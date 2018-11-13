@@ -8,8 +8,6 @@ import {withStyles} from '@material-ui/core'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import blue from '@material-ui/core/colors/blue'
-import {getMetadata} from 'page-metadata-parser'
-import {JSDOM} from 'jsdom'
 
 const mapDispatchToProps = {
   saveWish
@@ -47,7 +45,14 @@ export const WishForm = compose(
   return <Form
     onSubmit={saveWish}
     initialValues={wish}
-    render={({handleSubmit, values: {image, link}}) => {
+    render={({handleSubmit, values: {image, link}, form}) => {
+      const setDataFetchedFromUrl = ({title, image, body}) => {
+        form.batch(() => {
+          title && form.change('title', title)
+          image && form.change('image', image)
+          body && form.change('body', body)
+        })
+      }
       return <form
         onSubmit={handleSubmit}
         className={classes.container}
@@ -56,7 +61,7 @@ export const WishForm = compose(
           {image && <img src={image} className={classes.image} alt='wish' />}
         </div>
         <div className={classes.outerFieldsContainer}>
-        <LinkSection link={link} />
+        <LinkSection link={link} onMetadataFetched={setDataFetchedFromUrl} />
         <Divider className={classes.divider} />
         <div className={classes.container}>
             <Field
@@ -91,7 +96,7 @@ const linkSectionStyle = {
 
 const LinkSection = compose(
   withStyles(linkSectionStyle)
-)(({link, classes}) => {
+)(({link, classes, onMetadataFetched}) => {
   return <div className={classes.wrapper}>
     <Field
       name="link"
@@ -104,7 +109,10 @@ const LinkSection = compose(
       variant='text'
       color='primary'
       className={classes.button}
-      onClick={() => fetchProductInfo(link)}
+      onClick={async () => {
+        const metadata = await fetchProductInfo(link)
+        onMetadataFetched(metadata)
+      }}
     >
       Fetch info
     </Button>
@@ -112,13 +120,21 @@ const LinkSection = compose(
 })
 
 const fetchProductInfo = async (url) => {
-  const response = await fetch(url, {method: 'GET', mode: 'no-cors'})
-  const html = await response.text()
-  console.log(html)
-  const doc = new JSDOM(html)
-  const {title, description, image} = getMetadata(doc, url)
-  console.log({title, body: description, image})
-  return {title, body: description, image}
+  const metadata = await (await fetch(
+    `${process.env.REACT_APP_API_BASE_URL}/fetch-page-meta`,
+    {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({url})
+    }
+  )).json()
+  return {
+    title: metadata.title,
+    image: metadata.image,
+    body: metadata.description
+  }
 }
 
 const sectionStyle = (theme) => ({

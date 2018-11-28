@@ -8,12 +8,12 @@ import Typography from '@material-ui/core/Typography'
 import LinkIcon from '@material-ui/icons/Link'
 import blue from '@material-ui/core/colors/blue'
 import classNames from 'classnames'
-import {connect} from 'react-redux'
-import {setActiveWish} from '../actions'
+import { connect } from 'react-redux'
+import { setActiveWish } from '../actions'
 
 const styles = (theme) => ({
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit
   },
   frame: {
     display: 'flex',
@@ -44,13 +44,13 @@ const styles = (theme) => ({
   }
 })
 
-export const Wish = connect()(withStyles(styles)(({wish, dispatch, classes}) => {
+export const Wish = connect()(withStyles(styles)(({ wish, dispatch, classes }) => {
   return <div className={classes.frame}>
     <div className={classes.container}>
-    <div className={classes.imageContainer}>
-      {wish.image && <img src={wish.image} className={classes.image} alt='wish' />}
-    </div>
-    <WishBody wish={wish} />
+      <div className={classes.imageContainer}>
+        {wish.image && <img src={wish.image} className={classes.image} alt='wish' />}
+      </div>
+      <WishBody wish={wish} />
     </div>
     <div className={classNames(classes.column, classes.rightAlign)}>
       {wish.link && <LinkIconButton href={wish.link} />}
@@ -75,15 +75,13 @@ const bodyStyles = (theme) => ({
   }
 })
 
-const WishBody = withStyles(bodyStyles)(({classes, wish}) => {
+const WishBody = withStyles(bodyStyles)(({ classes, wish }) => {
   return <div className={classes.wrapper}>
     <div className={classes.column}>
       <Typography variant='h6'>{wish.title}</Typography>
       <Typography variant='subtitle1'>{wish.body}</Typography>
     </div>
-    <div className={classes.column}>
-      
-    </div>
+    <div className={classes.column} />
   </div>
 })
 
@@ -101,7 +99,7 @@ const linkButtonStyles = (theme) => ({
   }
 })
 
-export const LinkTextButton = withStyles(linkButtonStyles)(({classes, children, ...props}) => {
+export const LinkTextButton = withStyles(linkButtonStyles)(({ classes, children, ...props }) => {
   return <Button
     className={classes.linkButton}
     size='small'
@@ -112,7 +110,7 @@ export const LinkTextButton = withStyles(linkButtonStyles)(({classes, children, 
   </Button>
 })
 
-const LinkIconButton = withStyles(linkButtonStyles)(({classes, children, ...props}) => {
+const LinkIconButton = withStyles(linkButtonStyles)(({ classes, children, ...props }) => {
   return <IconButton
     className={classes.linkButton}
     {...props}

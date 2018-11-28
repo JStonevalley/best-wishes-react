@@ -1,7 +1,7 @@
 import React from 'react'
-import {FormControl, InputLabel, FormHelperText, Input} from '@material-ui/core'
+import { FormControl, InputLabel, FormHelperText, Input } from '@material-ui/core'
 
-export const RegularTextField = ({input, meta, label, style, disabled, required, fullWidth, multiline, rows, className, inputClassName, ...rest}) => {
+export const RegularTextField = ({ input, meta, label, style, disabled, required, fullWidth, multiline, rows, className, inputClassName, ...rest }) => {
   const errorText = meta && meta.touched && meta.error
   return <FormControl
     style={style}

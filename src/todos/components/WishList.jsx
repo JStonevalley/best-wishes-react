@@ -1,13 +1,14 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {compose, branch, renderNothing} from 'recompose'
-import {withStyles} from '@material-ui/core/styles'
+import { connect } from 'react-redux'
+import { compose, branch, renderNothing } from 'recompose'
+import { withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import {Wish} from './Wish'
-import {WishForm} from './WishForm'
+import { Wish } from './Wish'
+import { WishForm } from './WishForm'
+import { activeWishListSelector } from '../selectors'
 
 const styles = (theme) => ({
   wishLine: {
@@ -39,7 +40,7 @@ export const WishList = compose(
   withStyles(styles),
   connect(
     (state) => {
-      const activeWishList = state.wishLists.lists.get(state.wishLists.activeWishList)
+      const activeWishList = activeWishListSelector(state)
       return {
         wishList: activeWishList ? activeWishList.toJS() : undefined,
         activeWish: state.wishLists.activeWish
@@ -47,10 +48,10 @@ export const WishList = compose(
     }
   ),
   branch(
-    ({wishList}) => !wishList,
+    ({ wishList }) => !wishList,
     renderNothing
   )
-)(({wishList, classes, activeWish, style}) => {
+)(({ wishList, classes, activeWish, style }) => {
   return <Card style={style}>
     <CardContent>
       <Typography

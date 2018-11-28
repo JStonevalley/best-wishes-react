@@ -1,10 +1,11 @@
+/* global fetch */
 import * as React from 'react'
-import {Form, Field} from 'react-final-form'
-import {RegularTextField} from '../../shared/FormFields'
-import {saveWish} from '../actions'
-import {connect} from 'react-redux'
-import {compose} from 'recompose'
-import {withStyles} from '@material-ui/core'
+import { Form, Field } from 'react-final-form'
+import { RegularTextField } from '../../shared/FormFields'
+import { saveWish } from '../actions'
+import { connect } from 'react-redux'
+import { compose } from 'recompose'
+import { withStyles } from '@material-ui/core'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import blue from '@material-ui/core/colors/blue'
@@ -41,12 +42,12 @@ const styles = {
 export const WishForm = compose(
   connect(null, mapDispatchToProps),
   withStyles(styles)
-)(({wish, saveWish, classes}) => {
+)(({ wish, saveWish, classes }) => {
   return <Form
     onSubmit={saveWish}
     initialValues={wish}
-    render={({handleSubmit, values: {image, link}, form}) => {
-      const setDataFetchedFromUrl = ({title, image, body}) => {
+    render={({ handleSubmit, values: { image, link }, form }) => {
+      const setDataFetchedFromUrl = ({ title, image, body }) => {
         form.batch(() => {
           title && form.change('title', title)
           image && form.change('image', image)
@@ -61,9 +62,9 @@ export const WishForm = compose(
           {image && <img src={image} className={classes.image} alt='wish' />}
         </div>
         <div className={classes.outerFieldsContainer}>
-        <LinkSection link={link} onMetadataFetched={setDataFetchedFromUrl} />
-        <Divider className={classes.divider} />
-        <div className={classes.container}>
+          <LinkSection link={link} onMetadataFetched={setDataFetchedFromUrl} />
+          <Divider className={classes.divider} />
+          <div className={classes.container}>
             <Field
               name='id'
               component={() => null}
@@ -96,12 +97,12 @@ const linkSectionStyle = {
 
 const LinkSection = compose(
   withStyles(linkSectionStyle)
-)(({link, classes, onMetadataFetched}) => {
+)(({ link, classes, onMetadataFetched }) => {
   return <div className={classes.wrapper}>
     <Field
-      name="link"
+      name='link'
       component={RegularTextField}
-      label="Link"
+      label='Link'
       className={classes.input}
       inputClassName={classes.linkInput}
     />
@@ -124,10 +125,10 @@ const fetchProductInfo = async (url) => {
     `${process.env.REACT_APP_API_BASE_URL}/fetch-page-meta`,
     {
       method: 'POST',
-      headers:{
+      headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({url})
+      body: JSON.stringify({ url })
     }
   )).json()
   return {
@@ -152,44 +153,43 @@ const sectionStyle = (theme) => ({
   }
 })
 
-const TextSection = withStyles(sectionStyle)(({classes}) => {
+const TextSection = withStyles(sectionStyle)(({ classes }) => {
   return <div
     className={classes.wrapper}
   >
     <Field
-      name="title"
+      name='title'
       component={RegularTextField}
-      label="Title"
+      label='Title'
       className={classes.input}
     />
     <Field
-      name="body"
+      name='body'
       component={RegularTextField}
       multiline
-      label="Body"
+      label='Body'
       className={classes.input}
     />
   </div>
 })
 
-const MiscSection = withStyles(sectionStyle)(({classes}) => {
+const MiscSection = withStyles(sectionStyle)(({ classes }) => {
   return <div
     className={classes.wrapper}
   >
     <Field
-      name="price"
+      name='price'
       component={RegularTextField}
       type='number'
-      label="Price"
+      label='Price'
       className={classes.input}
     />
     <Field
-      name="image"
+      name='image'
       component={RegularTextField}
-      label="Image"
+      label='Image'
       className={classes.input}
       inputClassName={classes.linkInput}
     />
   </div>
 })
-

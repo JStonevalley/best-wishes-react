@@ -48,23 +48,23 @@ export const Wish = connect()(withStyles(styles)(({ wish, dispatch, classes }) =
   return <div className={classes.frame}>
     <div className={classes.container}>
       <div className={classes.imageContainer}>
-        {wish.image && <img src={wish.image} className={classes.image} alt='wish' />}
+        {wish.get('image') && <img src={wish.get('image')} className={classes.image} alt='wish' />}
       </div>
       <WishBody wish={wish} />
     </div>
     <div className={classNames(classes.column, classes.rightAlign)}>
-      {wish.link && <LinkIconButton href={wish.link} />}
+      {wish.get('link') && <LinkIconButton href={wish.get('link')} />}
       <IconButton color='secondary'>
         <DeleteIcon />
       </IconButton>
-      <IconButton onClick={() => dispatch(setActiveWish(wish.id))}>
+      <IconButton onClick={() => dispatch(setActiveWish(wish.get('id')))}>
         <EditIcon />
       </IconButton>
     </div>
   </div>
 }))
 
-const bodyStyles = (theme) => ({
+const bodyStyles = {
   wrapper: {
     display: 'flex',
     margin: '1vw'
@@ -73,13 +73,13 @@ const bodyStyles = (theme) => ({
     display: 'flex',
     flexDirection: 'column'
   }
-})
+}
 
 const WishBody = withStyles(bodyStyles)(({ classes, wish }) => {
   return <div className={classes.wrapper}>
     <div className={classes.column}>
-      <Typography variant='h6'>{wish.title}</Typography>
-      <Typography variant='subtitle1'>{wish.body}</Typography>
+      <Typography variant='h6'>{wish.get('title')}</Typography>
+      <Typography variant='subtitle1'>{wish.get('body')}</Typography>
     </div>
     <div className={classes.column} />
   </div>

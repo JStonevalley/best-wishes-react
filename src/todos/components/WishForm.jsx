@@ -2,12 +2,14 @@
 import * as React from 'react'
 import { Form, Field } from 'react-final-form'
 import { RegularTextField } from '../../shared/FormFields'
+import { required } from '../../shared/FormValidators'
 import { saveWish } from '../actions'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { withStyles } from '@material-ui/core'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
+import SaveIcon from '@material-ui/icons/Save'
 import blue from '@material-ui/core/colors/blue'
 
 const mapDispatchToProps = {
@@ -26,8 +28,15 @@ const styles = {
     width: '10vw',
     height: '10vw'
   },
-  container: {
+  flex: {
     display: 'flex'
+  },
+  flexColumn: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  alignSelfFlexStart: {
+    alignSelf: 'flex-start'
   },
   outerFieldsContainer: {
     display: 'flex',
@@ -45,7 +54,7 @@ export const WishForm = compose(
 )(({ wish, saveWish, classes }) => {
   return <Form
     onSubmit={saveWish}
-    initialValues={wish}
+    initialValues={wish.toJS()}
     render={({ handleSubmit, values: { image, link }, form }) => {
       const setDataFetchedFromUrl = ({ title, image, body }) => {
         form.batch(() => {
@@ -56,22 +65,34 @@ export const WishForm = compose(
       }
       return <form
         onSubmit={handleSubmit}
-        className={classes.container}
+        className={classes.flexColumn}
       >
-        <div className={classes.imageContainer}>
-          {image && <img src={image} className={classes.image} alt='wish' />}
-        </div>
-        <div className={classes.outerFieldsContainer}>
-          <LinkSection link={link} onMetadataFetched={setDataFetchedFromUrl} />
-          <Divider className={classes.divider} />
-          <div className={classes.container}>
-            <Field
-              name='id'
-              component={() => null}
-            />
-            <TextSection />
-            <MiscSection />
+        <div className={classes.flex}>
+          <div className={classes.imageContainer}>
+            {image && <img src={image} className={classes.image} alt='wish' />}
           </div>
+          <div className={classes.outerFieldsContainer}>
+            <LinkSection link={link} onMetadataFetched={setDataFetchedFromUrl} />
+            <Divider className={classes.divider} />
+            <div className={classes.flex}>
+              <Field
+                name='id'
+                component={() => null}
+              />
+              <Field
+                name='wishList'
+                component={() => null}
+              />
+              <TextSection />
+              <MiscSection />
+            </div>
+          </div>
+        </div>
+        <div className={classes.alignSelfFlexStart}>
+          <Button color='primary' onClick={form.submit}>
+            <SaveIcon />
+            Save
+          </Button>
         </div>
       </form>
     }}
@@ -161,6 +182,7 @@ const TextSection = withStyles(sectionStyle)(({ classes }) => {
       name='title'
       component={RegularTextField}
       label='Title'
+      validate={required}
       className={classes.input}
     />
     <Field

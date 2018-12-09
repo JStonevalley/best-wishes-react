@@ -33,7 +33,7 @@ export const WishLists = compose(
         variant='headline'
         component='h2'
       >
-        My ToDo Lists
+        My Wish Lists
       </Typography>
       <List>
         {wishLists.map((wishList, key) => <ListItem
@@ -64,13 +64,13 @@ const NewWishListForm = connect()(({ dispatch }) => {
           validate={required}
         />
         <ListItemSecondaryAction>
-        <IconButton
-          onClick={handleSubmit}
-        >
-          <AddIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
+          <IconButton
+            onClick={handleSubmit}
+          >
+            <AddIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
     }}
   />
 })

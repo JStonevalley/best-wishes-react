@@ -5,7 +5,7 @@ import { RegularTextField } from '../../shared/FormFields'
 import { required } from '../../shared/FormValidators'
 import { saveWish } from '../actions'
 import { connect } from 'react-redux'
-import { compose } from 'recompose'
+import { compose, withState } from 'recompose'
 import { withStyles } from '@material-ui/core'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
@@ -50,8 +50,9 @@ const styles = {
 
 export const WishForm = compose(
   connect(null, mapDispatchToProps),
+  withState('fetchingInfo', 'setFetchingInfo'),
   withStyles(styles)
-)(({ wish, saveWish, classes }) => {
+)(({ wish, saveWish, fetchingInfo, setFetchingInfo, classes }) => {
   return <Form
     onSubmit={saveWish}
     initialValues={wish.toJS()}
@@ -62,6 +63,7 @@ export const WishForm = compose(
           image && form.change('image', image)
           body && form.change('body', body)
         })
+        setFetchingInfo(false)
       }
       return <form
         onSubmit={handleSubmit}
@@ -72,7 +74,11 @@ export const WishForm = compose(
             {image && <img src={image} className={classes.image} alt='wish' />}
           </div>
           <div className={classes.outerFieldsContainer}>
-            <LinkSection link={link} onMetadataFetched={setDataFetchedFromUrl} />
+            <LinkSection
+              link={link}
+              onMetadataFetchingStarted={() => setFetchingInfo(true)}
+              onMetadataFetched={setDataFetchedFromUrl}
+            />
             <Divider className={classes.divider} />
             <div className={classes.flex}>
               <Field
@@ -83,8 +89,8 @@ export const WishForm = compose(
                 name='wishList'
                 component={() => null}
               />
-              <TextSection />
-              <MiscSection />
+              <TextSection disabled={fetchingInfo} />
+              <MiscSection disabled={fetchingInfo} />
             </div>
           </div>
         </div>
@@ -117,8 +123,9 @@ const linkSectionStyle = {
 }
 
 const LinkSection = compose(
-  withStyles(linkSectionStyle)
-)(({ link, classes, onMetadataFetched }) => {
+  withStyles(linkSectionStyle),
+  withState('fetchingInfo', 'setFetchingInfo')
+)(({ link, classes, fetchingInfo, setFetchingInfo, onMetadataFetchingStarted, onMetadataFetched }) => {
   return <div className={classes.wrapper}>
     <Field
       name='link'
@@ -126,14 +133,19 @@ const LinkSection = compose(
       label='Link'
       className={classes.input}
       inputClassName={classes.linkInput}
+      disabled={fetchingInfo}
     />
     <Button
       variant='text'
       color='primary'
+      disabled={fetchingInfo}
       className={classes.button}
       onClick={async () => {
+        setFetchingInfo(true)
+        onMetadataFetchingStarted()
         const metadata = await fetchProductInfo(link)
         onMetadataFetched(metadata)
+        setFetchingInfo(false)
       }}
     >
       Fetch info
@@ -174,7 +186,7 @@ const sectionStyle = (theme) => ({
   }
 })
 
-const TextSection = withStyles(sectionStyle)(({ classes }) => {
+const TextSection = withStyles(sectionStyle)(({ disabled, classes }) => {
   return <div
     className={classes.wrapper}
   >
@@ -183,6 +195,7 @@ const TextSection = withStyles(sectionStyle)(({ classes }) => {
       component={RegularTextField}
       label='Title'
       validate={required}
+      disabled={disabled}
       className={classes.input}
     />
     <Field
@@ -190,12 +203,13 @@ const TextSection = withStyles(sectionStyle)(({ classes }) => {
       component={RegularTextField}
       multiline
       label='Body'
+      disabled={disabled}
       className={classes.input}
     />
   </div>
 })
 
-const MiscSection = withStyles(sectionStyle)(({ classes }) => {
+const MiscSection = withStyles(sectionStyle)(({ disabled, classes }) => {
   return <div
     className={classes.wrapper}
   >
@@ -204,12 +218,14 @@ const MiscSection = withStyles(sectionStyle)(({ classes }) => {
       component={RegularTextField}
       type='number'
       label='Price'
+      disabled={disabled}
       className={classes.input}
     />
     <Field
       name='image'
       component={RegularTextField}
       label='Image'
+      disabled={disabled}
       className={classes.input}
       inputClassName={classes.linkInput}
     />

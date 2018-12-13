@@ -4,9 +4,10 @@ import {
   GET_PERSONAL_WISH_LISTS_SUCCESS,
   SET_ACTIVE_LIST,
   SET_ACTIVE_WISH,
-  SAVE_WISH,
+  WISH_SAVED,
   ADD_NEW_WISH,
-  CREATE_WISH_LIST
+  CREATE_WISH_LIST,
+  WISH_DELETED
 } from './actions'
 
 const lists = (state = Map(), action) => {
@@ -20,8 +21,9 @@ const lists = (state = Map(), action) => {
 const wishes = (state = Map(), action) => {
   switch (action.type) {
     case GET_PERSONAL_WISH_LISTS_SUCCESS: return state.merge(action.wishes.reduce((map, wish) => map.set(wish.get('id'), wish), Map()))
-    case SAVE_WISH: return state.set(action.wish.get('id'), action.wish).remove(null)
+    case WISH_SAVED: return state.set(action.wish.get('id'), action.wish).remove(null)
     case ADD_NEW_WISH: return state.set(action.wish.get('id'), action.wish)
+    case WISH_DELETED: return state.delete(action.id)
     default: return state
   }
 }
@@ -36,7 +38,7 @@ const activeWishList = (state = null, { type, listId }) => {
 const activeWish = (state = 'NO_WISH_SELECTED', { type, wishId }) => {
   switch (type) {
     case ADD_NEW_WISH: return null
-    case SAVE_WISH:
+    case WISH_SAVED:
     case SET_ACTIVE_LIST: return 'NO_WISH_SELECTED'
     case SET_ACTIVE_WISH: return wishId
     default: return state

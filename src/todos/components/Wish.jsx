@@ -9,7 +9,7 @@ import LinkIcon from '@material-ui/icons/Link'
 import blue from '@material-ui/core/colors/blue'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import { setActiveWish } from '../actions'
+import { setActiveWish, deleteWish } from '../actions'
 
 const styles = (theme) => ({
   button: {
@@ -54,7 +54,7 @@ export const Wish = connect()(withStyles(styles)(({ wish, dispatch, classes }) =
     </div>
     <div className={classNames(classes.column, classes.rightAlign)}>
       {wish.get('link') && <LinkIconButton href={wish.get('link')} />}
-      <IconButton color='secondary'>
+      <IconButton onClick={() => dispatch(deleteWish(wish.get('id')))} color='secondary'>
         <DeleteIcon />
       </IconButton>
       <IconButton onClick={() => dispatch(setActiveWish(wish.get('id')))}>

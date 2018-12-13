@@ -1,6 +1,6 @@
-/* global fetch */
 import { fromJS } from 'immutable'
 import * as queryString from 'qs'
+import { bwFetch } from '../shared/rest'
 
 const GET_PERSONAL_WISH_LISTS_LOADING = 'GET_PERSONAL_WISH_LISTS_LOADING'
 export const GET_PERSONAL_WISH_LISTS_SUCCESS = 'GET_PERSONAL_WISH_LISTS_SUCCESS'
@@ -8,9 +8,9 @@ export const GET_PERSONAL_WISH_LISTS_SUCCESS = 'GET_PERSONAL_WISH_LISTS_SUCCESS'
 export const getPersonalWishLists = () => {
   return async (dispatch, getState) => {
     dispatch({ type: GET_PERSONAL_WISH_LISTS_LOADING })
-    const { wishes, wishLists } = await (await fetch(
-      `http://localhost:3001/wish-list?${queryString.stringify({ email: getState().shared.user.get('email'), withWishes: true })}`
-    )).json()
+    const { wishes, wishLists } = await bwFetch(
+      `wish-list?${queryString.stringify({ email: getState().shared.user.get('email'), withWishes: true })}`
+    )
 
     dispatch({
       type: GET_PERSONAL_WISH_LISTS_SUCCESS,
@@ -25,19 +25,16 @@ export const CREATE_WISH_LIST = 'CREATE_WISH_LIST'
 export const createWishList = ({ title }) => {
   return async (dispatch, getState) => {
     try {
-      const savedWishList = await (await fetch(
-        'http://localhost:3001/wish-list',
+      const savedWishList = await bwFetch(
+        'wish-list',
         {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
           body: JSON.stringify({
             title,
             owner: getState().shared.user.get('email')
           })
         }
-      )).json()
+      )
       dispatch({ type: CREATE_WISH_LIST, wishList: fromJS(savedWishList) })
     } catch (error) {
       console.error(error)
@@ -57,24 +54,38 @@ export const setActiveWish = (wishId) => {
   return { type: SET_ACTIVE_WISH, wishId }
 }
 
-export const SAVE_WISH = 'SAVE_WISH'
+export const WISH_DELETED = 'WISH_DELETED'
+
+export const deleteWish = (id) => {
+  return async (dispatch) => {
+    try {
+      await bwFetch(
+        `wish/${id}`,
+        {
+          method: 'DELETE'
+        }
+      )
+      dispatch({ type: WISH_DELETED, id })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
+export const WISH_SAVED = 'WISH_SAVED'
 export const ADD_NEW_WISH = 'ADD_NEW_WISH'
 
 export const saveWish = (wish) => {
-  console.log(wish)
   return async (dispatch) => {
     try {
-      const savedWish = await (await fetch(
-        'http://localhost:3001/wish',
+      const savedWish = await bwFetch(
+        'wish',
         {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
           body: JSON.stringify(wish)
         }
-      )).json()
-      dispatch({ type: SAVE_WISH, wish: fromJS(savedWish) })
+      )
+      dispatch({ type: WISH_SAVED, wish: fromJS(savedWish) })
     } catch (error) {
       console.error(error)
     }

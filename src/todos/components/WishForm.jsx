@@ -9,6 +9,7 @@ import { compose, withState } from 'recompose'
 import { withStyles } from '@material-ui/core'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 import SaveIcon from '@material-ui/icons/Save'
 import blue from '@material-ui/core/colors/blue'
 
@@ -35,9 +36,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column'
   },
-  alignSelfFlexStart: {
-    alignSelf: 'flex-start'
-  },
   outerFieldsContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -45,6 +43,12 @@ const styles = {
   },
   divider: {
     margin: '2vw'
+  },
+  submitButton: {
+    alignSelf: 'center'
+  },
+  submitButtonIcon: {
+    marginRight: '1rem'
   }
 }
 
@@ -94,12 +98,15 @@ export const WishForm = compose(
             </div>
           </div>
         </div>
-        <div className={classes.alignSelfFlexStart}>
-          <Button color='primary' onClick={form.submit}>
-            <SaveIcon />
-            Save
-          </Button>
-        </div>
+        <Button
+          variant='text'
+          className={classes.submitButton}
+          color='primary'
+          onClick={form.submit}
+        >
+          <SaveIcon className={classes.submitButtonIcon} />
+          Save
+        </Button>
       </form>
     }}
   />

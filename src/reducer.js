@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import wishListReducer from './todos/reducer'
+import wishListReducer from './wishListOwner/reducer'
 import sharedReducer from './shared/reducer'
 
 const reducers = {

@@ -9,7 +9,6 @@ import { compose, withState } from 'recompose'
 import { withStyles } from '@material-ui/core'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
 import SaveIcon from '@material-ui/icons/Save'
 import blue from '@material-ui/core/colors/blue'
 

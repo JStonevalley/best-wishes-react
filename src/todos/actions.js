@@ -77,7 +77,6 @@ export const ADD_NEW_WISH = 'ADD_NEW_WISH'
 
 export const saveWish = (wish) => {
   return async (dispatch) => {
-    console.log('save wish', wish)
     try {
       const savedWish = await bwFetch(
         'wish',

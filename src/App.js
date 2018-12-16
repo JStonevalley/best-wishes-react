@@ -37,7 +37,7 @@ const MainWrapper = ({ children }) => {
 const App = () => {
   return <MainWrapper>
     <Route path='/workshop' component={WishLists} />
-    <Route path='/workshop/:wishListId' component={WishList} />
+    <Route path='/workshop/wish-list/:wishListId' component={WishList} />
   </MainWrapper>
 }
 

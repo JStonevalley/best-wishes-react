@@ -36,16 +36,11 @@ export const createWishList = ({ title }) => {
         }
       )
       dispatch({ type: CREATE_WISH_LIST, wishList: fromJS(savedWishList) })
+      return savedWishList
     } catch (error) {
       console.error(error)
     }
   }
-}
-
-export const SET_ACTIVE_LIST = 'SET_ACTIVE_LIST'
-
-export const setActiveList = (listId) => {
-  return { type: SET_ACTIVE_LIST, listId }
 }
 
 export const SET_ACTIVE_WISH = 'SET_ACTIVE_WISH'

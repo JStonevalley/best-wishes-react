@@ -2,7 +2,6 @@ import { combineReducers } from 'redux'
 import { Map } from 'immutable'
 import {
   GET_PERSONAL_WISH_LISTS_SUCCESS,
-  SET_ACTIVE_LIST,
   SET_ACTIVE_WISH,
   WISH_SAVED,
   ADD_NEW_WISH,
@@ -28,18 +27,10 @@ const wishes = (state = Map(), action) => {
   }
 }
 
-const activeWishList = (state = null, { type, listId }) => {
-  switch (type) {
-    case SET_ACTIVE_LIST: return listId
-    default: return state
-  }
-}
-
 const activeWish = (state = 'NO_WISH_SELECTED', { type, wishId }) => {
   switch (type) {
     case ADD_NEW_WISH: return null
-    case WISH_SAVED:
-    case SET_ACTIVE_LIST: return 'NO_WISH_SELECTED'
+    case WISH_SAVED: return 'NO_WISH_SELECTED'
     case SET_ACTIVE_WISH: return wishId
     default: return state
   }
@@ -48,6 +39,5 @@ const activeWish = (state = 'NO_WISH_SELECTED', { type, wishId }) => {
 export default combineReducers({
   lists,
   wishes,
-  activeWishList,
   activeWish
 })

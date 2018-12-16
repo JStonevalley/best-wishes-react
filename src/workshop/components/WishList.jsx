@@ -11,7 +11,6 @@ import Button from '@material-ui/core/Button'
 import { ADD_NEW_WISH } from '../actions'
 import { Wish } from './Wish'
 import { WishForm } from './WishForm'
-import { activeWishListSelector } from '../selectors'
 
 const styles = (theme) => ({
   wishLine: {
@@ -42,8 +41,8 @@ const styles = (theme) => ({
 export const WishList = compose(
   withStyles(styles),
   connect(
-    (state) => {
-      const activeWishList = activeWishListSelector(state)
+    (state, { match: { params: { wishListId } } }) => {
+      const activeWishList = state.wishLists.lists.get(wishListId)
       return {
         wishList: activeWishList,
         activeWishId: state.wishLists.activeWish,

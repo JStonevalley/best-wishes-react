@@ -14,7 +14,7 @@ import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
 import { Form, Field } from 'react-final-form'
 import { RegularTextField } from '../../shared/FormFields'
-import { getPersonalWishLists, setActiveList, createWishList } from '../actions'
+import { getPersonalWishLists, createWishList } from '../actions'
 import { required } from '../../shared/FormValidators'
 
 export const WishLists = compose(
@@ -26,7 +26,8 @@ export const WishLists = compose(
       this.props.dispatch(getPersonalWishLists())
     }
   })
-)(({ dispatch, wishLists, style }) => {
+)(({ dispatch, wishLists,history, style }) => {
+  const navigateToWishList = (wishListId) => history.push(`/workshop/wish-list/${wishListId}`)
   return <Card style={{ margin: '1rem', ...style }}>
     <CardContent>
       <Typography
@@ -39,22 +40,22 @@ export const WishLists = compose(
         {wishLists.map((wishList, key) => <ListItem
           key={key}
           button
-          onClick={() => dispatch(setActiveList(key))}
+          onClick={() => navigateToWishList(key)}
         >
           <ListItemIcon>
             <ReceiptIcon />
           </ListItemIcon>
           <ListItemText primary={wishList.get('title')} />
         </ListItem>).toList()}
-        <NewWishListForm />
+        <NewWishListForm onWishListCreated={navigateToWishList} />
       </List>
     </CardContent>
   </Card>
 })
 
-const NewWishListForm = connect()(({ dispatch }) => {
+const NewWishListForm = connect()(({ dispatch, onWishListCreated }) => {
   return <Form
-    onSubmit={(data) => dispatch(createWishList(data))}
+    onSubmit={(data) => dispatch(createWishList(data)).then(({id}) => onWishListCreated(id))}
     render={({ handleSubmit }) => {
       return <ListItem>
         <Field

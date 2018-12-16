@@ -43,12 +43,6 @@ export const createWishList = ({ title }) => {
   }
 }
 
-export const SET_ACTIVE_WISH = 'SET_ACTIVE_WISH'
-
-export const setActiveWish = (wishId) => {
-  return { type: SET_ACTIVE_WISH, wishId }
-}
-
 export const WISH_DELETED = 'WISH_DELETED'
 
 export const deleteWish = (id) => {

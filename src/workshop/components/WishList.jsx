@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { compose, branch, renderNothing } from 'recompose'
+import { Route, Switch, Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import { Map, fromJS } from 'immutable'
 import Card from '@material-ui/core/Card'
@@ -54,7 +55,7 @@ export const WishList = compose(
     ({ wishList }) => !wishList,
     renderNothing
   )
-)(({ wishList, wishes, classes, activeWishId, style, dispatch }) => {
+)(({ wishList, wishes, classes, activeWishId, style, dispatch, match: { path, url } }) => {
   const newWishExists = wishes.find((wish) => !wish.get('id'))
   return <Card style={{ margin: '1rem', ...style }}>
     <CardContent>
@@ -66,24 +67,37 @@ export const WishList = compose(
       </Typography>
       <div className={classes.list}>
         {wishes.map((wish, index) => <React.Fragment key={wish.get('id') || 'newWish'}>
-          {activeWishId === wish.get('id')
-            ? <WishForm
-              wishListId={wishList.get('id')}
-              wish={wish}
+          <Switch>
+            <Route
+              path={`${path}/${wish.get('id')}`}
+              render={(props) => <WishForm
+                wishListId={wishList.get('id')}
+                wish={wish}
+                {...props}
+              />}
             />
-            : <Wish
-              wish={wish}
-            />}
+            <Route
+              path={path}
+              render={(props) => <Wish
+                wish={wish}
+                {...props}
+              />}
+            />
+          </Switch>
           {index < wishes.length - 1 && <Divider className={classes.divider} />}
         </React.Fragment>).toArray()}
-        {!newWishExists && <Button
-          color='primary'
-          onClick={() => {
-            dispatch({ type: ADD_NEW_WISH, wish: fromJS({ id: null, wishList: wishList.get('id') }) })
-          }}
+        {!newWishExists && <Link
+          to={`${url}/null`}
         >
-          Make a new wish
-        </Button>}
+          <Button
+            color='primary'
+            onClick={() => {
+              dispatch({ type: ADD_NEW_WISH, wish: fromJS({ id: null, wishList: wishList.get('id') }) })
+            }}
+          >
+            Make a new wish
+          </Button>
+        </Link>}
       </div>
     </CardContent>
   </Card>

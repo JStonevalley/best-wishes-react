@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -9,7 +10,7 @@ import LinkIcon from '@material-ui/icons/Link'
 import blue from '@material-ui/core/colors/blue'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import { setActiveWish, deleteWish } from '../actions'
+import { deleteWish } from '../actions'
 
 const styles = (theme) => ({
   button: {
@@ -44,7 +45,7 @@ const styles = (theme) => ({
   }
 })
 
-export const Wish = connect()(withStyles(styles)(({ wish, dispatch, classes }) => {
+export const Wish = connect()(withStyles(styles)(({ wish, dispatch, classes, match: { url, path } }) => {
   return <div className={classes.frame}>
     <div className={classes.container}>
       <div className={classes.imageContainer}>
@@ -57,9 +58,11 @@ export const Wish = connect()(withStyles(styles)(({ wish, dispatch, classes }) =
       <IconButton onClick={() => dispatch(deleteWish(wish.get('id')))} color='secondary'>
         <DeleteIcon />
       </IconButton>
-      <IconButton onClick={() => dispatch(setActiveWish(wish.get('id')))}>
-        <EditIcon />
-      </IconButton>
+      <Link to={`${url}/${wish.get('id')}`}>
+        <IconButton>
+          <EditIcon />
+        </IconButton>
+      </Link>
     </div>
   </div>
 }))

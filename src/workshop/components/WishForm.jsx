@@ -55,9 +55,13 @@ export const WishForm = compose(
   connect(null, mapDispatchToProps),
   withState('fetchingInfo', 'setFetchingInfo'),
   withStyles(styles)
-)(({ wish, saveWish, fetchingInfo, setFetchingInfo, classes }) => {
+)(({ wish, saveWish, fetchingInfo, setFetchingInfo, classes, history, match: { url } }) => {
   return <Form
-    onSubmit={saveWish}
+    onSubmit={(wish) => saveWish(wish).then(() => {
+      const urlSegments = url.split('/')
+      const newUrl = urlSegments.slice(0, urlSegments.length - 1).join('/')
+      history.push(newUrl)
+    })}
     initialValues={wish.toJS()}
     render={({ handleSubmit, values: { image, link }, form }) => {
       const setDataFetchedFromUrl = ({ title, image, body }) => {

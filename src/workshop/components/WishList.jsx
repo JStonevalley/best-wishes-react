@@ -57,7 +57,7 @@ export const WishList = compose(
   )
 )(({ wishList, wishes, classes, activeWishId, style, dispatch }) => {
   const newWishExists = wishes.find((wish) => !wish.get('id'))
-  return <Card style={style}>
+  return <Card style={{ margin: '1rem', ...style }}>
     <CardContent>
       <Typography
         variant='h5'

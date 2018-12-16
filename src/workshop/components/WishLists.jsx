@@ -27,7 +27,7 @@ export const WishLists = compose(
     }
   })
 )(({ dispatch, wishLists, style }) => {
-  return <Card style={style}>
+  return <Card style={{ margin: '1rem', ...style }}>
     <CardContent>
       <Typography
         variant='headline'

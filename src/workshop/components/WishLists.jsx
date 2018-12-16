@@ -26,7 +26,7 @@ export const WishLists = compose(
       this.props.dispatch(getPersonalWishLists())
     }
   })
-)(({ dispatch, wishLists,history, style }) => {
+)(({ dispatch, wishLists, history, style }) => {
   const navigateToWishList = (wishListId) => history.push(`/workshop/wish-list/${wishListId}`)
   return <Card style={{ margin: '1rem', ...style }}>
     <CardContent>
@@ -55,7 +55,7 @@ export const WishLists = compose(
 
 const NewWishListForm = connect()(({ dispatch, onWishListCreated }) => {
   return <Form
-    onSubmit={(data) => dispatch(createWishList(data)).then(({id}) => onWishListCreated(id))}
+    onSubmit={(data) => dispatch(createWishList(data)).then(({ id }) => onWishListCreated(id))}
     render={({ handleSubmit }) => {
       return <ListItem>
         <Field

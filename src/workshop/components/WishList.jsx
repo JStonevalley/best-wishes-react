@@ -36,6 +36,10 @@ const styles = (theme) => ({
   divider: {
     width: '80%',
     alignSelf: 'center'
+  },
+  newWishButton: {
+    textDecoration: 'none',
+    alignSelf: 'center'
   }
 })
 
@@ -88,6 +92,7 @@ export const WishList = compose(
         </React.Fragment>).toArray()}
         {!newWishExists && <Link
           to={`${url}/null`}
+          className={classes.newWishButton}
         >
           <Button
             color='primary'

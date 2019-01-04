@@ -13,6 +13,7 @@ import ReceiptIcon from '@material-ui/icons/Receipt'
 import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
 import { Form, Field } from 'react-final-form'
+import { ShareWishList } from './ShareWishList.jsx'
 import { RegularTextField } from '../../shared/FormFields'
 import { getPersonalWishLists, createWishList } from '../actions'
 import { required } from '../../shared/FormValidators'
@@ -46,6 +47,9 @@ export const WishLists = compose(
             <ReceiptIcon />
           </ListItemIcon>
           <ListItemText primary={wishList.get('title')} />
+          <ListItemSecondaryAction>
+            <ShareWishList wishList={wishList} />
+          </ListItemSecondaryAction>
         </ListItem>).toList()}
         <NewWishListForm onWishListCreated={navigateToWishList} />
       </List>

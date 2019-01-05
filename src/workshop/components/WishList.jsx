@@ -50,8 +50,7 @@ export const WishList = compose(
       const activeWishList = state.wishLists.lists.get(wishListId)
       return {
         wishList: activeWishList,
-        activeWishId: state.wishLists.activeWish,
-        wishes: activeWishList ? state.wishLists.wishes.filter((wish) => wish.wishList === activeWishList.id) : Map()
+        wishes: activeWishList ? state.wishLists.wishes.filter((wish) => wish.get('wishList') === activeWishList.get('id')) : Map()
       }
     }
   ),
@@ -59,7 +58,7 @@ export const WishList = compose(
     ({ wishList }) => !wishList,
     renderNothing
   )
-)(({ wishList, wishes, classes, activeWishId, style, dispatch, match: { path, url } }) => {
+)(({ wishList, wishes, classes, style, dispatch, match: { path, url } }) => {
   const newWishExists = wishes.find((wish) => !wish.get('id'))
   return <Card style={{ margin: '1rem', ...style }}>
     <CardContent>

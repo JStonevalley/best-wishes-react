@@ -57,7 +57,7 @@ export const ShareWishList = compose(
           <DialogTitle>Share</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Share your wish list to friends and family. Every gift giver will be able to mark blabla
+              Share your wish list to friends and family. Gift givers will be able to indicate to each other what they have bought. You will not be able to see any of that and will hopefully receive beautiful gifts and no duplicates :)
             </DialogContentText>
             <form
               onSubmit={handleSubmit}

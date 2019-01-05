@@ -28,7 +28,7 @@ export const createWishList = ({ title }) => {
       const savedWishList = await bwFetch(
         'wish-list',
         {
-          method: 'PUT',
+          method: 'POST',
           body: JSON.stringify({
             title,
             owner: getState().shared.user.get('email')

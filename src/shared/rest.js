@@ -1,4 +1,5 @@
 /* global fetch */
+import { errorHandler } from './errors'
 
 export const bwFetch = async (path, options = {}) => {
   const response = await fetch(
@@ -14,5 +15,7 @@ export const bwFetch = async (path, options = {}) => {
     }
   )
   if (response.ok) return response.json()
-  throw new Error(await response.json())
+  else {
+    errorHandler(await response.json())
+  }
 }

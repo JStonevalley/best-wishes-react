@@ -16,6 +16,8 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import { shareWishList } from '../actions'
+import errorToFormError from '../../shared/errorToFormError'
 
 const styles = {
   flexColumn: {
@@ -38,17 +40,21 @@ export const ShareWishList = compose(
   connect(),
   withState('isOpen', 'setIsOpen', false),
   withStyles(styles)
-)(({ wishList, isOpen, setIsOpen, classes }) => {
+)(({ wishList, isOpen, setIsOpen, dispatch, classes }) => {
   return <React.Fragment>
     <IconButton onClick={() => setIsOpen(true)} color='primary'>
       <ShareIcon />
     </IconButton>
     <Form
-      onSubmit={({ sharedTo }) => {
-        console.log(sharedTo)
-        setIsOpen(false)
+      onSubmit={async ({ sharedTo }) => {
+        try {
+          await dispatch(shareWishList({ id: wishList.get('id'), sharedTo }))
+          setIsOpen(false)
+        } catch (error) {
+          return errorToFormError(error)
+        }
       }}
-      initialValues={{ sharedTo: wishList.get('sharedTo') || [''] }}
+      initialValues={{ sharedTo: wishList.get('sharedTo') ? wishList.get('sharedTo').toJS() : [''] }}
       mutators={{
         ...arrayMutators
       }}

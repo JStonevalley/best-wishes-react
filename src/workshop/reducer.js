@@ -5,11 +5,13 @@ import {
   WISH_SAVED,
   ADD_NEW_WISH,
   CREATE_WISH_LIST,
-  WISH_DELETED
+  WISH_DELETED,
+  WISH_LIST_SHARED
 } from './actions'
 
 const lists = (state = Map(), action) => {
   switch (action.type) {
+    case WISH_LIST_SHARED:
     case CREATE_WISH_LIST: return state.set(action.wishList.get('id'), action.wishList)
     case GET_PERSONAL_WISH_LISTS_SUCCESS: return state.merge(action.wishLists.reduce((map, wishList) => map.set(wishList.get('id'), wishList), Map()))
     default: return state

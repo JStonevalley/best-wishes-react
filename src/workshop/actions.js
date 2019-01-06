@@ -80,3 +80,18 @@ export const saveWish = (wish) => {
     }
   }
 }
+
+export const WISH_LIST_SHARED = 'WISH_LIST_SHARED'
+
+export const shareWishList = ({ id, sharedTo }) => {
+  return async (dispatch) => {
+    const wishList = await bwFetch(
+      `wish-list/share/${id}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ sharedTo })
+      }
+    )
+    dispatch({ type: WISH_LIST_SHARED, wishList: fromJS(wishList) })
+  }
+}

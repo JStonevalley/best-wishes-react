@@ -37,10 +37,17 @@ const styles = {
 }
 
 export const ShareWishList = compose(
-  connect(),
+  connect((state, { wishList }) => {
+    return {
+      sharedTo: state.workshop.shares
+        .filter((share) => share.get('wishList') === wishList.get('id'))
+        .map((share) => share.get('sharedTo'))
+        .toArray()
+    }
+  }),
   withState('isOpen', 'setIsOpen', false),
   withStyles(styles)
-)(({ wishList, isOpen, setIsOpen, dispatch, classes }) => {
+)(({ wishList, sharedTo, isOpen, setIsOpen, dispatch, classes }) => {
   return <React.Fragment>
     <IconButton onClick={() => setIsOpen(true)} color='primary'>
       <ShareIcon />
@@ -54,7 +61,7 @@ export const ShareWishList = compose(
           return errorToFormError(error)
         }
       }}
-      initialValues={{ sharedTo: wishList.get('sharedTo') ? wishList.get('sharedTo').toJS() : [''] }}
+      initialValues={{ sharedTo: [...sharedTo, ''] }}
       mutators={{
         ...arrayMutators
       }}

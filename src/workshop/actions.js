@@ -8,14 +8,15 @@ export const GET_PERSONAL_WISH_LISTS_SUCCESS = 'GET_PERSONAL_WISH_LISTS_SUCCESS'
 export const getPersonalWishLists = () => {
   return async (dispatch, getState) => {
     dispatch({ type: GET_PERSONAL_WISH_LISTS_LOADING })
-    const { wishes, wishLists } = await bwFetch(
-      `wish-list?${queryString.stringify({ email: getState().shared.user.get('email'), withWishes: true })}`
+    const { wishes, wishLists, shares } = await bwFetch(
+      `wish-list?${queryString.stringify({ email: getState().shared.user.get('email'), withWishes: true, withShares: true })}`
     )
 
     dispatch({
       type: GET_PERSONAL_WISH_LISTS_SUCCESS,
       wishLists: fromJS(wishLists),
-      wishes: fromJS(wishes)
+      wishes: fromJS(wishes),
+      shares: fromJS(shares)
     })
   }
 }
@@ -85,13 +86,13 @@ export const WISH_LIST_SHARED = 'WISH_LIST_SHARED'
 
 export const shareWishList = ({ id, sharedTo }) => {
   return async (dispatch) => {
-    const wishList = await bwFetch(
+    const shares = await bwFetch(
       `wish-list/share/${id}`,
       {
         method: 'PUT',
         body: JSON.stringify({ sharedTo })
       }
     )
-    dispatch({ type: WISH_LIST_SHARED, wishList: fromJS(wishList) })
+    dispatch({ type: WISH_LIST_SHARED, shares: fromJS(shares) })
   }
 }

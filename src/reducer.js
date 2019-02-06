@@ -3,7 +3,7 @@ import wishListReducer from './workshop/reducer'
 import sharedReducer from './shared/reducer'
 
 const reducers = {
-  wishLists: wishListReducer,
+  workshop: wishListReducer,
   shared: sharedReducer
 }
 

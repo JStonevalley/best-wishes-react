@@ -20,7 +20,7 @@ import { required } from '../../shared/FormValidators'
 
 export const WishLists = compose(
   connect((state) => ({
-    wishLists: state.wishLists.lists
+    wishLists: state.workshop.lists
   })),
   lifecycle({
     componentDidMount () {

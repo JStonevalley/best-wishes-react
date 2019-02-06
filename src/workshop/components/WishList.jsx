@@ -47,10 +47,10 @@ export const WishList = compose(
   withStyles(styles),
   connect(
     (state, { match: { params: { wishListId } } }) => {
-      const activeWishList = state.wishLists.lists.get(wishListId)
+      const activeWishList = state.workshop.lists.get(wishListId)
       return {
         wishList: activeWishList,
-        wishes: activeWishList ? state.wishLists.wishes.filter((wish) => wish.get('wishList') === activeWishList.get('id')) : Map()
+        wishes: activeWishList ? state.workshop.wishes.filter((wish) => wish.get('wishList') === activeWishList.get('id')) : Map()
       }
     }
   ),

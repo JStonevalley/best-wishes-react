@@ -55,7 +55,7 @@ export const ShareWishList = compose(
     <Form
       onSubmit={async ({ sharedTo }) => {
         try {
-          await dispatch(shareWishList({ id: wishList.get('id'), sharedTo }))
+          await dispatch(shareWishList({ id: wishList.get('id'), sharedTo: sharedTo.filter(Boolean) }))
           setIsOpen(false)
         } catch (error) {
           return errorToFormError(error)

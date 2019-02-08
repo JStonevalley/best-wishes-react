@@ -27,10 +27,15 @@ const wishes = (state = Map(), action) => {
   }
 }
 
+const sharesById = (shares) => shares.reduce((map, share) => map.set(share.get('id'), share), Map())
+
 const shares = (state = Map(), action) => {
   switch (action.type) {
-    case WISH_LIST_SHARED:
-    case GET_PERSONAL_WISH_LISTS_SUCCESS: return state.merge(action.shares.reduce((map, share) => map.set(share.get('id'), share), Map()))
+    case WISH_LIST_SHARED: {
+      if (!action.shares.isEmpty()) state = state.filter((share) => share.get('wishList') !== action.shares.first().get('wishList'))
+      return state.merge(sharesById(action.shares))
+    }
+    case GET_PERSONAL_WISH_LISTS_SUCCESS: return state.merge(sharesById(action.shares))
     default: return state
   }
 }

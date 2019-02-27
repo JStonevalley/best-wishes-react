@@ -9,49 +9,56 @@ import { WishLists } from './workshop/components/WishLists'
 import { signIn } from './shared/actions'
 import { connect } from 'react-redux'
 import { compose, lifecycle, branch, renderNothing } from 'recompose'
+import { SignIn, SignUp } from './user/SignInUp'
 
 const MainAppBar = () => {
-  return <AppBar position='static' color='primary'>
-    <Toolbar>
-      <Typography variant='title' color='inherit'>
-        Best Wishes
-      </Typography>
-    </Toolbar>
-  </AppBar>
+  return (
+    <AppBar position='static' color='primary'>
+      <Toolbar>
+        <Typography variant='title' color='inherit'>
+          Best Wishes
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  )
 }
 
 const mainWrapperStyle = { display: 'flex', flexDirection: 'column' }
 const centerContentWrapper = { display: 'flex', justifyContent: 'center' }
-const contentWrapperStyle = { display: 'flex', flexDirection: 'column', maxWidth: '80rem', flexGrow: 1 }
+const contentWrapperStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  maxWidth: '80rem',
+  flexGrow: 1
+}
 const MainWrapper = ({ children }) => {
-  return <BrowserRouter style={mainWrapperStyle}>
-    <MainAppBar />
-    <div style={centerContentWrapper}>
-      <div style={contentWrapperStyle}>
-        {children}
+  return (
+    <BrowserRouter style={mainWrapperStyle}>
+      <MainAppBar />
+      <div style={centerContentWrapper}>
+        <div style={contentWrapperStyle}>{children}</div>
       </div>
-    </div>
-  </BrowserRouter>
+    </BrowserRouter>
+  )
 }
 
 const App = () => {
-  return <MainWrapper>
-    <Route path='/workshop' component={WishLists} />
-    <Route path='/workshop/wish-list/:wishListId' component={WishList} />
-  </MainWrapper>
+  return (
+    <MainWrapper>
+      <Route path='/workshop' component={WishLists} />
+      <Route path='/workshop/wish-list/:wishListId' component={WishList} />
+      <SignIn />
+      <SignUp />
+    </MainWrapper>
+  )
 }
 
 export default compose(
-  connect(
-    (state) => ({ user: state.shared.user })
-  ),
+  connect(state => ({ user: state.shared.user })),
   lifecycle({
     componentDidMount () {
       this.props.dispatch(signIn({ email: 'jonas.stendahl@outlook.com' }))
     }
   }),
-  branch(
-    ({ user }) => !user,
-    renderNothing
-  )
+  branch(({ user }) => !user, renderNothing)
 )(App)

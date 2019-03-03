@@ -1,0 +1,8 @@
+{
+	"auth": {
+		"BestWishesAuth": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}

@@ -1,0 +1,19 @@
+{
+    "master": {
+        "awscloudformation": {
+            "AuthRoleName": "best-wishes-react-20190227071527-authRole",
+            "UnauthRoleArn": "arn:aws:iam::321715489563:role/best-wishes-react-20190227071527-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::321715489563:role/best-wishes-react-20190227071527-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "best-wishes-react-20190227071527-deployment",
+            "UnauthRoleName": "best-wishes-react-20190227071527-unauthRole",
+            "StackName": "best-wishes-react-20190227071527",
+            "StackId": "arn:aws:cloudformation:eu-west-1:321715489563:stack/best-wishes-react-20190227071527/132b6e90-3a57-11e9-a3e2-0673b71e51da"
+        },
+        "categories": {
+            "auth": {
+                "BestWishesAuth": {}
+            }
+        }
+    }
+}

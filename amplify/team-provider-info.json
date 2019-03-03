@@ -15,5 +15,22 @@
                 "BestWishesAuth": {}
             }
         }
+    },
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "best-wishes-react-20190303145652-authRole",
+            "UnauthRoleArn": "arn:aws:iam::321715489563:role/best-wishes-react-20190303145652-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::321715489563:role/best-wishes-react-20190303145652-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "best-wishes-react-20190303145652-deployment",
+            "UnauthRoleName": "best-wishes-react-20190303145652-unauthRole",
+            "StackName": "best-wishes-react-20190303145652",
+            "StackId": "arn:aws:cloudformation:eu-west-1:321715489563:stack/best-wishes-react-20190303145652/30fc7c30-3dbc-11e9-bc4f-0a25aff68e4e"
+        },
+        "categories": {
+            "auth": {
+                "BestWishesAuth": {}
+            }
+        }
     }
 }

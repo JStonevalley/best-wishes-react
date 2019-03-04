@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core'
 import { Route } from 'react-router-dom'
-import { signIn, signUp, confirmSignUp, isLoggedIn } from './actions'
+import { signIn, signUp, confirmSignUp, isSignedIn } from './actions'
 
 const styles = {
   wrapper: {
@@ -149,7 +149,7 @@ export const ConfirmSignUp = () => (
 )
 
 const checkSignInStatus = async ({ dispatch, history }) => {
-  if (!(await dispatch(isLoggedIn()))) return history.push('/sign-in')
+  if (!(await dispatch(isSignedIn()))) return history.push('/sign-in')
 }
 
 const SignInStatusChecker = connect()(({ history, dispatch }) => {

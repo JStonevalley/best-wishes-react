@@ -51,7 +51,7 @@ export const confirmSignUp = ({ email, code }) => {
   }
 }
 
-export const isLoggedIn = () => {
+export const isSignedIn = () => {
   return async dispatch => {
     try {
       dispatch({

@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core'
 import { Route } from 'react-router-dom'
-import { signIn, signUp } from './actions'
+import { signIn, signUp, confirmSignUp, isLoggedIn } from './actions'
 
 const styles = {
   wrapper: {
@@ -30,7 +30,7 @@ const styles = {
 const SignInUpForm = compose(
   connect(),
   withStyles(styles)
-)(({ classes, onSubmit, validate, heading, buttonText, dispatch }) => {
+)(({ classes, onSubmit, validate, heading, buttonText, dispatch, history }) => {
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.paper}>
@@ -38,7 +38,10 @@ const SignInUpForm = compose(
           {heading}
         </Typography>
         <Form
-          onSubmit={values => dispatch(onSubmit(values))}
+          onSubmit={async values => {
+            const redirectPath = await dispatch(onSubmit(values))
+            history.push(redirectPath)
+          }}
           validate={validate}
           render={({ handleSubmit }) => {
             return (
@@ -82,7 +85,7 @@ export const SignIn = () => (
   />
 )
 
-export const SignUp = props => (
+export const SignUp = () => (
   <Route
     path='/sign-up'
     render={props => (
@@ -95,3 +98,67 @@ export const SignUp = props => (
     )}
   />
 )
+
+const ConfirmSignUpForm = compose(
+  connect(),
+  withStyles(styles)
+)(({ classes, dispatch, history }) => {
+  return (
+    <div className={classes.wrapper}>
+      <Paper className={classes.paper}>
+        <Typography variant='h5' component='h2'>
+          Confirm email
+        </Typography>
+        <Form
+          onSubmit={async values => {
+            const redirectPath = await dispatch(confirmSignUp(values))
+            history.push(redirectPath)
+          }}
+          render={({ handleSubmit }) => {
+            return (
+              <form onSubmit={handleSubmit} className={classes.flexColumn}>
+                <Field
+                  label='Email'
+                  name='email'
+                  validate={email}
+                  component={RegularTextField}
+                />
+                <Field
+                  label='Code'
+                  name='code'
+                  validate={required}
+                  component={RegularTextField}
+                />
+                <Button variant='text' color='primary' type='submit'>
+                  Confirm
+                </Button>
+              </form>
+            )
+          }}
+        />
+      </Paper>
+    </div>
+  )
+})
+
+export const ConfirmSignUp = () => (
+  <Route
+    path='/confirm-sign-up'
+    render={props => <ConfirmSignUpForm {...props} />}
+  />
+)
+
+const checkSignInStatus = async ({ dispatch, history }) => {
+  if (!(await dispatch(isLoggedIn()))) return history.push('/sign-in')
+}
+
+const SignInStatusChecker = connect()(({ history, dispatch }) => {
+  useEffect(() => {
+    checkSignInStatus({ history, dispatch })
+  }, [])
+  return null
+})
+
+export const SignInStatus = () => {
+  return <Route path='/' component={SignInStatusChecker} />
+}

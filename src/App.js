@@ -6,10 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import { WishList } from './workshop/components/WishList'
 import { WishLists } from './workshop/components/WishLists'
-import { signIn } from './shared/actions'
-import { connect } from 'react-redux'
-import { compose, lifecycle, branch, renderNothing } from 'recompose'
-import { SignIn, SignUp } from './user/SignInUp'
+import { SignIn, SignUp, ConfirmSignUp, SignInStatus } from './user/SignInUp'
 
 const MainAppBar = () => {
   return (
@@ -49,16 +46,10 @@ const App = () => {
       <Route path='/workshop/wish-list/:wishListId' component={WishList} />
       <SignIn />
       <SignUp />
+      <ConfirmSignUp />
+      <SignInStatus />
     </MainWrapper>
   )
 }
 
-export default compose(
-  connect(state => ({ user: state.shared.user })),
-  lifecycle({
-    componentDidMount () {
-      this.props.dispatch(signIn({ email: 'jonas.stendahl@outlook.com' }))
-    }
-  }),
-  branch(({ user }) => !user, renderNothing)
-)(App)
+export default App

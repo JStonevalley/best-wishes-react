@@ -1,15 +1,18 @@
 import { fromJS } from 'immutable'
 import * as queryString from 'qs'
-import { bwFetch } from '../shared/rest'
+import { bwFetch } from '../shared/actions'
 
 const GET_PERSONAL_WISH_LISTS_LOADING = 'GET_PERSONAL_WISH_LISTS_LOADING'
 export const GET_PERSONAL_WISH_LISTS_SUCCESS = 'GET_PERSONAL_WISH_LISTS_SUCCESS'
 
 export const getPersonalWishLists = () => {
-  return async (dispatch, getState) => {
+  return async dispatch => {
     dispatch({ type: GET_PERSONAL_WISH_LISTS_LOADING })
     const { wishes, wishLists, shares } = await bwFetch(
-      `wish-list?${queryString.stringify({ email: getState().shared.user.get('email'), withWishes: true, withShares: true })}`
+      `private/wish-list?${queryString.stringify({
+        withWishes: true,
+        withShares: true
+      })}`
     )
 
     dispatch({
@@ -26,16 +29,13 @@ export const CREATE_WISH_LIST = 'CREATE_WISH_LIST'
 export const createWishList = ({ title }) => {
   return async (dispatch, getState) => {
     try {
-      const savedWishList = await bwFetch(
-        'wish-list',
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            title,
-            owner: getState().shared.user.get('email')
-          })
-        }
-      )
+      const savedWishList = await bwFetch('wish-list', {
+        method: 'POST',
+        body: JSON.stringify({
+          title,
+          owner: getState().shared.user.get('email')
+        })
+      })
       dispatch({ type: CREATE_WISH_LIST, wishList: fromJS(savedWishList) })
       return savedWishList
     } catch (error) {
@@ -46,15 +46,12 @@ export const createWishList = ({ title }) => {
 
 export const WISH_DELETED = 'WISH_DELETED'
 
-export const deleteWish = (id) => {
-  return async (dispatch) => {
+export const deleteWish = id => {
+  return async dispatch => {
     try {
-      await bwFetch(
-        `wish/${id}`,
-        {
-          method: 'DELETE'
-        }
-      )
+      await bwFetch(`wish/${id}`, {
+        method: 'DELETE'
+      })
       dispatch({ type: WISH_DELETED, id })
     } catch (error) {
       console.error(error)
@@ -65,16 +62,13 @@ export const deleteWish = (id) => {
 export const WISH_SAVED = 'WISH_SAVED'
 export const ADD_NEW_WISH = 'ADD_NEW_WISH'
 
-export const saveWish = (wish) => {
-  return async (dispatch) => {
+export const saveWish = wish => {
+  return async dispatch => {
     try {
-      const savedWish = await bwFetch(
-        'wish',
-        {
-          method: 'PUT',
-          body: JSON.stringify(wish)
-        }
-      )
+      const savedWish = await bwFetch('wish', {
+        method: 'PUT',
+        body: JSON.stringify(wish)
+      })
       dispatch({ type: WISH_SAVED, wish: fromJS(savedWish) })
     } catch (error) {
       console.error(error)
@@ -85,14 +79,11 @@ export const saveWish = (wish) => {
 export const WISH_LIST_SHARED = 'WISH_LIST_SHARED'
 
 export const shareWishList = ({ id, sharedTo }) => {
-  return async (dispatch) => {
-    const shares = await bwFetch(
-      `wish-list/share/${id}`,
-      {
-        method: 'PUT',
-        body: JSON.stringify({ sharedTo })
-      }
-    )
+  return async dispatch => {
+    const shares = await bwFetch(`wish-list/share/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ sharedTo })
+    })
     dispatch({ type: WISH_LIST_SHARED, shares: fromJS(shares) })
   }
 }

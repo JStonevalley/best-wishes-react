@@ -29,11 +29,10 @@ export const CREATE_WISH_LIST = 'CREATE_WISH_LIST'
 export const createWishList = ({ title }) => {
   return async (dispatch, getState) => {
     try {
-      const savedWishList = await bwFetch('wish-list', {
+      const savedWishList = await bwFetch('private/wish-list', {
         method: 'POST',
         body: JSON.stringify({
-          title,
-          owner: getState().shared.user.get('email')
+          title
         })
       })
       dispatch({ type: CREATE_WISH_LIST, wishList: fromJS(savedWishList) })
@@ -49,7 +48,7 @@ export const WISH_DELETED = 'WISH_DELETED'
 export const deleteWish = id => {
   return async dispatch => {
     try {
-      await bwFetch(`wish/${id}`, {
+      await bwFetch(`private/wish/${id}`, {
         method: 'DELETE'
       })
       dispatch({ type: WISH_DELETED, id })
@@ -65,7 +64,7 @@ export const ADD_NEW_WISH = 'ADD_NEW_WISH'
 export const saveWish = wish => {
   return async dispatch => {
     try {
-      const savedWish = await bwFetch('wish', {
+      const savedWish = await bwFetch('private/wish', {
         method: 'PUT',
         body: JSON.stringify(wish)
       })
@@ -80,7 +79,7 @@ export const WISH_LIST_SHARED = 'WISH_LIST_SHARED'
 
 export const shareWishList = ({ id, sharedTo }) => {
   return async dispatch => {
-    const shares = await bwFetch(`wish-list/share/${id}`, {
+    const shares = await bwFetch(`private/wish-list/share/${id}`, {
       method: 'PUT',
       body: JSON.stringify({ sharedTo })
     })

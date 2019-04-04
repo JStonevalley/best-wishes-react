@@ -8,6 +8,9 @@ import Typography from '@material-ui/core/Typography'
 import { SharedWish } from '../../workshop/components/Wish'
 
 const style = {
+  base: {
+    padding: '1rem 0'
+  },
   wishPaper: {
     margin: '1rem'
   }
@@ -55,9 +58,13 @@ export const SharedWishList = compose(
     )
     if (!shares) return null
     return (
-      <div>
-        <Typography variant='h1'>{wishList.get('title')}</Typography>
-        <Typography variant='subtitle1'>{wishList.get('owner')}</Typography>
+      <div className={classes.base}>
+        <Typography align='center' variant='h4' component='h1'>
+          {wishList.get('title')}
+        </Typography>
+        <Typography align='center' variant='subtitle1'>
+          {wishList.get('owner')}
+        </Typography>
         {wishes
           .map(wish => (
             <Paper className={classes.wishPaper} key={wish.get('id')}>

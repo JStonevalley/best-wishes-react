@@ -160,5 +160,5 @@ const SignInStatusChecker = connect()(({ history, dispatch }) => {
 })
 
 export const SignInStatus = () => {
-  return <Route path='/' component={SignInStatusChecker} />
+  return <Route path='/workshop' component={SignInStatusChecker} />
 }

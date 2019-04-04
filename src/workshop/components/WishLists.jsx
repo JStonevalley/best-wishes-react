@@ -19,7 +19,7 @@ import { getPersonalWishLists, createWishList } from '../actions'
 import { required } from '../../shared/FormValidators'
 
 export const WishLists = compose(
-  connect((state) => ({
+  connect(state => ({
     wishLists: state.workshop.lists
   })),
   lifecycle({
@@ -28,54 +28,62 @@ export const WishLists = compose(
     }
   })
 )(({ dispatch, wishLists, history, style }) => {
-  const navigateToWishList = (wishListId) => history.push(`/workshop/wish-list/${wishListId}`)
-  return <Card style={{ margin: '1rem', ...style }}>
-    <CardContent>
-      <Typography
-        variant='headline'
-        component='h2'
-      >
-        My Wish Lists
-      </Typography>
-      <List>
-        {wishLists.map((wishList, key) => <ListItem
-          key={key}
-          button
-          onClick={() => navigateToWishList(key)}
-        >
-          <ListItemIcon>
-            <ReceiptIcon />
-          </ListItemIcon>
-          <ListItemText primary={wishList.get('title')} />
-          <ListItemSecondaryAction>
-            <ShareWishList wishList={wishList} />
-          </ListItemSecondaryAction>
-        </ListItem>).toList()}
-        <NewWishListForm onWishListCreated={navigateToWishList} />
-      </List>
-    </CardContent>
-  </Card>
+  const navigateToWishList = wishListId =>
+    history.push(`/workshop/wish-list/${wishListId}`)
+  return (
+    <Card style={{ margin: '1rem', ...style }}>
+      <CardContent>
+        <Typography variant='headline' component='h2'>
+          My Wish Lists
+        </Typography>
+        <List>
+          {wishLists
+            .map((wishList, key) => (
+              <ListItem
+                key={key}
+                button
+                onClick={() => navigateToWishList(key)}
+              >
+                <ListItemIcon>
+                  <ReceiptIcon />
+                </ListItemIcon>
+                <ListItemText primary={wishList.get('title')} />
+                <ListItemSecondaryAction>
+                  <ShareWishList wishList={wishList} />
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))
+            .toList()}
+          <NewWishListForm onWishListCreated={navigateToWishList} />
+        </List>
+      </CardContent>
+    </Card>
+  )
 })
 
 const NewWishListForm = connect()(({ dispatch, onWishListCreated }) => {
-  return <Form
-    onSubmit={(data) => dispatch(createWishList(data)).then(({ id }) => onWishListCreated(id))}
-    render={({ handleSubmit }) => {
-      return <ListItem>
-        <Field
-          name='title'
-          component={RegularTextField}
-          label='Title'
-          validate={required}
-        />
-        <ListItemSecondaryAction>
-          <IconButton
-            onClick={handleSubmit}
-          >
-            <AddIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
-    }}
-  />
+  return (
+    <Form
+      onSubmit={data =>
+        dispatch(createWishList(data)).then(({ id }) => onWishListCreated(id))
+      }
+      render={({ handleSubmit }) => {
+        return (
+          <ListItem>
+            <Field
+              name='title'
+              component={RegularTextField}
+              label='Title'
+              validate={required}
+            />
+            <ListItemSecondaryAction>
+              <IconButton onClick={handleSubmit}>
+                <AddIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        )
+      }}
+    />
+  )
 })

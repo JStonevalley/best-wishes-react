@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import { WishList } from './workshop/components/WishList'
 import { WishLists } from './workshop/components/WishLists'
+import { SharedWishList } from './shares/components/SharedWishList'
 import { SignIn, SignUp, ConfirmSignUp, SignInStatus } from './user/SignInUp'
 
 const MainAppBar = () => {
@@ -44,6 +45,7 @@ const App = () => {
     <MainWrapper>
       <Route path='/workshop' component={WishLists} />
       <Route path='/workshop/wish-list/:wishListId' component={WishList} />
+      <Route path='/shares/wish-list/:shareId' component={SharedWishList} />
       <SignIn />
       <SignUp />
       <ConfirmSignUp />

@@ -27,7 +27,7 @@ export const getPersonalWishLists = () => {
 export const CREATE_WISH_LIST = 'CREATE_WISH_LIST'
 
 export const createWishList = ({ title }) => {
-  return async (dispatch, getState) => {
+  return async dispatch => {
     try {
       const savedWishList = await bwFetch('private/wish-list', {
         method: 'POST',

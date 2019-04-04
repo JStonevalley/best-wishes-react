@@ -4,10 +4,11 @@ import { errorHandler } from './errors'
 
 export const bwFetch = async (path, { headers = {}, ...options } = {}) => {
   options = options || {}
-  const currentSession = await Auth.currentSession()
   if (options.body) headers['Content-Type'] = 'application/json'
-  if (path.startsWith('private') && currentSession) {
-    headers.Authorization = `Bearer ${currentSession.idToken.jwtToken}`
+  if (path.startsWith('private')) {
+    headers.Authorization = `Bearer ${
+      (await Auth.currentSession()).idToken.jwtToken
+    }`
   }
   const response = await fetch(`http://localhost:3001/${path}`, {
     method: 'GET',

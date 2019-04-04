@@ -21,19 +21,13 @@ const styles = theme => ({
   },
   frame: {
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     flexGrow: 1,
     padding: '2vw'
   },
-  column: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  rightAlign: {
-    alignItems: 'flex-end'
-  },
-  spaceBetween: {
-    justifyContent: 'space-between'
+  toolBar: {
+    alignSelf: 'flex-end',
+    display: 'flex'
   },
   image: {
     width: '100%',
@@ -67,8 +61,7 @@ export const Wish = connect()(
           </div>
           <WishBody wish={wish} />
         </div>
-        <div className={classNames(classes.column, classes.rightAlign)}>
-          {wish.get('link') && <LinkIconButton href={wish.get('link')} />}
+        <div className={classes.toolBar}>
           <IconButton
             onClick={() => dispatch(deleteWish(wish.get('id')))}
             color='secondary'
@@ -80,6 +73,10 @@ export const Wish = connect()(
               <EditIcon />
             </IconButton>
           </Link>
+          <LinkIconButton
+            href={wish.get('link')}
+            disabled={!wish.get('link')}
+          />
         </div>
       </div>
     )
@@ -108,14 +105,7 @@ export const SharedWish = connect()(
           </div>
           <WishBody wish={wish} />
         </div>
-        <div
-          className={classNames(
-            classes.column,
-            classes.rightAlign,
-            classes.spaceBetween
-          )}
-        >
-          {wish.get('link') && <LinkIconButton href={wish.get('link')} />}
+        <div className={classes.toolBar}>
           <FormControlLabel
             control={
               <Switch
@@ -143,6 +133,10 @@ export const SharedWish = connect()(
                 ? `Bought by ${grantedByOtherUser.get('sharedTo')}`
                 : 'Bought by you'
             }
+          />
+          <LinkIconButton
+            href={wish.get('link')}
+            disabled={!wish.get('link')}
           />
         </div>
       </div>

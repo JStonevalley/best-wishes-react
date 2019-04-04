@@ -1,19 +1,21 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { withStyles } from '@material-ui/core'
 import { fetchWishListShare } from '../actions'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import { SharedWish } from '../../workshop/components/Wish'
 
-export const SharedWishList = connect(
-  (
-    state,
-    {
-      match: {
-        params: { shareId }
-      }
-    }
-  ) => {
+const style = {
+  wishPaper: {
+    margin: '1rem'
+  }
+}
+
+export const SharedWishList = compose(
+  withStyles(style),
+  connect((state, { match: { params: { shareId } } }) => {
     const share = state.workshop.shares.get(shareId)
     const wishList = share
       ? state.workshop.lists.get(share.get('wishList'))
@@ -33,32 +35,43 @@ export const SharedWishList = connect(
       wishes,
       shares
     }
+  })
+)(
+  ({
+    classes,
+    dispatch,
+    wishList,
+    wishes,
+    shares,
+    match: {
+      params: { shareId }
+    }
+  }) => {
+    useEffect(
+      () => {
+        dispatch(fetchWishListShare(shareId))
+      },
+      [shareId]
+    )
+    if (!shares) return null
+    return (
+      <div>
+        <Typography variant='h1'>{wishList.get('title')}</Typography>
+        <Typography variant='subtitle1'>{wishList.get('owner')}</Typography>
+        {wishes
+          .map(wish => (
+            <Paper className={classes.wishPaper} key={wish.get('id')}>
+              <SharedWish
+                wish={wish}
+                shares={shares.filter(share =>
+                  share.get('grantedWishes').includes(wish.get('id'))
+                )}
+                activeShare={shares.find(share => share.get('id') === shareId)}
+              />
+            </Paper>
+          ))
+          .toArray()}
+      </div>
+    )
   }
-)(({ dispatch, wishList, wishes, shares, match: { params: { shareId } } }) => {
-  useEffect(
-    () => {
-      dispatch(fetchWishListShare(shareId))
-    },
-    [shareId]
-  )
-  if (!shares) return null
-  return (
-    <div>
-      <Typography variant='h1'>{wishList.get('title')}</Typography>
-      <Typography variant='subtitle1'>{wishList.get('owner')}</Typography>
-      {wishes
-        .map(wish => (
-          <Paper key={wish.get('id')}>
-            <SharedWish
-              wish={wish}
-              shares={shares.filter(share =>
-                share.get('grantedWishes').includes(wish.get('id'))
-              )}
-              activeShare={shares.find(share => share.get('id') === shareId)}
-            />
-          </Paper>
-        ))
-        .toArray()}
-    </div>
-  )
-})
+)

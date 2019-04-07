@@ -27,12 +27,20 @@ export const signUp = ({ email, password }) => {
         password,
         attributes: { email }
       })
-      return '/confirm-sign-up'
+      return {
+        pathname: '/confirm-sign-up',
+        state: { email }
+      }
     } catch (error) {
       console.error(error)
     }
   }
 }
+
+export const resendSignUp = email =>
+  Auth.resendSignUp(email)
+    .then(console.log)
+    .catch(console.error)
 
 export const SIGN_UP = 'SIGN_UP'
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { withStyles } from '@material-ui/core'
 import { fetchWishListShare } from '../actions'
-import Paper from '@material-ui/core/Paper'
+import { Paper } from '../../shared/ui'
 import Typography from '@material-ui/core/Typography'
 import { SharedWish } from '../../workshop/components/Wish'
 

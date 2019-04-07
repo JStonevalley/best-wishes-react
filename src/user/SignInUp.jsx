@@ -5,11 +5,17 @@ import { compose } from 'redux'
 import { RegularTextField } from '../shared/FormFields'
 import { required, email } from '../shared/FormValidators'
 import Button from '@material-ui/core/Button'
-import Paper from '@material-ui/core/Paper'
+import { Paper } from '../shared/ui'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core'
 import { Route } from 'react-router-dom'
-import { signIn, signUp, confirmSignUp, isSignedIn } from './actions'
+import {
+  signIn,
+  signUp,
+  confirmSignUp,
+  isSignedIn,
+  resendSignUp
+} from './actions'
 
 const styles = {
   wrapper: {
@@ -102,7 +108,7 @@ export const SignUp = () => (
 const ConfirmSignUpForm = compose(
   connect(),
   withStyles(styles)
-)(({ classes, dispatch, history }) => {
+)(({ classes, dispatch, history, location: { state } }) => {
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.paper}>
@@ -114,7 +120,8 @@ const ConfirmSignUpForm = compose(
             const redirectPath = await dispatch(confirmSignUp(values))
             history.push(redirectPath)
           }}
-          render={({ handleSubmit }) => {
+          initialValues={state}
+          render={({ handleSubmit, values }) => {
             return (
               <form onSubmit={handleSubmit} className={classes.flexColumn}>
                 <Field
@@ -131,6 +138,14 @@ const ConfirmSignUpForm = compose(
                 />
                 <Button variant='text' color='primary' type='submit'>
                   Confirm
+                </Button>
+                <Button
+                  onClick={() => resendSignUp(values.email)}
+                  variant='text'
+                  color='secondary'
+                  type='button'
+                >
+                  Resend confirmation email
                 </Button>
               </form>
             )

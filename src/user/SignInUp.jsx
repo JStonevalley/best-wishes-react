@@ -115,6 +115,10 @@ const ConfirmSignUpForm = compose(
         <Typography variant='h5' component='h2'>
           Confirm email
         </Typography>
+        <Typography variant='body1'>
+          A confirmation email has been sent to: {state && state.email} Please
+          check your inbox for the verification code and enter it below.
+        </Typography>
         <Form
           onSubmit={async values => {
             const redirectPath = await dispatch(confirmSignUp(values))

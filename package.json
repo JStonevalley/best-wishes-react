@@ -36,7 +36,8 @@
   },
   "standard": {
     "ignore": [
-      "node_modules"
+      "node_modules",
+      "src/aws-exports.js"
     ]
   }
 }

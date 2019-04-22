@@ -10,7 +10,7 @@ export const bwFetch = async (path, { headers = {}, ...options } = {}) => {
       (await Auth.currentSession()).idToken.jwtToken
     }`
   }
-  const response = await fetch(`http://localhost:3001/${path}`, {
+  const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/${path}`, {
     method: 'GET',
     headers,
     ...options

@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable'
+import { fromJS, List } from 'immutable'
 import * as queryString from 'qs'
 import { bwFetch } from '../shared/actions'
 
@@ -79,10 +79,17 @@ export const WISH_LIST_SHARED = 'WISH_LIST_SHARED'
 
 export const shareWishList = ({ id, sharedTo }) => {
   return async dispatch => {
-    const shares = await bwFetch(`private/wish-list/share/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify({ sharedTo })
+    const { shares, removedShares } = await bwFetch(
+      `private/wish-list/share/${id}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ sharedTo })
+      }
+    )
+    dispatch({
+      type: WISH_LIST_SHARED,
+      shares: fromJS(shares),
+      removedShares: List(removedShares)
     })
-    dispatch({ type: WISH_LIST_SHARED, shares: fromJS(shares) })
   }
 }

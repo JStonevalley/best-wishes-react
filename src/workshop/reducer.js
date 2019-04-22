@@ -58,12 +58,9 @@ const sharesById = shares =>
 const shares = (state = Map(), action) => {
   switch (action.type) {
     case WISH_LIST_SHARED: {
-      if (!action.shares.isEmpty()) {
-        state = state.filter(
-          share =>
-            share.get('wishList') !== action.shares.first().get('wishList')
-        )
-      }
+      state = state.filter(
+        share => !action.removedShares.includes(share.get('id'))
+      )
       return state.merge(sharesById(action.shares))
     }
     case GET_PERSONAL_WISH_LISTS_SUCCESS:

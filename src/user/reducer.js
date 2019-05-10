@@ -1,17 +1,27 @@
 import { combineReducers } from 'redux'
 import { SIGN_IN, SIGN_UP } from './actions'
-import { Map } from 'immutable'
 
-const cognito = (state = Map(), { type, user }) => {
+const cognito = (state = null, { type, user }) => {
   switch (type) {
     case SIGN_IN:
     case SIGN_UP:
-      return user
+      return user || state
+    default:
+      return state
+  }
+}
+
+const signInTried = (state = false, { type, user }) => {
+  switch (type) {
+    case SIGN_IN:
+    case SIGN_UP:
+      return true
     default:
       return state
   }
 }
 
 export default combineReducers({
-  cognito
+  cognito,
+  signInTried
 })

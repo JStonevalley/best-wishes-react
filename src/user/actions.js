@@ -7,32 +7,28 @@ export const SIGN_IN = 'SIGN_IN'
 
 export const signIn = ({ email, password }) => {
   return async dispatch => {
-    try {
-      dispatch({
-        type: SIGN_IN,
-        user: fromJS(await Auth.signIn(email, password))
-      })
-      return '/workshop'
-    } catch (error) {
-      console.error(error)
-    }
+    dispatch({
+      type: SIGN_IN,
+      user: fromJS(await Auth.signIn(email, password))
+    })
+    lastSignupDetails = null
+    return '/workshop'
   }
 }
 
+let lastSignupDetails
+
 export const signUp = ({ email, password }) => {
   return async dispatch => {
-    try {
-      await Auth.signUp({
-        username: email,
-        password,
-        attributes: { email }
-      })
-      return {
-        pathname: '/confirm-sign-up',
-        state: { email }
-      }
-    } catch (error) {
-      console.error(error)
+    await Auth.signUp({
+      username: email,
+      password,
+      attributes: { email }
+    })
+    lastSignupDetails = { email, password }
+    return {
+      pathname: '/confirm-sign-up',
+      state: { email }
     }
   }
 }
@@ -46,15 +42,11 @@ export const SIGN_UP = 'SIGN_UP'
 
 export const confirmSignUp = ({ email, code }) => {
   return async dispatch => {
-    try {
-      await Auth.confirmSignUp(email, code)
-      dispatch({
-        type: SIGN_UP,
-        user: fromJS(await Auth.currentAuthenticatedUser())
-      })
-      return '/workshop'
-    } catch (error) {
-      console.error(error)
+    await Auth.confirmSignUp(email, code)
+    if (lastSignupDetails) {
+      return dispatch(signIn(lastSignupDetails))
+    } else {
+      return '/sign-in'
     }
   }
 }
@@ -69,7 +61,15 @@ export const isSignedIn = () => {
       return true
     } catch (error) {
       console.error(error)
+      dispatch({
+        type: SIGN_IN
+      })
       return false
     }
   }
+}
+
+export const signOut = async () => {
+  await Auth.signOut()
+  window.location.replace(window.location.origin)
 }

@@ -1,19 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { compose, branch, renderNothing } from 'recompose'
+import { compose } from 'recompose'
 import { Route, Switch, Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import { Map, fromJS } from 'immutable'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
+import { PageHeading, Paper } from '../../shared/ui'
 import Button from '@material-ui/core/Button'
-import { ADD_NEW_WISH } from '../actions'
+import { ADD_NEW_WISH, getPersonalWishLists } from '../actions'
 import { Wish } from './Wish'
 import { WishForm } from './WishForm'
 
-const styles = (theme) => ({
+const styles = theme => ({
   wishLine: {
     display: 'flex',
     alignItems: 'center'
@@ -33,9 +30,8 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'column'
   },
-  divider: {
-    width: '80%',
-    alignSelf: 'center'
+  wishPaper: {
+    margin: '1rem'
   },
   newWishButton: {
     textDecoration: 'none',
@@ -45,64 +41,85 @@ const styles = (theme) => ({
 
 export const WishList = compose(
   withStyles(styles),
-  connect(
-    (state, { match: { params: { wishListId } } }) => {
-      const activeWishList = state.workshop.lists.get(wishListId)
-      return {
-        wishList: activeWishList,
-        wishes: activeWishList ? state.workshop.wishes.filter((wish) => wish.get('wishList') === activeWishList.get('id')) : Map()
-      }
+  connect((state, { match: { params: { wishListId } } }) => {
+    const activeWishList = state.workshop.lists.get(wishListId)
+    return {
+      wishList: activeWishList,
+      wishes: activeWishList
+        ? state.workshop.wishes.filter(
+          wish => wish.get('wishList') === activeWishList.get('id')
+        )
+        : Map()
     }
-  ),
-  branch(
-    ({ wishList }) => !wishList,
-    renderNothing
-  )
-)(({ wishList, wishes, classes, style, dispatch, match: { path, url } }) => {
-  const newWishExists = wishes.find((wish) => !wish.get('id'))
-  return <Card style={{ margin: '1rem', ...style }}>
-    <CardContent>
-      <Typography
-        variant='h5'
-        component='h2'
-      >
-        {wishList.get('title')}
-      </Typography>
-      <div className={classes.list}>
-        {wishes.map((wish, index) => <React.Fragment key={wish.get('id') || 'newWish'}>
-          <Switch>
-            <Route
-              path={`${path}/${wish.get('id')}`}
-              render={(props) => <WishForm
-                wishListId={wishList.get('id')}
-                wish={wish}
-                {...props}
-              />}
-            />
-            <Route
-              path={path}
-              render={(props) => <Wish
-                wish={wish}
-                {...props}
-              />}
-            />
-          </Switch>
-          {index < wishes.length - 1 && <Divider className={classes.divider} />}
-        </React.Fragment>).toArray()}
-        {!newWishExists && <Link
-          to={`${url}/null`}
-          className={classes.newWishButton}
-        >
-          <Button
-            color='primary'
-            onClick={() => {
-              dispatch({ type: ADD_NEW_WISH, wish: fromJS({ id: null, wishList: wishList.get('id') }) })
-            }}
-          >
-            Make a new wish
-          </Button>
-        </Link>}
+  })
+)(
+  ({
+    wishList,
+    wishes,
+    classes,
+    dispatch,
+    match: {
+      path,
+      url,
+      params: { wishListId }
+    }
+  }) => {
+    useEffect(
+      () => {
+        dispatch(getPersonalWishLists())
+      },
+      [wishListId]
+    )
+    if (!wishList) return null
+    const newWishExists = wishes.find(wish => !wish.get('id'))
+    return (
+      <div>
+        <div>
+          <PageHeading heading={wishList.get('title')} />
+          <div className={classes.list}>
+            {wishes
+              .map(wish => (
+                <Paper
+                  className={classes.wishPaper}
+                  key={wish.get('id') || 'newWish'}
+                >
+                  <Switch>
+                    <Route
+                      path={`${path}/${wish.get('id')}`}
+                      render={props => (
+                        <WishForm
+                          wishListId={wishList.get('id')}
+                          wish={wish}
+                          {...props}
+                        />
+                      )}
+                    />
+                    <Route
+                      path={path}
+                      render={props => <Wish wish={wish} {...props} />}
+                    />
+                  </Switch>
+                </Paper>
+              ))
+              .toArray()}
+            {!newWishExists && (
+              <Link to={`${url}/null`} className={classes.newWishButton}>
+                <Button
+                  color='primary'
+                  onClick={() => {
+                    dispatch({
+                      type: ADD_NEW_WISH,
+                      wish: fromJS({ id: null, wishList: wishList.get('id') })
+                    })
+                  }}
+                >
+                  Make a new wish
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
-    </CardContent>
-  </Card>
-})
+    )
+  }
+)

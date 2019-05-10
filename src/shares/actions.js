@@ -28,7 +28,6 @@ export const fetchWishListShare = id => {
 export const GRANT_WISH = 'GRANT_WISH'
 
 export const grantWish = ({ wishId, shareId }) => {
-  console.log({ wishId, shareId })
   return async dispatch => {
     try {
       const share = await bwFetch(`share/wish/grant`, {

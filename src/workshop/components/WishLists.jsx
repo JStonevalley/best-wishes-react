@@ -1,41 +1,48 @@
-import React from 'react'
-import { compose, lifecycle } from 'recompose'
-import { connect } from 'react-redux'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import IconButton from '@material-ui/core/IconButton'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import AddIcon from '@material-ui/icons/Add'
-import Typography from '@material-ui/core/Typography'
-import { Form, Field } from 'react-final-form'
+import { Field } from 'react-final-form'
+import { PageHeading, ActionFormDialog } from '../../shared/ui'
+import { withStyles } from '@material-ui/core/styles'
 import { ShareWishList } from './ShareWishList.jsx'
 import { RegularTextField } from '../../shared/FormFields'
 import { getPersonalWishLists, createWishList } from '../actions'
 import { required } from '../../shared/FormValidators'
 
-export const WishLists = compose(
-  connect(state => ({
-    wishLists: state.workshop.lists
-  })),
-  lifecycle({
-    componentDidMount () {
-      this.props.dispatch(getPersonalWishLists())
-    }
-  })
-)(({ dispatch, wishLists, history, style }) => {
+const styles = {
+  wrapper: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  base: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    maxWidth: '40rem'
+  },
+  flexGrow: {
+    flexGrow: 1
+  }
+}
+
+export const WishLists = withStyles(styles)(({ history, classes }) => {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getPersonalWishLists())
+  }, [])
+  const wishLists = useSelector(state => state.workshop.lists)
   const navigateToWishList = wishListId =>
     history.push(`/workshop/wish-list/${wishListId}`)
   return (
-    <Card style={{ margin: '1rem', ...style }}>
-      <CardContent>
-        <Typography variant='headline' component='h2'>
-          My Wish Lists
-        </Typography>
+    <div className={classes.wrapper}>
+      <div className={classes.base}>
+        <PageHeading heading='My wish lists' />
         <List>
           {wishLists
             .map((wishList, key) => (
@@ -54,36 +61,29 @@ export const WishLists = compose(
               </ListItem>
             ))
             .toList()}
-          <NewWishListForm onWishListCreated={navigateToWishList} />
         </List>
-      </CardContent>
-    </Card>
-  )
-})
-
-const NewWishListForm = connect()(({ dispatch, onWishListCreated }) => {
-  return (
-    <Form
-      onSubmit={data =>
-        dispatch(createWishList(data)).then(({ id }) => onWishListCreated(id))
-      }
-      render={({ handleSubmit }) => {
-        return (
-          <ListItem>
-            <Field
-              name='title'
-              component={RegularTextField}
-              label='Title'
-              validate={required}
-            />
-            <ListItemSecondaryAction>
-              <IconButton onClick={handleSubmit}>
-                <AddIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        )
-      }}
-    />
+        <ActionFormDialog
+          color='primary'
+          title='Create new wishlist'
+          submitButtonText='Create'
+          actionButtonIcon={AddIcon}
+          actionButtonText='New wishlist'
+          onSubmit={async data => {
+            const { id } = await dispatch(createWishList(data))
+            navigateToWishList(id)
+          }}
+        >
+          <Field
+            name='title'
+            component={RegularTextField}
+            label='Title'
+            validate={required}
+            margin='none'
+            variant='outlined'
+            className={classes.flexGrow}
+          />
+        </ActionFormDialog>
+      </div>
+    </div>
   )
 })

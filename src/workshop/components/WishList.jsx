@@ -19,7 +19,7 @@ const styles = theme => ({
     flexGrow: 1
   },
   standardSpace: {
-    margin: theme.spacing.unit
+    margin: `${theme.spacing.unit}px`
   },
   form: {
     display: 'flex',
@@ -31,7 +31,8 @@ const styles = theme => ({
     flexDirection: 'column'
   },
   wishPaper: {
-    margin: '1rem'
+    margin: `${theme.spacing.unit}px`,
+    padding: `${3 * theme.spacing.unit}px`
   },
   newWishButton: {
     textDecoration: 'none',

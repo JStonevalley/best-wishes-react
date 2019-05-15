@@ -92,11 +92,11 @@ export const WishForm = compose(
           return (
             <form onSubmit={handleSubmit} className={classes.flexColumn}>
               <div className={classes.flex}>
-                <div className={classes.imageContainer}>
-                  {image && (
+                {image && (
+                  <div className={classes.imageContainer}>
                     <img src={image} className={classes.image} alt='wish' />
-                  )}
-                </div>
+                  </div>
+                )}
                 <div className={classes.outerFieldsContainer}>
                   <LinkSection
                     link={link}

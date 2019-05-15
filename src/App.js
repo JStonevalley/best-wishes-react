@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -17,6 +17,10 @@ import { Home } from './home/components/Home'
 const styles = theme => ({
   signOutButtonText: {
     color: theme.palette.primary.contrastText
+  },
+  titleLink: {
+    textDecoration: 'none',
+    color: theme.palette.primary.contrastText
   }
 })
 
@@ -25,9 +29,11 @@ const MainAppBar = withStyles(styles)(({ classes }) => {
   return (
     <AppBar position='static' color='primary'>
       <Toolbar>
-        <Typography variant='title' color='inherit'>
-          Best Wishes
-        </Typography>
+        <Link to='/' className={classes.titleLink}>
+          <Typography variant='title' color='inherit'>
+            Best Wishes
+          </Typography>
+        </Link>
         <div style={{ flexGrow: 1 }} />
         {user && (
           <Button

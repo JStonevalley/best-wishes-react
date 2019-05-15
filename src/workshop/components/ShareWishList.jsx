@@ -1,10 +1,10 @@
-import * as React from 'react'
+import React, { useState } from 'react'
 import { Form, Field } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { FieldArray } from 'react-final-form-arrays'
 import { RegularTextField } from '../../shared/FormFields'
 import { connect } from 'react-redux'
-import { compose, withState } from 'recompose'
+import { compose } from 'recompose'
 import { withStyles } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
@@ -36,78 +36,117 @@ const styles = {
   }
 }
 
+const defaultButtonElement = (
+  <IconButton color='primary'>
+    <ShareIcon />
+  </IconButton>
+)
+
 export const ShareWishList = compose(
   connect((state, { wishList }) => {
     return {
       sharedTo: state.workshop.shares
-        .filter((share) => share.get('wishList') === wishList.get('id'))
-        .map((share) => share.get('sharedTo'))
+        .filter(share => share.get('wishList') === wishList.get('id'))
+        .map(share => share.get('sharedTo'))
         .toArray()
     }
   }),
-  withState('isOpen', 'setIsOpen', false),
   withStyles(styles)
-)(({ wishList, sharedTo, isOpen, setIsOpen, dispatch, classes }) => {
-  return <React.Fragment>
-    <IconButton onClick={() => setIsOpen(true)} color='primary'>
-      <ShareIcon />
-    </IconButton>
-    <Form
-      onSubmit={async ({ sharedTo }) => {
-        try {
-          await dispatch(shareWishList({ id: wishList.get('id'), sharedTo: sharedTo.filter(Boolean) }))
-          setIsOpen(false)
-        } catch (error) {
-          return errorToFormError(error)
-        }
-      }}
-      initialValues={{ sharedTo: [...sharedTo, ''] }}
-      mutators={{
-        ...arrayMutators
-      }}
-      render={({ handleSubmit }) => {
-        return <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-          <DialogTitle>Share</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Share your wish list to friends and family. Gift givers will be able to indicate to each other what they have bought. You will not be able to see any of that and will hopefully receive beautiful gifts and no duplicates :)
-            </DialogContentText>
-            <form
-              onSubmit={handleSubmit}
-              className={classes.flexColumn}
-            >
-              <FieldArray name='sharedTo'>
-                {({ fields }) => <React.Fragment>
-                  {fields.map((name, index) => (
-                    <div key={name} className={classes.fieldRow}>
-                      <Field
-                        name={name}
-                        component={RegularTextField}
-                        label='Email'
-                        className={classes.field}
-                      />
-                      <IconButton onClick={() => fields.remove(index)} color='secondary'>
-                        <DeleteIcon />
-                      </IconButton>
-                    </div>
-                  ))}
-                  <IconButton className={classes.addFieldButton} onClick={() => fields.push('')} color='primary'>
-                    <AddIcon />
-                  </IconButton>
-                </React.Fragment>}
-              </FieldArray>
-            </form>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setIsOpen(false)} color='secondary'>
-              Cancel
-            </Button>
-            <Button onClick={handleSubmit} color='primary'>
-              Send
-            </Button>
-          </DialogActions>
-        </Dialog>
-      }}
-    />
-  </React.Fragment>
-})
+)(
+  ({
+    wishList,
+    sharedTo,
+    dispatch,
+    classes,
+    buttonElement: ButtonElement = defaultButtonElement
+  }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const { children, ...buttonProps } = ButtonElement.props
+    return (
+      <React.Fragment>
+        <ButtonElement.type
+          {...buttonProps}
+          onClick={(...args) => {
+            buttonProps.onClick && buttonProps.onClick(...args)
+            setIsOpen(true)
+          }}
+        >
+          {children}
+        </ButtonElement.type>
+        <Form
+          onSubmit={async ({ sharedTo }) => {
+            try {
+              await dispatch(
+                shareWishList({
+                  id: wishList.get('id'),
+                  sharedTo: sharedTo.filter(Boolean)
+                })
+              )
+              setIsOpen(false)
+            } catch (error) {
+              return errorToFormError(error)
+            }
+          }}
+          initialValues={{ sharedTo: [...sharedTo, ''] }}
+          mutators={{
+            ...arrayMutators
+          }}
+          render={({ handleSubmit }) => {
+            return (
+              <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+                <DialogTitle>Share</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Share your wish list to friends and family. Gift givers will
+                    be able to indicate to each other what they have bought. You
+                    will not be able to see any of that and will hopefully
+                    receive beautiful gifts and no duplicates :)
+                  </DialogContentText>
+                  <form onSubmit={handleSubmit} className={classes.flexColumn}>
+                    <FieldArray name='sharedTo'>
+                      {({ fields }) => (
+                        <React.Fragment>
+                          {fields.map((name, index) => (
+                            <div key={name} className={classes.fieldRow}>
+                              <Field
+                                name={name}
+                                component={RegularTextField}
+                                label='Email'
+                                className={classes.field}
+                              />
+                              <IconButton
+                                onClick={() => fields.remove(index)}
+                                color='secondary'
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </div>
+                          ))}
+                          <IconButton
+                            className={classes.addFieldButton}
+                            onClick={() => fields.push('')}
+                            color='primary'
+                          >
+                            <AddIcon />
+                          </IconButton>
+                        </React.Fragment>
+                      )}
+                    </FieldArray>
+                  </form>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setIsOpen(false)} color='secondary'>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSubmit} color='primary'>
+                    Send
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            )
+          }}
+        />
+      </React.Fragment>
+    )
+  }
+)

@@ -4,11 +4,14 @@ import { compose } from 'recompose'
 import { Route, Switch, Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import { Map, fromJS } from 'immutable'
+import { Fab } from '@material-ui/core'
 import { PageHeading, Paper } from '../../shared/ui'
 import Button from '@material-ui/core/Button'
+import ShareIcon from '@material-ui/icons/Share'
 import { ADD_NEW_WISH, getPersonalWishLists } from '../actions'
 import { Wish } from './Wish'
 import { WishForm } from './WishForm'
+import { ShareWishList } from './ShareWishList.jsx'
 
 const styles = theme => ({
   wishLine: {
@@ -37,6 +40,11 @@ const styles = theme => ({
   newWishButton: {
     textDecoration: 'none',
     alignSelf: 'center'
+  },
+  fabRoot: {
+    position: 'fixed',
+    right: `${3 * theme.spacing.unit}px`,
+    bottom: `${3 * theme.spacing.unit}px`
   }
 })
 
@@ -120,6 +128,18 @@ export const WishList = compose(
             )}
           </div>
         </div>
+        <ShareWishList
+          wishList={wishList}
+          buttonElement={
+            <Fab
+              classes={{ root: classes.fabRoot }}
+              variant='round'
+              color='primary'
+            >
+              <ShareIcon />
+            </Fab>
+          }
+        />
       </div>
     )
   }

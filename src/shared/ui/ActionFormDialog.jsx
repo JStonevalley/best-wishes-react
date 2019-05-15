@@ -10,7 +10,7 @@ import { Form } from 'react-final-form'
 
 const actionFormDialogStyles = theme => ({
   fabRoot: {
-    position: 'absolute',
+    position: 'fixed',
     right: `${3 * theme.spacing.unit}px`,
     bottom: `${3 * theme.spacing.unit}px`
   },

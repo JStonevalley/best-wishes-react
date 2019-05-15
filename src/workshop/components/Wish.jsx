@@ -25,12 +25,13 @@ const styles = theme => ({
     padding: '2vw'
   },
   toolBar: {
-    alignSelf: 'flex-end',
-    display: 'flex'
+    alignSelf: 'stretch',
+    display: 'flex',
+    alignItems: 'center'
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: '10vw',
+    height: '10vw',
     objectFit: 'cover',
     borderRadius: '50%'
   },
@@ -41,6 +42,9 @@ const styles = theme => ({
   },
   container: {
     display: 'flex'
+  },
+  expander: {
+    flexGrow: 1
   }
 })
 
@@ -61,6 +65,10 @@ export const Wish = connect()(
           <WishBody wish={wish} />
         </div>
         <div className={classes.toolBar}>
+          <Typography variant='h6' inline>
+            <b>Pris:</b> {wish.get('price') || 'Not specified'}
+          </Typography>
+          <div className={classes.expander} />
           <IconButton
             onClick={() => dispatch(deleteWish(wish.get('id')))}
             color='secondary'

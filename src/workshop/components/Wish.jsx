@@ -65,8 +65,8 @@ export const Wish = connect()(
           <WishBody wish={wish} />
         </div>
         <div className={classes.toolBar}>
-          <Typography variant='h6' inline>
-            <b>Pris:</b> {wish.get('price') || 'Not specified'}
+          <Typography variant='subtitle1' inline>
+            <b>Price:</b> {wish.get('price') || 'Not specified'}
           </Typography>
           <div className={classes.expander} />
           <IconButton
@@ -113,6 +113,10 @@ export const SharedWish = connect()(
           <WishBody wish={wish} />
         </div>
         <div className={classes.toolBar}>
+          <Typography variant='subtitle1' inline>
+            <b>Price:</b> {wish.get('price') || 'Not specified'}
+          </Typography>
+          <div className={classes.expander} />
           <FormControlLabel
             control={
               <Switch

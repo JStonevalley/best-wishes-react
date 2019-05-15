@@ -69,6 +69,14 @@ export const ActionFormDialog = withStyles(actionFormDialogStyles)(
                     {children}
                   </DialogContent>
                   <DialogActions>
+                    <Button
+                      type='button'
+                      color='secondary'
+                      onClick={() => setIsOpen(false)}
+                      disabled={submitting}
+                    >
+                      Close
+                    </Button>
                     <Button type='submit' color='primary' disabled={submitting}>
                       {submitButtonText}
                     </Button>

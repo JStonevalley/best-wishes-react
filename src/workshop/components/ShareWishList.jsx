@@ -10,14 +10,23 @@ import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import ShareIcon from '@material-ui/icons/Share'
 import DeleteIcon from '@material-ui/icons/Delete'
+import EmailIcon from '@material-ui/icons/Email'
 import AddIcon from '@material-ui/icons/Add'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import Tooltip from '@material-ui/core/Tooltip'
 import { shareWishList } from '../actions'
 import errorToFormError from '../../shared/errorToFormError'
+import { bwFetch } from '../../shared/actions'
+
+const resendEmail = ({ wishListId, email }) =>
+  bwFetch(`private/wish-list/share/resend/${wishListId}`, {
+    method: 'POST',
+    body: JSON.stringify({ email })
+  })
 
 const styles = {
   flexColumn: {
@@ -78,7 +87,7 @@ export const ShareWishList = compose(
             try {
               await dispatch(
                 shareWishList({
-                  id: wishList.get('id'),
+                  wishListId: wishList.get('id'),
                   sharedTo: sharedTo.filter(Boolean)
                 })
               )
@@ -104,33 +113,55 @@ export const ShareWishList = compose(
                   </DialogContentText>
                   <form onSubmit={handleSubmit} className={classes.flexColumn}>
                     <FieldArray name='sharedTo'>
-                      {({ fields }) => (
-                        <React.Fragment>
-                          {fields.map((name, index) => (
-                            <div key={name} className={classes.fieldRow}>
-                              <Field
-                                name={name}
-                                component={RegularTextField}
-                                label='Email'
-                                className={classes.field}
-                              />
-                              <IconButton
-                                onClick={() => fields.remove(index)}
-                                color='secondary'
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </div>
-                          ))}
-                          <IconButton
-                            className={classes.addFieldButton}
-                            onClick={() => fields.push('')}
-                            color='primary'
-                          >
-                            <AddIcon />
-                          </IconButton>
-                        </React.Fragment>
-                      )}
+                      {({ fields }) => {
+                        return (
+                          <React.Fragment>
+                            {fields.map((name, index) => {
+                              const dirtyValue =
+                                fields.value[index] !== '' &&
+                                fields.value[index] === fields.initial[index]
+                              return (
+                                <div key={name} className={classes.fieldRow}>
+                                  <Field
+                                    name={name}
+                                    component={RegularTextField}
+                                    label='Email'
+                                    className={classes.field}
+                                  />
+                                  <IconButton
+                                    onClick={() => fields.remove(index)}
+                                    color='secondary'
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                  {dirtyValue && (
+                                    <Tooltip title='Resend invitation email'>
+                                      <IconButton
+                                        onClick={() =>
+                                          resendEmail({
+                                            wishListId: wishList.get('id'),
+                                            email: fields.value[index]
+                                          })
+                                        }
+                                        color='primary'
+                                      >
+                                        <EmailIcon />
+                                      </IconButton>
+                                    </Tooltip>
+                                  )}
+                                </div>
+                              )
+                            })}
+                            <IconButton
+                              className={classes.addFieldButton}
+                              onClick={() => fields.push('')}
+                              color='primary'
+                            >
+                              <AddIcon />
+                            </IconButton>
+                          </React.Fragment>
+                        )
+                      }}
                     </FieldArray>
                   </form>
                 </DialogContent>

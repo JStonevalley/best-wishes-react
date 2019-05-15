@@ -77,10 +77,10 @@ export const saveWish = wish => {
 
 export const WISH_LIST_SHARED = 'WISH_LIST_SHARED'
 
-export const shareWishList = ({ id, sharedTo }) => {
+export const shareWishList = ({ wishListId, sharedTo }) => {
   return async dispatch => {
     const { shares, removedShares } = await bwFetch(
-      `private/wish-list/share/${id}`,
+      `private/wish-list/share/${wishListId}`,
       {
         method: 'PUT',
         body: JSON.stringify({ sharedTo })

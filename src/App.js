@@ -40,7 +40,7 @@ const MainAppBar = withStyles(styles)(({ classes }) => {
             onClick={signOut}
             classes={{ label: classes.signOutButtonText }}
           >
-            Sign out
+            Sign out {user.attributes.email}
           </Button>
         )}
       </Toolbar>

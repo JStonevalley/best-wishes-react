@@ -7,6 +7,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import LinkIcon from '@material-ui/icons/Link'
+import Tooltip from '@material-ui/core/Tooltip'
 import blue from '@material-ui/core/colors/blue'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
@@ -142,7 +143,9 @@ export const SharedWish = connect()(
             label={
               grantedByOtherUser
                 ? `Bought by ${grantedByOtherUser.get('sharedTo')}`
-                : 'Bought by you'
+                : grantedByActiveUser
+                  ? 'Bought by you'
+                  : 'Mark as bought'
             }
           />
           <LinkIconButton
@@ -204,11 +207,18 @@ export const LinkTextButton = withStyles(linkButtonStyles)(
 )
 
 const LinkIconButton = withStyles(linkButtonStyles)(
-  ({ classes, children, ...props }) => {
+  ({ classes, children, href, newTab = true, ...props }) => {
     return (
-      <IconButton className={classes.linkButton} {...props}>
-        <LinkIcon />
-      </IconButton>
+      <Tooltip title={href}>
+        <IconButton
+          className={classes.linkButton}
+          href={href}
+          target={newTab ? '_blank' : '_self'}
+          {...props}
+        >
+          <LinkIcon />
+        </IconButton>
+      </Tooltip>
     )
   }
 )

@@ -7,13 +7,32 @@ import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import rootReducer from './reducer'
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import pink from '@material-ui/core/colors/pink'
+import cyan from '@material-ui/core/colors/cyan'
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: pink.A100
+    },
+    secondary: {
+      main: cyan[300]
+    }
+  }
+})
+
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+)
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <MuiThemeProvider theme={theme}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </MuiThemeProvider>,
   document.getElementById('root')
 )
 registerServiceWorker()

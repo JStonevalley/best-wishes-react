@@ -130,7 +130,6 @@ export const ShareWishList = compose(
                                   />
                                   <IconButton
                                     onClick={() => fields.remove(index)}
-                                    color='secondary'
                                   >
                                     <DeleteIcon />
                                   </IconButton>

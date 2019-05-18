@@ -8,7 +8,7 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import rootReducer from './reducer'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
-import deepOrage from '@material-ui/core/colors/deepOrage'
+import deepOrange from '@material-ui/core/colors/deepOrange'
 import cyan from '@material-ui/core/colors/cyan'
 
 const theme = createMuiTheme({
@@ -17,7 +17,7 @@ const theme = createMuiTheme({
       main: cyan[300]
     },
     secondary: {
-      main: deepOrage.A100
+      main: deepOrange.A100
     }
   }
 })

@@ -8,16 +8,16 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import rootReducer from './reducer'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
-import pink from '@material-ui/core/colors/pink'
+import deepOrage from '@material-ui/core/colors/deepOrage'
 import cyan from '@material-ui/core/colors/cyan'
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: pink.A100
+      main: cyan[300]
     },
     secondary: {
-      main: cyan[300]
+      main: deepOrage.A100
     }
   }
 })

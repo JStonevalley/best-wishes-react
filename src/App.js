@@ -11,12 +11,22 @@ import { WishList } from './workshop/components/WishList'
 import { WishLists } from './workshop/components/WishLists'
 import { SharedWishList } from './shares/components/SharedWishList'
 import { signOut } from './user/actions'
+import { MEDIA_QUERIES } from './shared/ui'
 import { SignIn, SignUp, ConfirmSignUp, SignInStatus } from './user/SignInUp'
 import { Home } from './home/components/Home'
 
 const styles = theme => ({
   signOutButtonText: {
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.contrastText,
+    [MEDIA_QUERIES.PHONE]: {
+      display: 'flex',
+      flexDirection: 'column'
+    }
+  },
+  userEmailText: {
+    [MEDIA_QUERIES.PHONE]: {
+      fontSize: '0.5em'
+    }
   },
   titleLink: {
     textDecoration: 'none',
@@ -40,7 +50,10 @@ const MainAppBar = withStyles(styles)(({ classes }) => {
             onClick={signOut}
             classes={{ label: classes.signOutButtonText }}
           >
-            Sign out {user.attributes.email}
+            Sign out{' '}
+            <span className={classes.userEmailText}>
+              {user.attributes.email}
+            </span>
           </Button>
         )}
       </Toolbar>

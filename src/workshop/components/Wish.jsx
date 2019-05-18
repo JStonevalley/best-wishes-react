@@ -31,18 +31,20 @@ const styles = theme => ({
     alignItems: 'center'
   },
   image: {
-    width: '10vw',
-    height: '10vw',
+    width: '100%',
+    height: '100%',
     objectFit: 'cover',
     borderRadius: '50%'
   },
   imageContainer: {
     alignSelf: 'center',
-    width: '10vw',
-    height: '10vw'
+    width: '15rem',
+    height: '15rem'
   },
   container: {
-    display: 'flex'
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
   },
   expander: {
     flexGrow: 1
@@ -158,7 +160,8 @@ export const SharedWish = connect()(
 const bodyStyles = {
   wrapper: {
     display: 'flex',
-    margin: '1vw'
+    margin: '1vw',
+    flex: '1 0 20rem'
   },
   column: {
     display: 'flex',

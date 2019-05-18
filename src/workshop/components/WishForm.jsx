@@ -18,22 +18,24 @@ const mapDispatchToProps = {
 
 const styles = {
   image: {
-    width: '10vw',
-    height: '10vw',
+    width: '100%',
+    height: '100%',
     objectFit: 'cover',
-    borderRadius: '5vw'
+    borderRadius: '50%'
   },
   imageContainer: {
     alignSelf: 'center',
-    width: '10vw',
-    height: '10vw'
-  },
-  flex: {
-    display: 'flex'
+    width: '15rem',
+    height: '15rem'
   },
   flexColumn: {
     display: 'flex',
     flexDirection: 'column'
+  },
+  contentContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
   },
   outerFieldsContainer: {
     display: 'flex',
@@ -91,7 +93,7 @@ export const WishForm = compose(
           }
           return (
             <form onSubmit={handleSubmit} className={classes.flexColumn}>
-              <div className={classes.flex}>
+              <div className={classes.contentContainer}>
                 {image && (
                   <div className={classes.imageContainer}>
                     <img src={image} className={classes.image} alt='wish' />
@@ -104,7 +106,7 @@ export const WishForm = compose(
                     onMetadataFetched={setDataFetchedFromUrl}
                   />
                   <Divider className={classes.divider} />
-                  <div className={classes.flex}>
+                  <div className={classes.contentContainer}>
                     <Field name='id' component={() => null} />
                     <Field name='wishList' component={() => null} />
                     <TextSection disabled={fetchingInfo} />
@@ -211,7 +213,7 @@ const sectionStyle = theme => ({
     margin: `0 ${3 * theme.spacing.unit}px`,
     display: 'flex',
     flexDirection: 'column',
-    flexGrow: 1
+    flex: '1 0 15rem'
   },
   input: {
     width: '100%'

@@ -72,7 +72,10 @@ export const Wish = connect()(
             <b>Price:</b> {wish.get('price') || 'Not specified'}
           </Typography>
           <div className={classes.expander} />
-          <IconButton onClick={() => dispatch(deleteWish(wish.get('id')))}>
+          <IconButton
+            onClick={() => dispatch(deleteWish(wish.get('id')))}
+            color='secondary'
+          >
             <DeleteIcon />
           </IconButton>
           <Link to={`${url}/${wish.get('id')}`}>

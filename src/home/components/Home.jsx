@@ -41,11 +41,7 @@ export const Home = compose(
   return (
     <div className={classes.base}>
       <PageHeading heading='Best Wishes' />
-      <Typography
-        variant='headline'
-        align='center'
-        className={classes.bodyText}
-      >
+      <Typography variant='h5' align='center' className={classes.bodyText}>
         Welcome to Best Wishes. Best wishes helps you create wish lists that are
         easily shared with friends and family. Everyone who the list is shared
         to are able to indicate what they have bought to the other gift givers.

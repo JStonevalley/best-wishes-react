@@ -3,6 +3,8 @@ import MaterialPaper from '@material-ui/core/Paper'
 export { PageHeading } from './PageHeading'
 export { LinkButton } from './LinkButton'
 export { ActionFormDialog } from './ActionFormDialog'
+export { DeleteIconButton } from './DeleteIconButton'
+export { ButtonWithConfirmation } from './ButtonWithConfirmation'
 
 const Paper = props => <MaterialPaper elevation={1} {...props} />
 

@@ -8,11 +8,20 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import AddIcon from '@material-ui/icons/Add'
 import { Field } from 'react-final-form'
-import { PageHeading, ActionFormDialog } from '../../shared/ui'
+import {
+  PageHeading,
+  ActionFormDialog,
+  DeleteIconButton,
+  ButtonWithConfirmation
+} from '../../shared/ui'
 import { withStyles } from '@material-ui/core/styles'
 import { ShareWishList } from './ShareWishList.jsx'
 import { RegularTextField } from '../../shared/FormFields'
-import { getPersonalWishLists, createWishList } from '../actions'
+import {
+  getPersonalWishLists,
+  createWishList,
+  removeWishList
+} from '../actions'
 import { required } from '../../shared/FormValidators'
 
 const styles = {
@@ -36,7 +45,15 @@ export const WishLists = withStyles(styles)(({ history, classes }) => {
   useEffect(() => {
     dispatch(getPersonalWishLists())
   }, [])
-  const wishLists = useSelector(state => state.workshop.lists)
+  const wishLists = useSelector(state =>
+    state.workshop.lists
+      .filter(wishList => {
+        const username = state.user.cognito && state.user.cognito.username
+        return wishList.get('owner') === username
+      })
+      .sortBy(wishList => wishList.get('id'))
+      .sortBy(wishList => wishList.get('title'))
+  )
   const navigateToWishList = wishListId =>
     history.push(`/workshop/wish-list/${wishListId}`)
   return (
@@ -56,6 +73,13 @@ export const WishLists = withStyles(styles)(({ history, classes }) => {
                 </ListItemIcon>
                 <ListItemText primary={wishList.get('title')} />
                 <ListItemSecondaryAction>
+                  <ButtonWithConfirmation
+                    activationElement={<DeleteIconButton />}
+                    action={() => dispatch(removeWishList(wishList.get('id')))}
+                    confirmationTitle={`Are you sure you want to remove list ${wishList.get(
+                      'title'
+                    )}?`}
+                  />
                   <ShareWishList wishList={wishList} />
                 </ListItemSecondaryAction>
               </ListItem>

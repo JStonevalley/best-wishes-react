@@ -51,7 +51,10 @@ const styles = theme => ({
 export const WishList = compose(
   withStyles(styles),
   connect((state, { match: { params: { wishListId } } }) => {
-    const activeWishList = state.workshop.lists.get(wishListId)
+    const username = state.user.cognito && state.user.cognito.username
+    const wishList = state.workshop.lists.get(wishListId)
+    const activeWishList =
+      wishList && wishList.get('owner') === username ? wishList : null
     return {
       wishList: activeWishList,
       wishes: activeWishList

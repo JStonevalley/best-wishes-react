@@ -6,7 +6,8 @@ import {
   ADD_NEW_WISH,
   CREATE_WISH_LIST,
   WISH_DELETED,
-  WISH_LIST_SHARED
+  WISH_LIST_SHARED,
+  WISH_LIST_REMOVED
 } from './actions'
 import {
   WISH_LIST_SHARE_FETCHED,
@@ -19,6 +20,8 @@ const lists = (state = Map(), action) => {
     case WISH_LIST_SHARE_FETCHED:
     case CREATE_WISH_LIST:
       return state.set(action.wishList.get('id'), action.wishList)
+    case WISH_LIST_REMOVED:
+      return state.delete(action.wishList.get('id'))
     case GET_PERSONAL_WISH_LISTS_SUCCESS:
       return state.merge(
         action.wishLists.reduce(

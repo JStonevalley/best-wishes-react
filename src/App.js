@@ -40,7 +40,7 @@ const MainAppBar = withStyles(styles)(({ classes }) => {
     <AppBar position='static' color='primary'>
       <Toolbar>
         <Link to='/' className={classes.titleLink}>
-          <Typography variant='title' color='inherit'>
+          <Typography variant='h6' color='inherit'>
             Best Wishes
           </Typography>
         </Link>

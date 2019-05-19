@@ -43,6 +43,21 @@ export const createWishList = ({ title }) => {
   }
 }
 
+export const WISH_LIST_REMOVED = 'WISH_LIST_REMOVED'
+
+export const removeWishList = wishListId => {
+  return async dispatch => {
+    try {
+      const removedWishList = await bwFetch(`private/wish-list/${wishListId}`, {
+        method: 'DELETE'
+      })
+      dispatch({ type: WISH_LIST_REMOVED, wishList: fromJS(removedWishList) })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
 export const WISH_DELETED = 'WISH_DELETED'
 
 export const deleteWish = id => {

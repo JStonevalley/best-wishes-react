@@ -63,6 +63,8 @@ const SignInUpForm = compose(
                 const redirectPath = await dispatch(onSubmit(values))
                 history.push(redirectPath)
               } catch (error) {
+                if (error.code === 'UserNotConfirmedException') {
+                }
                 return { [FORM_ERROR]: error.message }
               }
             }}

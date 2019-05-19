@@ -34,6 +34,9 @@ const styles = theme => ({
   },
   spacing: {
     marginTop: `${theme.spacing.unit}px`
+  },
+  error: {
+    color: theme.palette.error.light
   }
 })
 
@@ -64,6 +67,11 @@ const SignInUpForm = compose(
                 history.push(redirectPath)
               } catch (error) {
                 if (error.code === 'UserNotConfirmedException') {
+                  resendSignUp(values.email)
+                  history.push({
+                    pathname: '/confirm-sign-up',
+                    state: { email: values.email, error }
+                  })
                 }
                 return { [FORM_ERROR]: error.message }
               }
@@ -141,13 +149,22 @@ export const ConfirmSignUp = compose(
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.paper}>
-        <Typography variant='h5' component='h2'>
+        <Typography variant='h5' component='h2' paragraph>
           Confirm email
         </Typography>
-        <Typography variant='body1'>
-          A confirmation email has been sent to: {state && state.email} Please
-          check your inbox for the verification code and enter it below.
-        </Typography>
+        {state &&
+          state.error &&
+          state.error.code === 'UserNotConfirmedException' && (
+          <Typography variant='body1' paragraph className={classes.error}>
+              Your account is not yet confirmed.
+          </Typography>
+        )}
+        {state && state.email && (
+          <Typography variant='body1' paragraph>
+            A confirmation email has been sent to: {state && state.email} Please
+            check your inbox for the verification code and enter it below.
+          </Typography>
+        )}
         <Form
           onSubmit={async values => {
             try {

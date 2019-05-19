@@ -89,7 +89,7 @@ const App = () => {
         <Route path='/shares/wish-list/:shareId' component={SharedWishList} />
         <Route path='/sign-up' component={SignUp} />
         <Route path='/sign-in' component={SignIn} />
-        <Route path='/confirm-sign-up' component={ConfirmSignUp} />
+        <Route path='/confirm-sign-up/' component={ConfirmSignUp} />
         <Route path='/' component={Home} />
       </Switch>
       <SignInStatus />

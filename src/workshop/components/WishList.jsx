@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { Route, Switch, Link } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
-import { Map, fromJS } from 'immutable'
+import { Map } from 'immutable'
 import { Fab } from '@material-ui/core'
 import { PageHeading, Paper } from '../../shared/ui'
-import Button from '@material-ui/core/Button'
 import ShareIcon from '@material-ui/icons/Share'
-import { ADD_NEW_WISH, getPersonalWishLists } from '../actions'
+import AddIcon from '@material-ui/icons/Add'
+import { getPersonalWishLists } from '../actions'
 import { Wish } from './Wish'
 import { WishForm } from './WishForm'
 import { ShareWishList } from './ShareWishList.jsx'
@@ -37,11 +37,12 @@ const styles = theme => ({
     margin: `${theme.spacing.unit}px`,
     padding: `${3 * theme.spacing.unit}px`
   },
-  newWishButton: {
-    textDecoration: 'none',
-    alignSelf: 'center'
+  shareFabRoot: {
+    position: 'fixed',
+    right: `${3 * theme.spacing.unit}px`,
+    bottom: `${13 * theme.spacing.unit}px`
   },
-  fabRoot: {
+  addWishFabRoot: {
     position: 'fixed',
     right: `${3 * theme.spacing.unit}px`,
     bottom: `${3 * theme.spacing.unit}px`
@@ -83,11 +84,20 @@ export const WishList = compose(
       [wishListId]
     )
     if (!wishList) return null
-    const newWishExists = wishes.find(wish => !wish.get('id'))
     return (
       <div>
         <div>
           <PageHeading heading={wishList.get('title')} />
+          <Route
+            path={`${path}/:wishId`}
+            render={props => (
+              <WishForm
+                wishListId={wishList.get('id')}
+                wish={wishes.get(props.match.params.wishId)}
+                {...props}
+              />
+            )}
+          />
           <div className={classes.list}>
             {wishes
               .map(wish => (
@@ -95,47 +105,20 @@ export const WishList = compose(
                   className={classes.wishPaper}
                   key={wish.get('id') || 'newWish'}
                 >
-                  <Switch>
-                    <Route
-                      path={`${path}/${wish.get('id')}`}
-                      render={props => (
-                        <WishForm
-                          wishListId={wishList.get('id')}
-                          wish={wish}
-                          {...props}
-                        />
-                      )}
-                    />
-                    <Route
-                      path={path}
-                      render={props => <Wish wish={wish} {...props} />}
-                    />
-                  </Switch>
+                  <Route
+                    path={path}
+                    render={props => <Wish wish={wish} {...props} />}
+                  />
                 </Paper>
               ))
               .toArray()}
-            {!newWishExists && (
-              <Link to={`${url}/null`} className={classes.newWishButton}>
-                <Button
-                  color='primary'
-                  onClick={() => {
-                    dispatch({
-                      type: ADD_NEW_WISH,
-                      wish: fromJS({ id: null, wishList: wishList.get('id') })
-                    })
-                  }}
-                >
-                  Make a new wish
-                </Button>
-              </Link>
-            )}
           </div>
         </div>
         <ShareWishList
           wishList={wishList}
           buttonElement={
             <Fab
-              classes={{ root: classes.fabRoot }}
+              classes={{ root: classes.shareFabRoot }}
               variant='round'
               color='primary'
             >
@@ -143,6 +126,15 @@ export const WishList = compose(
             </Fab>
           }
         />
+        <Link to={`${url}/null`}>
+          <Fab
+            classes={{ root: classes.addWishFabRoot }}
+            variant={wishes.isEmpty() ? 'extended' : 'round'}
+          >
+            <AddIcon />
+            {wishes.isEmpty() && 'Make your first wish'}
+          </Fab>
+        </Link>
       </div>
     )
   }

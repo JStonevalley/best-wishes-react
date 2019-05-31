@@ -3,7 +3,6 @@ import { Map } from 'immutable'
 import {
   GET_PERSONAL_WISH_LISTS_SUCCESS,
   WISH_SAVED,
-  ADD_NEW_WISH,
   CREATE_WISH_LIST,
   WISH_DELETED,
   WISH_LIST_SHARED,
@@ -46,8 +45,6 @@ const wishes = (state = Map(), action) => {
       )
     case WISH_SAVED:
       return state.set(action.wish.get('id'), action.wish).remove(null)
-    case ADD_NEW_WISH:
-      return state.set(action.wish.get('id'), action.wish)
     case WISH_DELETED:
       return state.delete(action.id)
     default:

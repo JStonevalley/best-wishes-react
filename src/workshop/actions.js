@@ -74,7 +74,6 @@ export const deleteWish = id => {
 }
 
 export const WISH_SAVED = 'WISH_SAVED'
-export const ADD_NEW_WISH = 'ADD_NEW_WISH'
 
 export const saveWish = wish => {
   return async dispatch => {

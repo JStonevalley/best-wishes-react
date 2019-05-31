@@ -6,11 +6,15 @@ import { required } from '../../shared/FormValidators'
 import { saveWish } from '../actions'
 import { connect } from 'react-redux'
 import { compose, withState } from 'recompose'
+import { Map } from 'immutable'
 import { withStyles } from '@material-ui/core'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import SaveIcon from '@material-ui/icons/Save'
 import blue from '@material-ui/core/colors/blue'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
 
 const mapDispatchToProps = {
   saveWish
@@ -45,9 +49,6 @@ const styles = {
   divider: {
     margin: '2vw'
   },
-  submitButton: {
-    alignSelf: 'center'
-  },
   submitButtonIcon: {
     marginRight: '1rem'
   }
@@ -63,6 +64,7 @@ export const WishForm = compose(
 )(
   ({
     wish,
+    wishListId,
     saveWish,
     fetchingInfo,
     setFetchingInfo,
@@ -70,17 +72,15 @@ export const WishForm = compose(
     history,
     match: { url }
   }) => {
+    wish = wish || Map({ id: null, wishList: wishListId })
+    const closeDialog = () => {
+      const urlSegments = url.split('/')
+      const newUrl = urlSegments.slice(0, urlSegments.length - 1).join('/')
+      history.push(newUrl)
+    }
     return (
       <Form
-        onSubmit={wish =>
-          saveWish(wish).then(() => {
-            const urlSegments = url.split('/')
-            const newUrl = urlSegments
-              .slice(0, urlSegments.length - 1)
-              .join('/')
-            history.push(newUrl)
-          })
-        }
+        onSubmit={wish => saveWish(wish).then(closeDialog)}
         initialValues={wish.toJS()}
         render={({ handleSubmit, values: { image, link }, form }) => {
           const setDataFetchedFromUrl = ({ title, image, body }) => {
@@ -93,36 +93,45 @@ export const WishForm = compose(
           }
           return (
             <form onSubmit={handleSubmit} className={classes.flexColumn}>
-              <div className={classes.contentContainer}>
-                {image && (
-                  <div className={classes.imageContainer}>
-                    <img src={image} className={classes.image} alt='wish' />
-                  </div>
-                )}
-                <div className={classes.outerFieldsContainer}>
-                  <LinkSection
-                    link={link}
-                    onMetadataFetchingStarted={() => setFetchingInfo(true)}
-                    onMetadataFetched={setDataFetchedFromUrl}
-                  />
-                  <Divider className={classes.divider} />
+              <Dialog open>
+                <DialogContent>
                   <div className={classes.contentContainer}>
-                    <Field name='id' component={() => null} />
-                    <Field name='wishList' component={() => null} />
-                    <TextSection disabled={fetchingInfo} />
-                    <MiscSection disabled={fetchingInfo} />
+                    {image && (
+                      <div className={classes.imageContainer}>
+                        <img src={image} className={classes.image} alt='wish' />
+                      </div>
+                    )}
+                    <div className={classes.outerFieldsContainer}>
+                      <LinkSection
+                        link={link}
+                        onMetadataFetchingStarted={() => setFetchingInfo(true)}
+                        onMetadataFetched={setDataFetchedFromUrl}
+                      />
+                      <Divider className={classes.divider} />
+                      <div className={classes.contentContainer}>
+                        <Field name='id' component={() => null} />
+                        <Field name='wishList' component={() => null} />
+                        <TextSection disabled={fetchingInfo} />
+                        <MiscSection disabled={fetchingInfo} />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <Button
-                variant='text'
-                className={classes.submitButton}
-                color='primary'
-                onClick={form.submit}
-              >
-                <SaveIcon className={classes.submitButtonIcon} />
-                Save
-              </Button>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    variant='text'
+                    color='secondary'
+                    onClick={closeDialog}
+                    tyle='button'
+                  >
+                    Cancel
+                  </Button>
+                  <Button variant='text' color='primary' onClick={form.submit}>
+                    <SaveIcon className={classes.submitButtonIcon} />
+                    Save
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </form>
           )
         }}

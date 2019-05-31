@@ -132,7 +132,7 @@ export const WishList = compose(
             variant={wishes.isEmpty() ? 'extended' : 'round'}
           >
             <AddIcon />
-            {wishes.isEmpty() && 'Make your first wish'}
+            {wishes.isEmpty() && 'Make a wish'}
           </Fab>
         </Link>
       </div>

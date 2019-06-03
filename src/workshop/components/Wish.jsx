@@ -39,7 +39,8 @@ const styles = theme => ({
   imageContainer: {
     alignSelf: 'center',
     width: '15rem',
-    height: '15rem'
+    height: '15rem',
+    margin: '0 1vw'
   },
   container: {
     display: 'flex',
@@ -56,15 +57,15 @@ export const Wish = connect()(
     return (
       <div className={classes.frame}>
         <div className={classes.container}>
-          <div className={classes.imageContainer}>
-            {wish.get('image') && (
+          {wish.get('image') && (
+            <div className={classes.imageContainer}>
               <img
                 src={wish.get('image')}
                 className={classes.image}
                 alt='wish'
               />
-            )}
-          </div>
+            </div>
+          )}
           <WishBody wish={wish} />
         </div>
         <div className={classes.toolBar}>
@@ -104,15 +105,16 @@ export const SharedWish = connect()(
     return (
       <div className={classes.frame}>
         <div className={classes.container}>
-          <div className={classes.imageContainer}>
-            {wish.get('image') && (
+          {wish.get('image') && (
+            <div className={classes.imageContainer}>
               <img
                 src={wish.get('image')}
                 className={classes.image}
                 alt='wish'
               />
-            )}
-          </div>
+              )}
+            </div>
+          )}
           <WishBody wish={wish} />
         </div>
         <div className={classes.toolBar}>
@@ -163,7 +165,7 @@ export const SharedWish = connect()(
 const bodyStyles = {
   wrapper: {
     display: 'flex',
-    margin: '1vw',
+    margin: '1vw 1vw 1vw 0',
     flex: '1 0 20rem'
   },
   column: {

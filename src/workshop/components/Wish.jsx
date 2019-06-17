@@ -112,7 +112,6 @@ export const SharedWish = connect()(
                 className={classes.image}
                 alt='wish'
               />
-              )}
             </div>
           )}
           <WishBody wish={wish} />

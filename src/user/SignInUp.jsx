@@ -18,6 +18,8 @@ import {
   resendSignUp
 } from './actions'
 
+const toLowerCase = value => value && value.toLowerCase()
+
 const styles = theme => ({
   wrapper: {
     display: 'flex',
@@ -84,6 +86,7 @@ const SignInUpForm = compose(
                     label='Email'
                     name='email'
                     validate={email}
+                    parse={toLowerCase}
                     component={RegularTextField}
                   />
                   <Field
@@ -182,6 +185,7 @@ export const ConfirmSignUp = compose(
                   label='Email'
                   name='email'
                   validate={email}
+                  parse={toLowerCase}
                   component={RegularTextField}
                 />
                 <Field

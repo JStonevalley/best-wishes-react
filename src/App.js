@@ -11,7 +11,6 @@ import { WishList } from './workshop/components/WishList'
 import { WishLists } from './workshop/components/WishLists'
 import { SharedWishList } from './shares/components/SharedWishList'
 import { signOut } from './user/actions'
-import { MEDIA_QUERIES } from './shared/ui'
 import { SignIn, SignUp, ConfirmSignUp, SignInStatus } from './user/SignInUp'
 import { Home } from './home/components/Home'
 

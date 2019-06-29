@@ -106,13 +106,15 @@ export const SharedWish = connect()(
       <div className={classes.frame}>
         <div className={classes.container}>
           {wish.get('image') && (
-            <div className={classes.imageContainer}>
-              <img
-                src={wish.get('image')}
-                className={classes.image}
-                alt='wish'
-              />
-            </div>
+            <a href={wish.get('link')} target='_blank'>
+              <div className={classes.imageContainer}>
+                <img
+                  src={wish.get('image')}
+                  className={classes.image}
+                  alt='wish'
+                />
+              </div>
+            </a>
           )}
           <WishBody wish={wish} />
         </div>

@@ -18,15 +18,11 @@ import { Home } from './home/components/Home'
 const styles = theme => ({
   signOutButtonText: {
     color: theme.palette.primary.contrastText,
-    [MEDIA_QUERIES.PHONE]: {
-      display: 'flex',
-      flexDirection: 'column'
-    }
+    display: 'flex',
+    flexDirection: 'column'
   },
   userEmailText: {
-    [MEDIA_QUERIES.PHONE]: {
-      fontSize: '0.5em'
-    }
+    fontSize: '0.5em'
   },
   titleLink: {
     textDecoration: 'none',

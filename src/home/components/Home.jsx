@@ -49,7 +49,7 @@ export const Home = compose(
         of the past.
       </Typography>
       <Typography variant='h4' component='h2' align='center'>
-        Start by either creating an account or signing in to en existing one!
+        Start by either creating an account or signing in to an existing one!
       </Typography>
       <div className={classes.buttonsRow}>
         <LinkButton

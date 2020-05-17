@@ -167,7 +167,7 @@ const bodyStyles = {
   wrapper: {
     display: 'flex',
     margin: '1vw 1vw 1vw 0',
-    flex: '1 0 20rem'
+    flex: '1 0 15rem'
   },
   column: {
     display: 'flex',

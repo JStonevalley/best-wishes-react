@@ -33,8 +33,8 @@ const styles = theme => ({
   image: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover',
-    borderRadius: '50%'
+    objectFit: 'contain',
+    borderRadius: '5%'
   },
   imageContainer: {
     alignSelf: 'center',

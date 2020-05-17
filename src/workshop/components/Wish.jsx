@@ -28,18 +28,17 @@ const styles = theme => ({
   toolBar: {
     alignSelf: 'stretch',
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    margin: '0 1vw'
   },
   image: {
     width: '100%',
-    height: '100%',
     objectFit: 'contain',
-    borderRadius: '5%'
+    borderRadius: '10px'
   },
   imageContainer: {
     alignSelf: 'center',
     width: '15rem',
-    height: '15rem',
     margin: '0 1vw'
   },
   container: {

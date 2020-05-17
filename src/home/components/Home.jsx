@@ -19,7 +19,8 @@ const styles = theme => ({
   buttonsRow: {
     display: 'flex',
     justifyContent: 'center',
-    margin: `${2 * theme.spacing.unit}px 0`
+    margin: `${2 * theme.spacing.unit}px 0`,
+    flexWrap: 'wrap'
   },
   linkButton: {
     width: '10rem',

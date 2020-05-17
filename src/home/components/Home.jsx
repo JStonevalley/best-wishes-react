@@ -10,7 +10,8 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     maxWidth: '50rem',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    padding: `0 ${theme.spacing.unit}px`
   },
   bodyText: {
     margin: `${2 * theme.spacing.unit}px 0`

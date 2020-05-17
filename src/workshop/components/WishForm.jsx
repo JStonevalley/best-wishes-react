@@ -23,14 +23,12 @@ const mapDispatchToProps = {
 const styles = {
   image: {
     width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    borderRadius: '50%'
+    objectFit: 'contain',
+    borderRadius: '10px'
   },
   imageContainer: {
     alignSelf: 'center',
-    width: '15rem',
-    height: '15rem'
+    width: '15rem'
   },
   flexColumn: {
     display: 'flex',

@@ -18,6 +18,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Tooltip from '@material-ui/core/Tooltip'
+import Typography from '@material-ui/core/Typography'
 import { shareWishList } from '../actions'
 import errorToFormError from '../../shared/errorToFormError'
 import { bwFetch } from '../../shared/actions'
@@ -116,11 +117,11 @@ export const ShareWishList = compose(
                       {({ fields }) => {
                         return (
                           <React.Fragment>
+                            <Typography variant='h6' component='h3'>
+                              Previously shared with
+                            </Typography>
                             {fields.map((name, index) => {
-                              const dirtyValue =
-                                fields.value[index] !== '' &&
-                                fields.value[index] === fields.initial[index]
-                              return (
+                              return (fields.value[index] !== '' && fields.value[index] === fields.initial[index] &&
                                 <div key={name} className={classes.fieldRow}>
                                   <Field
                                     name={name}
@@ -134,21 +135,40 @@ export const ShareWishList = compose(
                                   >
                                     <DeleteIcon />
                                   </IconButton>
-                                  {dirtyValue && (
-                                    <Tooltip title='Resend invitation email'>
-                                      <IconButton
-                                        onClick={() =>
-                                          resendEmail({
-                                            wishListId: wishList.get('id'),
-                                            email: fields.value[index]
-                                          })
-                                        }
-                                        color='primary'
-                                      >
-                                        <EmailIcon />
-                                      </IconButton>
-                                    </Tooltip>
-                                  )}
+                                  <Tooltip title='Resend invitation email'>
+                                    <IconButton
+                                      onClick={() =>
+                                        resendEmail({
+                                          wishListId: wishList.get('id'),
+                                          email: fields.value[index]
+                                        })
+                                      }
+                                      color='primary'
+                                    >
+                                      <EmailIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                </div>
+                              )
+                            })}
+                            <Typography variant='h6' component='h6'>
+                              New invitations to send
+                            </Typography>
+                            {fields.map((name, index) => {
+                              return ((fields.value[index] === '' || fields.value[index] !== fields.initial[index]) &&
+                                <div key={name} className={classes.fieldRow}>
+                                  <Field
+                                    name={name}
+                                    component={RegularTextField}
+                                    label='Email'
+                                    className={classes.field}
+                                  />
+                                  <IconButton
+                                    onClick={() => fields.remove(index)}
+                                    color='secondary'
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
                                 </div>
                               )
                             })}

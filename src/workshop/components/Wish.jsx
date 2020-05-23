@@ -22,14 +22,15 @@ const styles = theme => ({
   frame: {
     display: 'flex',
     flexDirection: 'column',
-    flexGrow: 1,
+    flex: '1 0 15rem',
+    maxWidth: '20rem',
     padding: '2vw'
   },
   toolBar: {
     alignSelf: 'stretch',
     display: 'flex',
     alignItems: 'center',
-    margin: '0 1vw'
+    flexWrap: 'wrap'
   },
   image: {
     width: '100%',
@@ -37,14 +38,7 @@ const styles = theme => ({
     borderRadius: '10px'
   },
   imageContainer: {
-    alignSelf: 'center',
-    width: '15rem',
-    margin: '0 1vw'
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center'
+    alignSelf: 'center'
   },
   expander: {
     flexGrow: 1
@@ -55,21 +49,20 @@ export const Wish = connect()(
   withStyles(styles)(({ wish, dispatch, classes, match: { url } }) => {
     return (
       <div className={classes.frame}>
-        <div className={classes.container}>
-          {wish.get('image') && (
-            <div className={classes.imageContainer}>
-              <img
-                src={wish.get('image')}
-                className={classes.image}
-                alt='wish'
-              />
-            </div>
-          )}
-          <WishBody wish={wish} />
-        </div>
+        {wish.get('image') && (
+          <div className={classes.imageContainer}>
+            <img
+              src={wish.get('image')}
+              className={classes.image}
+              alt='wish'
+            />
+          </div>
+        )}
+        <WishBody wish={wish} />
+        <div style={{ flexGrow: 1 }} />
         <div className={classes.toolBar}>
           <Typography variant='subtitle1' inline>
-            <b>Price:</b> {wish.get('price') || 'Not specified'}
+            <b>Price:</b> {wish.get('price') || 'N/A'}
           </Typography>
           <div className={classes.expander} />
           <IconButton
@@ -119,7 +112,7 @@ export const SharedWish = connect()(
         </div>
         <div className={classes.toolBar}>
           <Typography variant='subtitle1' inline>
-            <b>Price:</b> {wish.get('price') || 'Not specified'}
+            <b>Price:</b> {wish.get('price') || 'N/A'}
           </Typography>
           <div className={classes.expander} />
           <FormControlLabel
@@ -165,11 +158,6 @@ export const SharedWish = connect()(
 const bodyStyles = {
   wrapper: {
     display: 'flex',
-    margin: '1vw 1vw 1vw 0',
-    flex: '1 0 15rem'
-  },
-  column: {
-    display: 'flex',
     flexDirection: 'column'
   }
 }
@@ -177,11 +165,8 @@ const bodyStyles = {
 const WishBody = withStyles(bodyStyles)(({ classes, wish }) => {
   return (
     <div className={classes.wrapper}>
-      <div className={classes.column}>
-        <Typography variant='h6'>{wish.get('title')}</Typography>
-        <Typography variant='subtitle1'>{wish.get('body')}</Typography>
-      </div>
-      <div className={classes.column} />
+      <Typography variant='h6'>{wish.get('title')}</Typography>
+      <Typography variant='subtitle1'>{wish.get('body')}</Typography>
     </div>
   )
 })

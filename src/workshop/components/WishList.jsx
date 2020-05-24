@@ -30,12 +30,14 @@ const styles = theme => ({
     flexGrow: 1
   },
   list: {
-    display: 'flex'
+    display: 'flex',
+    flexWrap: 'wrap'
   },
   wishPaper: {
     margin: `${theme.spacing.unit}px`,
     padding: `${3 * theme.spacing.unit}px`,
-    display: 'flex'
+    display: 'flex',
+    flexGrow: 1
   },
   shareFabRoot: {
     position: 'fixed',

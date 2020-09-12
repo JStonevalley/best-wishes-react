@@ -21,10 +21,7 @@ const styles = theme => ({
   },
   frame: {
     display: 'flex',
-    flexDirection: 'column',
-    flex: '1 0 15rem',
-    maxWidth: '20rem',
-    padding: '2vw'
+    flexDirection: 'column'
   },
   toolBar: {
     alignSelf: 'stretch',
@@ -110,6 +107,7 @@ export const SharedWish = connect()(
           )}
           <WishBody wish={wish} />
         </div>
+        <div style={{ flexGrow: 1 }} />
         <div className={classes.toolBar}>
           <Typography variant='subtitle1' inline>
             <b>Price:</b> {wish.get('price') || 'N/A'}

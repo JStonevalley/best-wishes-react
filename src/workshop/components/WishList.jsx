@@ -37,6 +37,8 @@ const styles = theme => ({
     margin: `${theme.spacing.unit}px`,
     padding: `${3 * theme.spacing.unit}px`,
     display: 'flex',
+    flex: '1 0 15rem',
+    maxWidth: '20rem',
     flexGrow: 1
   },
   shareFabRoot: {

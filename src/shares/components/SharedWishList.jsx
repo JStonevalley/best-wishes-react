@@ -7,14 +7,23 @@ import { Paper } from '../../shared/ui'
 import Typography from '@material-ui/core/Typography'
 import { SharedWish } from '../../workshop/components/Wish'
 
-const style = {
+const style = (theme) => ({
   base: {
     padding: '1rem 0'
   },
+  list: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
   wishPaper: {
-    margin: '1rem'
+    margin: `${theme.spacing.unit}px`,
+    padding: `${3 * theme.spacing.unit}px`,
+    display: 'flex',
+    flex: '1 0 15rem',
+    maxWidth: '20rem',
+    flexGrow: 1
   }
-}
+})
 
 export const SharedWishList = compose(
   withStyles(style),
@@ -65,19 +74,21 @@ export const SharedWishList = compose(
         <Typography align='center' variant='subtitle1'>
           {wishList.get('owner')}
         </Typography>
-        {wishes
-          .map(wish => (
-            <Paper className={classes.wishPaper} key={wish.get('id')}>
-              <SharedWish
-                wish={wish}
-                shares={shares.filter(share =>
-                  share.get('grantedWishes').includes(wish.get('id'))
-                )}
-                activeShare={shares.find(share => share.get('id') === shareId)}
-              />
-            </Paper>
-          ))
-          .toArray()}
+        <div className={classes.list}>
+          {wishes
+            .map(wish => (
+              <Paper className={classes.wishPaper} key={wish.get('id')}>
+                <SharedWish
+                  wish={wish}
+                  shares={shares.filter(share =>
+                    share.get('grantedWishes').includes(wish.get('id'))
+                  )}
+                  activeShare={shares.find(share => share.get('id') === shareId)}
+                />
+              </Paper>
+            ))
+            .toArray()}
+        </div>
       </div>
     )
   }

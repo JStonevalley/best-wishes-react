@@ -39,7 +39,14 @@ const styles = theme => ({
   },
   expander: {
     flexGrow: 1
-  }
+  },
+  switchDisabled: {
+    color: `${theme.palette.error.light} !important`,
+    '& + $switchBar': {
+      backgroundColor: `${theme.palette.error.light} !important`
+    }
+  },
+  switchBar: {}
 })
 
 export const Wish = connect()(
@@ -116,8 +123,8 @@ export const SharedWish = connect()(
           <FormControlLabel
             control={
               <Switch
-                checked={grantedByActiveUser || grantedByOtherUser}
-                disabled={grantedByOtherUser}
+                checked={Boolean(grantedByActiveUser || grantedByOtherUser)}
+                disabled={Boolean(grantedByOtherUser)}
                 onChange={() =>
                   dispatch(
                     grantedByActiveUser
@@ -133,6 +140,10 @@ export const SharedWish = connect()(
                 }
                 value={`${wish.get('id')}-bought`}
                 color='primary'
+                classes={{
+                  disabled: classes.switchDisabled,
+                  bar: classes.switchBar
+                }}
               />
             }
             label={

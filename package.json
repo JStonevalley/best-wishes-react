@@ -1,44 +1,68 @@
 {
-  "name": "frontend-designer-sandbox",
+  "name": "bestwishes",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^3.9.3",
-    "@material-ui/icons": "^3.0.2",
-    "aws-amplify": "^1.1.23",
-    "classnames": "^2.2.6",
-    "final-form": "^4.12.0",
-    "final-form-arrays": "^1.1.2",
-    "immutable": "^3.8.2",
-    "qs": "^6.6.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-final-form": "^4.1.0",
-    "react-final-form-arrays": "^2.0.3",
-    "react-redux": "^7.1.0-alpha.4",
-    "react-router": "^5.0.0",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "1.1.4",
-    "recompose": "^0.30.0",
-    "redux": "^4.0.1",
-    "redux-devtools-extension": "^2.13.8",
-    "redux-thunk": "^2.3.0",
-    "yup": "^0.26.6"
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.7.1",
+    "firebase": "^8.2.9",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-hook-form": "^6.15.3",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.2",
+    "styled-components": "^5.2.1",
+    "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env BROWSER=none react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {
-    "env-cmd": "^8.0.2",
-    "standard": "^12.0.1"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "prettier"
+    ],
+    "plugins": [
+      "eslint-plugin-prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "endOfLine": "auto"
+        }
+      ]
+    }
   },
-  "standard": {
-    "ignore": [
-      "node_modules",
-      "src/aws-exports.js"
+  "prettier": {
+    "trailingComma": "none",
+    "semi": false,
+    "singleQuote": true,
+    "jsxSingleQuote": true
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint-config-prettier": "^8.0.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "2.2.1"
   }
 }

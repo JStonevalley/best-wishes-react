@@ -1,38 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import './index.css'
 import App from './App'
-import registerServiceWorker from './registerServiceWorker'
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import thunk from 'redux-thunk'
-import rootReducer from './reducer'
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
-import deepOrange from '@material-ui/core/colors/deepOrange'
-import cyan from '@material-ui/core/colors/cyan'
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: cyan[300]
-    },
-    secondary: {
-      main: deepOrange.A100
-    }
-  }
-})
-
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(thunk))
-)
+import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(
-  <MuiThemeProvider theme={theme}>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </MuiThemeProvider>,
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
   document.getElementById('root')
 )
-registerServiceWorker()
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals()

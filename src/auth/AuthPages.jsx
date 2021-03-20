@@ -25,7 +25,7 @@ export const Signup = () => {
     <div className={classes.page}>
       <Paper elevation={0} className={classes.paper}>
         <Typography variant='h6' component='h1' paragraph>
-          Welcome, wish for an account?
+          Welcome, wish to create account?
         </Typography>
         <AuthDetailsForm variant='signin' onSubmit={onSubmit} {...formProps} />
       </Paper>

@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography, Paper } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
-import AuthDetailsForm from './components/Form'
+import AuthDetailsForm from './components/AuthForm'
+import { useUser } from '../store/user'
 
 const useStyles = makeStyles((theme) => ({
   page: {
@@ -16,11 +19,39 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export const Signup = () => {
+const signupError = (error) => {
+  switch (error.code) {
+    case 'auth/email-already-in-use':
+      return [
+        'email',
+        {
+          type: 'manual',
+          message: error.message
+        }
+      ]
+    default:
+      return [
+        'general',
+        { type: 'manual', code: error.code, message: error.message }
+      ]
+  }
+}
+
+export const Signup = ({ history }) => {
   const classes = useStyles()
-  const { handleSubmit, watch, ...formProps } = useForm()
-  const onSubmit = handleSubmit((data) => console.log(data))
-  console.log(watch('email'), watch('password'))
+  const user = useUser()
+  useEffect(() => {
+    if (user) history.push('/')
+  })
+  const { handleSubmit, setError, ...formProps } = useForm()
+  const onSubmit = handleSubmit(async ({ email, password }) => {
+    try {
+      await firebase.auth().createUserWithEmailAndPassword(email, password)
+    } catch (error) {
+      console.error(error)
+      setError(...signupError(error))
+    }
+  })
   return (
     <div className={classes.page}>
       <Paper elevation={0} className={classes.paper}>
@@ -33,11 +64,48 @@ export const Signup = () => {
   )
 }
 
-export const Login = () => {
+const loginError = (error) => {
+  switch (error.code) {
+    case 'auth/too-many-requests':
+      return [
+        'general',
+        {
+          type: 'manual',
+          message:
+            'Too many login attempts. Account temporarily blocked. Reset your password to login.'
+        }
+      ]
+    case 'auth/wrong-password':
+      return [
+        'password',
+        {
+          type: 'manual',
+          message: 'Wrong password'
+        }
+      ]
+    default:
+      return [
+        'general',
+        { type: 'manual', code: error.code, message: error.message }
+      ]
+  }
+}
+
+export const Login = ({ history }) => {
   const classes = useStyles()
-  const { handleSubmit, watch, ...formProps } = useForm()
-  const onSubmit = handleSubmit((data) => console.log(data))
-  console.log(watch('email'), watch('password'))
+  const user = useUser()
+  useEffect(() => {
+    if (user) history.push('/')
+  })
+  const { handleSubmit, setError, ...formProps } = useForm()
+  const onSubmit = handleSubmit(async ({ email, password }) => {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password)
+    } catch (error) {
+      console.error(error)
+      setError(...loginError(error))
+    }
+  })
   return (
     <div className={classes.page}>
       <Paper elevation={0} className={classes.paper}>

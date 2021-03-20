@@ -1,5 +1,5 @@
 import React from 'react'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { Signup, Login } from './auth/AuthPages'
@@ -7,6 +7,7 @@ import ContentGrid from './ui/components/ContentGrid'
 import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
 import AppBar from './ui/components/AppBar'
+import { UserProvider } from './store/user'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAUXoQex0Q_2Ln0yZSoSxQ2wsd7UKvnDJc',
@@ -27,40 +28,32 @@ const PATTERNS = {
 
 function App() {
   return (
-    <ThemeProvider
-      theme={theme}
-      style={{
-        minHeight: '100vh',
-        width: '100%'
-      }}
-    >
-      <CssBaseline />
-      <BrowserRouter>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            flexGrow: 1,
-            backgroundImage: PATTERNS.HEXAGON
-          }}
-        >
-          <AppBar />
-          <ContentGrid>
-            <Switch>
-              <Route path='/signup'>
-                <Signup />
-              </Route>
-              <Route path='/login'>
-                <Login />
-              </Route>
-              <Route path='/'>
-                <div>Home</div>
-              </Route>
-            </Switch>
-          </ContentGrid>
-          <BottomNav />
-        </div>
-      </BrowserRouter>
+    <ThemeProvider theme={theme}>
+      <UserProvider>
+        <CssBaseline />
+        <BrowserRouter>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flexGrow: 1,
+              backgroundImage: PATTERNS.HEXAGON
+            }}
+          >
+            <AppBar />
+            <ContentGrid>
+              <Switch>
+                <Route path='/signup' component={Signup} />
+                <Route path='/login' component={Login} />
+                <Route path='/'>
+                  <div>Home</div>
+                </Route>
+              </Switch>
+            </ContentGrid>
+            <BottomNav />
+          </div>
+        </BrowserRouter>
+      </UserProvider>
     </ThemeProvider>
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from '../../ui/components/Link'
 import { makeStyles } from '@material-ui/core/styles'
-import { TextField, Button } from '@material-ui/core'
+import { Typography, TextField, Button } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -16,8 +16,19 @@ const useStyles = makeStyles((theme) => ({
   input: {
     gridColumn: 'span 2'
   },
-  submitButton: {
-    gridColumn: '2 / span 2',
+  error: {
+    color: theme.palette.error.main,
+    gridColumn: '1 / span 4',
+    [theme.breakpoints.down('sm')]: {
+      gridColumn: '1 / span 2'
+    }
+  },
+  button: {
+    gridColumn: '1 / span 2'
+  },
+  link: {
+    alignSelf: 'center',
+    gridColumn: '3 / span 2',
     [theme.breakpoints.down('sm')]: {
       gridColumn: '1 / span 2'
     }
@@ -62,12 +73,17 @@ const AuthDetailsForm = ({ variant, onSubmit, register, errors }) => {
         helperText={errors.password?.message}
         className={classes.input}
       />
-      <Button variant='outlined' className={classes.submitButton} type='submit'>
+      {errors.general && (
+        <Typography className={classes.error}>
+          {errors.general.message}
+        </Typography>
+      )}
+      <Button variant='outlined' className={classes.button} type='submit'>
         {variant === 'login' ? 'Log in' : 'Sign up'}
       </Button>
       <Link
         to={variant === 'login' ? '/signup' : '/login'}
-        className={classes.submitButton}
+        className={classes.link}
       >
         {variant === 'login'
           ? 'Wish to create an account?'

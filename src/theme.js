@@ -7,7 +7,9 @@ const theme = createMuiTheme({
     primary: {
       main: pink[500]
     }
-  }
+  },
+  spacing: (...factors) =>
+    factors.map((factor) => factor * 10).join('px ') + 'px'
 })
 
 export default theme

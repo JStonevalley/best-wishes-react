@@ -2,9 +2,11 @@ import React from 'react'
 import firebase from 'firebase'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
-import Signup from './auth/Signup'
+import { Signup, Login } from './auth/AuthPages'
+import ContentGrid from './ui/components/ContentGrid'
+import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
-import AppBar from './ui/AppBar'
+import AppBar from './ui/components/AppBar'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAUXoQex0Q_2Ln0yZSoSxQ2wsd7UKvnDJc',
@@ -22,15 +24,23 @@ function App() {
     <ThemeProvider theme={theme} style={{ minHeight: '100vh', width: '100%' }}>
       <CssBaseline />
       <BrowserRouter>
-        <AppBar />
-        <Switch>
-          <Route path='/signup'>
-            <Signup />
-          </Route>
-          <Route path='/'>
-            <div>Home</div>
-          </Route>
-        </Switch>
+        <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+          <AppBar />
+          <ContentGrid>
+            <Switch>
+              <Route path='/signup'>
+                <Signup />
+              </Route>
+              <Route path='/login'>
+                <Login />
+              </Route>
+              <Route path='/'>
+                <div>Home</div>
+              </Route>
+            </Switch>
+          </ContentGrid>
+          <BottomNav />
+        </div>
       </BrowserRouter>
     </ThemeProvider>
   )

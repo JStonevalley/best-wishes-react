@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from '../ui/components/Link'
+import { Link } from '../../ui/components/Link'
 import { makeStyles } from '@material-ui/core/styles'
 import { TextField, Button } from '@material-ui/core'
 

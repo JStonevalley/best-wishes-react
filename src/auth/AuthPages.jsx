@@ -41,7 +41,7 @@ export const Signup = ({ history }) => {
   const classes = useStyles()
   const user = useUser()
   useEffect(() => {
-    if (user) history.push('/')
+    if (user) history.push('/lists')
   })
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {
@@ -95,7 +95,7 @@ export const Login = ({ history }) => {
   const classes = useStyles()
   const user = useUser()
   useEffect(() => {
-    if (user) history.push('/')
+    if (user) history.push('/lists')
   })
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {

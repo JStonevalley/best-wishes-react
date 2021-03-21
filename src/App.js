@@ -3,6 +3,7 @@ import firebase from 'firebase/app'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { Signup, Login } from './auth/AuthPages'
+import Lists from './lists/components/Lists'
 import ContentGrid from './ui/components/ContentGrid'
 import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
@@ -45,6 +46,7 @@ function App() {
               <Switch>
                 <Route path='/signup' component={Signup} />
                 <Route path='/login' component={Login} />
+                <Route path='/lists' component={Lists} />
                 <Route path='/'>
                   <div>Home</div>
                 </Route>

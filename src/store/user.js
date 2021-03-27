@@ -26,10 +26,8 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log(ACTION_TYPES.LOGIN, user)
         dispatch({ type: ACTION_TYPES.LOGIN, user })
       } else {
-        console.log(ACTION_TYPES.LOGOUT)
         dispatch({ type: ACTION_TYPES.LOGOUT })
       }
     })

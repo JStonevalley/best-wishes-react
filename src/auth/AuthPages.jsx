@@ -29,6 +29,14 @@ const signupError = (error) => {
           message: error.message
         }
       ]
+    case 'auth/weak-password':
+      return [
+        'password',
+        {
+          type: 'manual',
+          message: error.message
+        }
+      ]
     default:
       return [
         'general',
@@ -41,7 +49,7 @@ export const Signup = ({ history }) => {
   const classes = useStyles()
   const user = useUser()
   useEffect(() => {
-    if (user) history.push('/lists')
+    if (user) history.push('/list')
   })
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {

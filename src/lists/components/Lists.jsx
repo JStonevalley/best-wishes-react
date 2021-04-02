@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -16,13 +17,15 @@ const useStyles = makeStyles((theme) => ({
   },
   inline: {
     display: 'inline'
+  },
+  listItemText: {
+    color: theme.palette.text.primary
   }
 }))
 
 const Lists = () => {
   const classes = useStyles()
-  const { lists, wishes } = useLists()
-  console.log(lists, wishes)
+  const { lists } = useLists()
   return (
     <Paper className={classes.paper}>
       <Typography component='h1' variant='h4'>
@@ -30,25 +33,19 @@ const Lists = () => {
       </Typography>
       <List>
         {Object.entries(lists).map(([id, { headline }]) => (
-          <ListItem alignItems='flex-start' key={id}>
+          <ListItem
+            component={Link}
+            to={`list/${id}`}
+            alignItems='flex-start'
+            key={id}
+          >
             <ListItemAvatar>
               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
             </ListItemAvatar>
             <ListItemText
+              className={classes.listItemText}
               primary={headline}
-              secondary={
-                <React.Fragment>
-                  <Typography
-                    component='span'
-                    variant='body2'
-                    className={classes.inline}
-                    color='textPrimary'
-                  >
-                    Ali Connors
-                  </Typography>
-                  {" — I'll be in your neighborhood doing errands this…"}
-                </React.Fragment>
-              }
+              secondary={id}
             />
           </ListItem>
         ))}

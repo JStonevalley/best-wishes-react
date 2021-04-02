@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from '../../ui/components/Link'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography, TextField, Button } from '@material-ui/core'
+import { materialUiFormRegister } from '../../tools/forms'
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -35,7 +36,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const AuthDetailsForm = ({ variant, onSubmit, register, errors }) => {
+const AuthDetailsForm = ({
+  variant,
+  onSubmit,
+  register,
+  formState: { errors }
+}) => {
   const classes = useStyles()
   return (
     <form onSubmit={onSubmit} className={classes.form}>
@@ -43,15 +49,12 @@ const AuthDetailsForm = ({ variant, onSubmit, register, errors }) => {
         label='Email'
         variant='outlined'
         type='email'
-        name='email'
-        inputProps={{
-          ref: register({
-            required: {
-              value: true,
-              message: 'Email is required'
-            }
-          })
-        }}
+        {...materialUiFormRegister(register)('email', {
+          required: {
+            value: true,
+            message: 'Email is required'
+          }
+        })}
         error={Boolean(errors.email)}
         helperText={errors.email?.message}
         className={classes.input}
@@ -60,15 +63,12 @@ const AuthDetailsForm = ({ variant, onSubmit, register, errors }) => {
         label='Password'
         variant='outlined'
         type='password'
-        name='password'
-        inputProps={{
-          ref: register({
-            required: {
-              value: true,
-              message: 'Password is required'
-            }
-          })
-        }}
+        {...materialUiFormRegister(register)('password', {
+          required: {
+            value: true,
+            message: 'Password is required'
+          }
+        })}
         error={Boolean(errors.password)}
         helperText={errors.password?.message}
         className={classes.input}

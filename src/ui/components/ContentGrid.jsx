@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
         "c c c c c c c c c c c c"
       `
     },
-    gap: theme.spacing(1, 1),
+    gridGap: theme.spacing(1, 1),
     margin: theme.spacing(1, 1),
     flexGrow: 1,
     overflowX: 'auto'

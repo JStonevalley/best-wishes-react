@@ -27,12 +27,12 @@ const ListsProvider = ({ children }) => {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        const newLists = await subscribeToOwnDocumentsInCollection(user)('list')
-        dispatch({ type: ACTION_TYPES.LISTS_UPDATE, lists: newLists })
-        const newWishes = await subscribeToOwnDocumentsInCollection(user)(
-          'wish'
+        subscribeToOwnDocumentsInCollection(user)('list')((data) =>
+          dispatch({ type: ACTION_TYPES.LISTS_UPDATE, lists: data })
         )
-        dispatch({ type: ACTION_TYPES.WISHES_UPDATE, wishes: newWishes })
+        subscribeToOwnDocumentsInCollection(user)('wish')((data) =>
+          dispatch({ type: ACTION_TYPES.WISHES_UPDATE, wishes: data })
+        )
       }
     })
   }, [])

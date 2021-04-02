@@ -6,7 +6,7 @@ import { useUser } from '../../store/user'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 
-const NAV_DESTINATIONS = [['/lists', '/list'], ['/shared']]
+const NAV_DESTINATIONS = [['/list'], ['/shared']]
 
 const BottomNav = () => {
   const location = useLocation()

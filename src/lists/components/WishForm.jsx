@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Button,
@@ -68,7 +66,6 @@ const WishFormModal = ({
   const submit = handleSubmit(async (data) => {
     try {
       console.log('SUBMIT', data)
-      firebase.firestore().collection('wish')
       close()
     } catch (error) {
       console.error(error)

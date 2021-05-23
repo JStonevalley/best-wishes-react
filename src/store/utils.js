@@ -1,18 +1,23 @@
-import firebase from 'firebase/app'
-import 'firebase/firestore'
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  getFirestore
+} from 'firebase/firestore'
 
-export const subscribeToOwnDocumentsInCollection = (user) => (collection) => (
+export const subscribeToOwnDocumentsInCollection = (user) => (coll) => (
   onData
 ) => {
-  firebase
-    .firestore()
-    .collection(collection)
-    .where('ownerUID', '==', user.uid)
-    .onSnapshot((querySnapshot) => {
-      const data = {}
-      querySnapshot.forEach((doc) => {
-        data[doc.id] = doc.data()
-      })
-      onData(data)
+  const q = query(
+    collection(getFirestore(), coll),
+    where('ownerUID', '==', user.uid)
+  )
+  onSnapshot(q, (querySnapshot) => {
+    const data = {}
+    querySnapshot.forEach((doc) => {
+      data[doc.id] = doc.data()
     })
+    onData(data)
+  })
 }

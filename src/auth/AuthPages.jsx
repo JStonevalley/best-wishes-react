@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from 'firebase/auth'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography, Paper } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
@@ -54,7 +57,7 @@ export const Signup = ({ history }) => {
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {
     try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password)
+      await createUserWithEmailAndPassword(getAuth(), email, password)
     } catch (error) {
       console.error(error)
       setError(...signupError(error))
@@ -108,7 +111,7 @@ export const Login = ({ history }) => {
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password)
+      await signInWithEmailAndPassword(getAuth(), email, password)
     } catch (error) {
       console.error(error)
       setError(...loginError(error))

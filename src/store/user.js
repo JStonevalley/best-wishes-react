@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useReducer } from 'react'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const UserContext = React.createContext()
 
@@ -24,7 +23,7 @@ const userReducer = (state, { type, user }) => {
 const UserProvider = ({ children }) => {
   const [user, dispatch] = useReducer(userReducer, { user: undefined })
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         dispatch({ type: ACTION_TYPES.LOGIN, user })
       } else {

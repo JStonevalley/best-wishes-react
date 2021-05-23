@@ -1,6 +1,5 @@
 import React from 'react'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import { getAuth, signOut } from 'firebase/auth'
 import { makeStyles } from '@material-ui/core/styles'
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core'
 import { Link } from 'react-router-dom'
@@ -45,7 +44,7 @@ export default function ButtonAppBar() {
             </Link>
           </>
         ) : (
-          <Button color='inherit' onClick={() => firebase.auth().signOut()}>
+          <Button color='inherit' onClick={() => signOut(getAuth())}>
             Logout
           </Button>
         )}

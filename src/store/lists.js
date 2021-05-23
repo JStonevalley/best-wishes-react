@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useReducer } from 'react'
 import { subscribeToOwnDocumentsInCollection } from './utils'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const ListsContext = React.createContext()
 
@@ -25,7 +24,7 @@ const listsReducer = (state, { type, lists = {}, wishes = {} }) => {
 const ListsProvider = ({ children }) => {
   const [lists, dispatch] = useReducer(listsReducer, { lists: {}, wishes: {} })
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(async (user) => {
+    onAuthStateChanged(getAuth(), async (user) => {
       if (user) {
         subscribeToOwnDocumentsInCollection(user)('list')((data) =>
           dispatch({ type: ACTION_TYPES.LISTS_UPDATE, lists: data })

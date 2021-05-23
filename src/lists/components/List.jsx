@@ -58,7 +58,7 @@ const List = ({
             <ListItemAvatar>
               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
             </ListItemAvatar>
-            <ListItemText primary={wish.headline} secondary={id} />
+            <ListItemText primary={wish.title} secondary={id} />
             <ListItemSecondaryAction>
               <IconButton onClick={() => editWish(wish)} aria-label='edit'>
                 <EditIcon />

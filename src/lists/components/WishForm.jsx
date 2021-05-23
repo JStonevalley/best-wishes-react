@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Button,
@@ -20,16 +22,16 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateAreas: `
       "introText introText introText introText introText introText introText introText"
       "link link link link link link link rfb"
-      "headline headline headline headline headline headline headline headline"
-      "body body body body body body body body"
+      "title title title title title title title title"
+      "description description description description description description description description"
       "price price image image image image image image"
     `,
     [theme.breakpoints.down('sm')]: {
       gridTemplateAreas: `
         "introText introText introText introText introText introText introText introText"
         "link link link link link link link rfb"
-        "headline headline headline headline headline headline headline headline"
-        "body body body body body body body body"
+        "title title title title title title title title"
+        "description description description description description description description description"
         "price price image image image image image image"
       `
     },
@@ -40,6 +42,17 @@ const useStyles = makeStyles((theme) => ({
   },
   hide: {
     display: 'none'
+  },
+  '@keyframes roll': {
+    from: {
+      transform: 'rotate(0)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  },
+  loading: {
+    animation: '$roll 2s infinite'
   }
 }))
 
@@ -47,65 +60,100 @@ const WishFormModal = ({
   isOpen,
   formMode,
   close,
-  hookFormProps: { watch, register, formState, ...hookFormProps }
+  hookFormProps: { watch, register, formState, handleSubmit, ...hookFormProps }
 }) => {
   const classes = useStyles()
-  const [headline] = watch(['headline'])
+  const [fetchingMetadata, setFetchingMetadata] = useState(false)
+  const [title, link] = watch(['title', 'link'])
+  const submit = handleSubmit(async (data) => {
+    try {
+      console.log('SUBMIT', data)
+      firebase.firestore().collection('wish')
+      close()
+    } catch (error) {
+      console.error(error)
+    }
+  })
   return (
     <Dialog open={isOpen} onClose={close}>
-      <DialogTitle>{headline}</DialogTitle>
-      <DialogContent className={classes.dialogContent}>
-        <DialogContentText className={classes.introText}>
-          To make wishing easier, paste a link in the field below and as much
-          information as possible will be fetched for you.
-        </DialogContentText>
-        <TextField
-          autoFocus
-          label='Link'
-          variant='outlined'
-          style={{ gridArea: 'link' }}
-          {...materialUiFormRegister(register)('link')}
-        />
-        <IconButton style={{ gridArea: 'rfb' }}>
-          <RefreshIcon />
-        </IconButton>
-        <TextField
-          label='Headline'
-          variant='outlined'
-          style={{ gridArea: 'headline' }}
-          className={formMode === 'create' ? classes.hide : undefined}
-          {...materialUiFormRegister(register)('headline')}
-        />
-        <TextField
-          label='Body'
-          variant='outlined'
-          multiline
-          style={{ gridArea: 'body' }}
-          className={formMode === 'create' ? classes.hide : undefined}
-          {...materialUiFormRegister(register)('body')}
-        />
-        <TextField
-          label='Price'
-          variant='outlined'
-          type='number'
-          style={{ gridArea: 'price' }}
-          className={formMode === 'create' ? classes.hide : undefined}
-          {...materialUiFormRegister(register)('price')}
-        />
-        <TextField
-          label='Image'
-          variant='outlined'
-          style={{ gridArea: 'image' }}
-          className={formMode === 'create' ? classes.hide : undefined}
-          {...materialUiFormRegister(register)('image')}
-        />
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+        <form onSubmit={submit} className={classes.dialogContent}>
+          <DialogContentText className={classes.introText}>
+            To make wishing easier, paste a link in the field below and as much
+            information as possible will be fetched for you.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            label='Link'
+            variant='outlined'
+            style={{ gridArea: 'link' }}
+            {...materialUiFormRegister(register)('link')}
+          />
+          <IconButton
+            style={{ gridArea: 'rfb' }}
+            disabled={fetchingMetadata}
+            onClick={async () => {
+              setFetchingMetadata(true)
+              try {
+                const pageMetadata = await fetch(
+                  `${process.env.REACT_APP_API_BASE}/fetchPageMetadata`,
+                  {
+                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: link })
+                  }
+                ).then((res) => res.json())
+                console.log(pageMetadata)
+              } catch (error) {
+                console.error(error)
+              }
+              setFetchingMetadata(false)
+            }}
+          >
+            <RefreshIcon
+              className={fetchingMetadata ? classes.loading : undefined}
+            />
+          </IconButton>
+          <TextField
+            label='Title'
+            variant='outlined'
+            style={{ gridArea: 'title' }}
+            className={formMode === 'create' ? classes.hide : undefined}
+            {...materialUiFormRegister(register)('title')}
+          />
+          <TextField
+            label='Description'
+            variant='outlined'
+            multiline
+            rows={4}
+            style={{ gridArea: 'description' }}
+            className={formMode === 'create' ? classes.hide : undefined}
+            {...materialUiFormRegister(register)('description')}
+          />
+          <TextField
+            label='Price'
+            variant='outlined'
+            type='number'
+            style={{ gridArea: 'price' }}
+            className={formMode === 'create' ? classes.hide : undefined}
+            {...materialUiFormRegister(register)('price')}
+          />
+          <TextField
+            label='Image'
+            variant='outlined'
+            style={{ gridArea: 'image' }}
+            className={formMode === 'create' ? classes.hide : undefined}
+            {...materialUiFormRegister(register)('image')}
+          />
+        </form>
       </DialogContent>
       <DialogActions>
-        <Button onClick={close} color='primary'>
-          Cancel
-        </Button>
-        <Button onClick={close} color='primary'>
-          Subscribe
+        <Button onClick={close}>Cancel</Button>
+        <Button onClick={submit} color='primary'>
+          {formMode === 'create' ? 'Make my wish' : 'Change my wish'}
         </Button>
       </DialogActions>
     </Dialog>

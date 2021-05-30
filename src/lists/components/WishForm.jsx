@@ -58,7 +58,14 @@ const WishFormModal = ({
   isOpen,
   formMode,
   close,
-  hookFormProps: { watch, register, formState, handleSubmit, ...hookFormProps }
+  hookFormProps: {
+    watch,
+    register,
+    formState,
+    handleSubmit,
+    setValue,
+    ...hookFormProps
+  }
 }) => {
   const classes = useStyles()
   const [fetchingMetadata, setFetchingMetadata] = useState(false)
@@ -103,7 +110,18 @@ const WishFormModal = ({
                     body: JSON.stringify({ url: link })
                   }
                 ).then((res) => res.json())
-                console.log(pageMetadata)
+                if (pageMetadata?.title) {
+                  setValue('title', pageMetadata?.title)
+                }
+                if (pageMetadata?.description) {
+                  setValue('description', pageMetadata?.description)
+                }
+                if (pageMetadata?.price) {
+                  setValue('price', pageMetadata?.price)
+                }
+                if (pageMetadata?.image) {
+                  setValue('image', pageMetadata?.image, { shouldDirty: true })
+                }
               } catch (error) {
                 console.error(error)
               }

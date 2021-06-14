@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import { materialUiFormRegister } from '../../tools/forms'
+import { useWishMaking } from '../wishMaking'
 
 const useStyles = makeStyles((theme) => ({
   dialogContent: {
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 const WishFormModal = ({
   isOpen,
-  formMode,
+  wishId,
   close,
   hookFormProps: {
     watch,
@@ -69,10 +70,12 @@ const WishFormModal = ({
 }) => {
   const classes = useStyles()
   const [fetchingMetadata, setFetchingMetadata] = useState(false)
+  const [fetchedMetadata, setFetchedMetadata] = useState(false)
   const [title, link] = watch(['title', 'link'])
+  const { makeAWish, changeAWish } = useWishMaking()
   const submit = handleSubmit(async (data) => {
     try {
-      console.log('SUBMIT', data)
+      wishId ? changeAWish(wishId)(data) : makeAWish(data)
       close()
     } catch (error) {
       console.error(error)
@@ -110,17 +113,30 @@ const WishFormModal = ({
                     body: JSON.stringify({ url: link })
                   }
                 ).then((res) => res.json())
+                setFetchedMetadata(true)
                 if (pageMetadata?.title) {
-                  setValue('title', pageMetadata?.title)
+                  setValue('title', pageMetadata?.title, {
+                    shouldTouch: true,
+                    shouldDirty: true
+                  })
                 }
                 if (pageMetadata?.description) {
-                  setValue('description', pageMetadata?.description)
+                  setValue('description', pageMetadata?.description, {
+                    shouldTouch: true,
+                    shouldDirty: true
+                  })
                 }
                 if (pageMetadata?.price) {
-                  setValue('price', pageMetadata?.price)
+                  setValue('price', pageMetadata?.price, {
+                    shouldTouch: true,
+                    shouldDirty: true
+                  })
                 }
                 if (pageMetadata?.image) {
-                  setValue('image', pageMetadata?.image, { shouldDirty: true })
+                  setValue('image', pageMetadata?.image, {
+                    shouldTouch: true,
+                    shouldDirty: true
+                  })
                 }
               } catch (error) {
                 console.error(error)
@@ -136,7 +152,7 @@ const WishFormModal = ({
             label='Title'
             variant='outlined'
             style={{ gridArea: 'title' }}
-            className={formMode === 'create' ? classes.hide : undefined}
+            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
             {...materialUiFormRegister(register)('title')}
           />
           <TextField
@@ -145,7 +161,7 @@ const WishFormModal = ({
             multiline
             rows={4}
             style={{ gridArea: 'description' }}
-            className={formMode === 'create' ? classes.hide : undefined}
+            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
             {...materialUiFormRegister(register)('description')}
           />
           <TextField
@@ -153,23 +169,25 @@ const WishFormModal = ({
             variant='outlined'
             type='number'
             style={{ gridArea: 'price' }}
-            className={formMode === 'create' ? classes.hide : undefined}
+            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
             {...materialUiFormRegister(register)('price')}
           />
           <TextField
             label='Image'
             variant='outlined'
             style={{ gridArea: 'image' }}
-            className={formMode === 'create' ? classes.hide : undefined}
+            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
             {...materialUiFormRegister(register)('image')}
           />
         </form>
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>
-        <Button onClick={submit} color='primary'>
-          {formMode === 'create' ? 'Make my wish' : 'Change my wish'}
-        </Button>
+        {(wishId || fetchedMetadata) && (
+          <Button onClick={submit} color='primary'>
+            {!wishId ? 'Make my wish' : 'Change my wish'}
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   )

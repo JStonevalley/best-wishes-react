@@ -22,7 +22,10 @@ const listsReducer = (state, { type, lists = {}, wishes = {} }) => {
 }
 
 const ListsProvider = ({ children }) => {
-  const [lists, dispatch] = useReducer(listsReducer, { lists: {}, wishes: {} })
+  const [listsAndWishes, dispatch] = useReducer(listsReducer, {
+    lists: {},
+    wishes: {}
+  })
   useEffect(() => {
     onAuthStateChanged(getAuth(), async (user) => {
       if (user) {
@@ -35,7 +38,11 @@ const ListsProvider = ({ children }) => {
       }
     })
   }, [])
-  return <ListsContext.Provider value={lists}>{children}</ListsContext.Provider>
+  return (
+    <ListsContext.Provider value={listsAndWishes}>
+      {children}
+    </ListsContext.Provider>
+  )
 }
 
 const useLists = () => {

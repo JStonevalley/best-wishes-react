@@ -19,6 +19,7 @@ import { useLists } from '../../store/lists'
 import { pick, prop } from 'ramda'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
+import { useUser } from '../../store/user'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,11 +36,26 @@ const List = ({
   }
 }) => {
   const [wishFormIsOpen, setWishFormIsOpen] = useState(false)
-  const [formMode, setFormMode] = useState('create')
+  const [formWishId, setFormWishId] = useState()
+  const user = useUser()
   const hookFormProps = useForm()
-  const editWish = (wish) => {
-    setFormMode(wish ? 'edit' : 'create')
-    hookFormProps.reset(wish)
+  const editWish = (id, wish) => {
+    setFormWishId(id)
+    hookFormProps.reset(
+      wish
+        ? wish
+        : {
+            link: undefined,
+            title: undefined,
+            description: undefined,
+            price: undefined,
+            image: undefined,
+            ownerUID: user.uid
+          },
+      {
+        keepValues: false
+      }
+    )
     setWishFormIsOpen(true)
   }
   const classes = useStyles()
@@ -56,11 +72,14 @@ const List = ({
         {Object.entries(listWishes).map(([id, wish]) => (
           <ListItem alignItems='flex-start' key={id}>
             <ListItemAvatar>
-              <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
+              <Avatar
+                alt={wish.title}
+                src={wish.image || '/static/images/avatar/1.jpg'}
+              />
             </ListItemAvatar>
             <ListItemText primary={wish.title} secondary={id} />
             <ListItemSecondaryAction>
-              <IconButton onClick={() => editWish(wish)} aria-label='edit'>
+              <IconButton onClick={() => editWish(id, wish)} aria-label='edit'>
                 <EditIcon />
               </IconButton>
               <IconButton edge='end' aria-label='delete'>
@@ -78,7 +97,7 @@ const List = ({
       </div>
       <WishFormModal
         hookFormProps={hookFormProps}
-        formMode={formMode}
+        wishId={formWishId}
         isOpen={wishFormIsOpen}
         close={() => setWishFormIsOpen(false)}
       />

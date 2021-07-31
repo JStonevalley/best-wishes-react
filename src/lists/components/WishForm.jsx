@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const WishFormModal = ({
   isOpen,
   wishId,
+  listId,
   close,
   hookFormProps: {
     watch,
@@ -75,7 +76,7 @@ const WishFormModal = ({
   const { makeAWish, changeAWish } = useWishMaking()
   const submit = handleSubmit(async (data) => {
     try {
-      wishId ? changeAWish(wishId)(data) : makeAWish(data)
+      wishId ? changeAWish(wishId)(data) : makeAWish(listId)(data)
       close()
     } catch (error) {
       console.error(error)

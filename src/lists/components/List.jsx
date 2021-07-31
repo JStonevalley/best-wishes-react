@@ -83,6 +83,7 @@ const List = ({
         hookFormProps={hookFormProps}
         wishId={formWishId}
         isOpen={wishFormIsOpen}
+        listId={listId}
         close={() => setWishFormIsOpen(false)}
       />
     </Paper>

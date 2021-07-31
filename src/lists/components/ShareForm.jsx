@@ -120,7 +120,7 @@ export const ShareFormDialog = ({ listId }) => {
           <IconButton
             style={{ justifySelf: 'center' }}
             onClick={() => addShare()}
-            aria-label='share'
+            aria-label='add share'
           >
             <AddIcon />
           </IconButton>

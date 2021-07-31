@@ -8,11 +8,11 @@ import {
   Avatar,
   Typography,
   Paper,
-  Button,
   IconButton
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import AddIcon from '@material-ui/icons/Add'
 import { useLists } from '../../store/lists'
 import { pick, prop } from 'ramda'
 import WishFormModal from './WishForm'
@@ -26,17 +26,25 @@ const useWishListHeaderStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     justifyContent: 'space-between'
+  },
+  toolBar: {
+    display: 'flex'
   }
 }))
 
-const ListHeader = ({ headline, listId }) => {
+const ListHeader = ({ headline, listId, editWish }) => {
   const classes = useWishListHeaderStyles()
   return (
     <div className={classes.container}>
       <Typography component='h1' variant='h4'>
         {headline}
       </Typography>
-      <ShareFormDialog listId={listId} />
+      <div className={classes.toolBar}>
+        <IconButton onClick={() => editWish()}>
+          <AddIcon />
+        </IconButton>
+        <ShareFormDialog listId={listId} />
+      </div>
     </div>
   )
 }
@@ -85,7 +93,11 @@ const List = ({
   const listWishes = pick(list.wishes.map(prop('id')))(wishes)
   return (
     <Paper className={classes.paper}>
-      <ListHeader headline={list.headline} listId={listId} />
+      <ListHeader
+        headline={list.headline}
+        listId={listId}
+        editWish={editWish}
+      />
       <MaterialList>
         {Object.entries(listWishes).map(([id, wish]) => (
           <WishListItem
@@ -97,11 +109,6 @@ const List = ({
           />
         ))}
       </MaterialList>
-      <div>
-        <Button variant='outlined' onClick={() => editWish()}>
-          Make a wish
-        </Button>
-      </div>
       <WishFormModal
         hookFormProps={hookFormProps}
         wishId={formWishId}

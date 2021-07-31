@@ -4,7 +4,6 @@ import {
   List as MaterialList,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
   ListItemAvatar,
   Avatar,
   Typography,

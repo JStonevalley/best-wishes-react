@@ -93,7 +93,6 @@ const List = ({
         {Object.entries(listWishes).map(([id, wish]) => (
           <WishListItem id={id} wish={wish} editWish={editWish} />
         ))}
-        <Divider variant='inset' component='li' />
       </MaterialList>
       <div>
         <Button variant='outlined' onClick={() => editWish()}>
@@ -169,9 +168,11 @@ const WishListItem = ({ id, wish, editWish }) => {
           <div className={wishListItemTextClasses.container}>
             <Typography variant='body2'>{wish.description}</Typography>
             <div className={wishListItemTextClasses.infoBar}>
-              <Typography variant='body1'>
-                <strong>Price:</strong> {wish.price}
-              </Typography>
+              {wish.price && (
+                <Typography variant='body1'>
+                  <strong>Price:</strong> {wish.price}
+                </Typography>
+              )}
             </div>
           </div>
         }

@@ -15,13 +15,35 @@ import {
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import ShareIcon from '@material-ui/icons/Share'
 import { useLists } from '../../store/lists'
 import { pick, prop } from 'ramda'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
 import { useUser } from '../../store/user'
 
-const useStyles = makeStyles((theme) => ({
+const useWishListHeaderStyles = makeStyles((theme) => ({
+  container: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
+}))
+
+const ListHeader = ({ headline, listId }) => {
+  const classes = useWishListHeaderStyles()
+  return (
+    <div className={classes.container}>
+      <Typography component='h1' variant='h4'>
+        {headline}
+      </Typography>
+      <IconButton aria-label='share'>
+        <ShareIcon />
+      </IconButton>
+    </div>
+  )
+}
+
+const useWishListStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2, 2)
   },
@@ -58,16 +80,14 @@ const List = ({
     )
     setWishFormIsOpen(true)
   }
-  const classes = useStyles()
+  const classes = useWishListStyles()
   const { lists, wishes } = useLists()
   const list = lists[listId]
   if (!list) return null
   const listWishes = pick(list.wishes.map(prop('id')))(wishes)
   return (
     <Paper className={classes.paper}>
-      <Typography component='h1' variant='h4'>
-        {list.headline}
-      </Typography>
+      <ListHeader headline={list.headline} listId={listId} />
       <MaterialList>
         {Object.entries(listWishes).map(([id, wish]) => (
           <WishListItem id={id} wish={wish} editWish={editWish} />

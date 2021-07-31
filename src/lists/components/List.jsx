@@ -21,6 +21,7 @@ import { pick, prop } from 'ramda'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
 import { useUser } from '../../store/user'
+import { Lightbox } from '../../ui/components/Lightbox.jsx'
 
 const useWishListHeaderStyles = makeStyles((theme) => ({
   container: {
@@ -123,16 +124,39 @@ const useWishListItemBodyStyles = makeStyles((theme) => ({
   }
 }))
 
+const useAvatarStyles = makeStyles((theme) => ({
+  root: {
+    cursor: 'pointer',
+    transition: 'all .2s ease-in-out',
+    '&:hover': {
+      transform: 'scale(1.1)'
+    }
+  }
+}))
+
 const WishListItem = ({ id, wish, editWish }) => {
   const wishListItemTextClasses = useWishListItemBodyStyles()
-  console.log(wish)
+  const avatarClasses = useAvatarStyles()
+  const avatar = (
+    <Avatar
+      classes={avatarClasses}
+      variant='rounded'
+      alt={wish.title}
+      src={wish.image || '/static/images/avatar/1.jpg'}
+    />
+  )
   return (
     <ListItem alignItems='flex-start' key={id}>
       <ListItemAvatar>
-        <Avatar
-          alt={wish.title}
-          src={wish.image || '/static/images/avatar/1.jpg'}
-        />
+        {wish.image ? (
+          <Lightbox
+            src={wish.image}
+            alt={wish.title}
+            activationElement={avatar}
+          />
+        ) : (
+          avatar
+        )}
       </ListItemAvatar>
       <ListItemText
         disableTypography

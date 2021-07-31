@@ -23,7 +23,6 @@ export const useWishMaking = () => {
     await await updateDoc(doc(db, 'list', listId), {
       wishes: arrayRemove(doc(db, 'wish', id))
     })
-    await deleteDoc(doc(db, 'wish', id))
   }
   return { makeAWish, changeAWish, removeAWish }
 }

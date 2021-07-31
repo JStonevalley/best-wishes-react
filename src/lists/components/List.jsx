@@ -97,7 +97,7 @@ const List = ({
       </MaterialList>
       <div>
         <Button variant='outlined' onClick={() => editWish()}>
-          Make a swish
+          Make a wish
         </Button>
       </div>
       <WishFormModal

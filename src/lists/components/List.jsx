@@ -116,12 +116,17 @@ const List = ({
 
 const useWishListItemBodyStyles = makeStyles((theme) => ({
   container: {
-    marginRight: theme.spacing(6),
     display: 'flex',
     flexDirection: 'column'
   },
   infoBar: {
     marginTop: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  toolBar: {
     display: 'flex',
     flexDirection: 'row'
   }
@@ -173,27 +178,34 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
           <div className={wishListItemTextClasses.container}>
             <Typography variant='body2'>{wish.description}</Typography>
             <div className={wishListItemTextClasses.infoBar}>
-              {wish.price && (
-                <Typography variant='body1'>
-                  <strong>Price:</strong> {wish.price}
-                </Typography>
-              )}
+              <Typography variant='body1'>
+                {wish.price ? (
+                  <span>
+                    <strong>Price:</strong> {wish.price}
+                  </span>
+                ) : (
+                  ''
+                )}
+              </Typography>
+              <div className={wishListItemTextClasses.toolBar}>
+                <IconButton
+                  onClick={() => editWish(id, wish)}
+                  aria-label='edit'
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => removeAWish(listId)(id)}
+                  edge='end'
+                  aria-label='delete'
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </div>
             </div>
           </div>
         }
       />
-      <ListItemSecondaryAction>
-        <IconButton onClick={() => editWish(id, wish)} aria-label='edit'>
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          onClick={() => removeAWish(listId)(id)}
-          edge='end'
-          aria-label='delete'
-        >
-          <DeleteIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
     </ListItem>
   )
 }

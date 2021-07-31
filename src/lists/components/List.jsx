@@ -7,7 +7,6 @@ import {
   ListItemSecondaryAction,
   ListItemAvatar,
   Avatar,
-  Divider,
   Typography,
   Paper,
   Button,
@@ -15,13 +14,14 @@ import {
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import ShareIcon from '@material-ui/icons/Share'
 import { useLists } from '../../store/lists'
 import { pick, prop } from 'ramda'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
 import { useUser } from '../../store/user'
 import { Lightbox } from '../../ui/components/Lightbox.jsx'
+import { ShareFormDialog } from './ShareForm.jsx'
+import { useWishMaking } from '../wishMaking'
 
 const useWishListHeaderStyles = makeStyles((theme) => ({
   container: {
@@ -37,9 +37,7 @@ const ListHeader = ({ headline, listId }) => {
       <Typography component='h1' variant='h4'>
         {headline}
       </Typography>
-      <IconButton aria-label='share'>
-        <ShareIcon />
-      </IconButton>
+      <ShareFormDialog listId={listId} />
     </div>
   )
 }
@@ -91,7 +89,13 @@ const List = ({
       <ListHeader headline={list.headline} listId={listId} />
       <MaterialList>
         {Object.entries(listWishes).map(([id, wish]) => (
-          <WishListItem id={id} wish={wish} editWish={editWish} />
+          <WishListItem
+            key={`wishListItem-${id}`}
+            id={id}
+            listId={listId}
+            wish={wish}
+            editWish={editWish}
+          />
         ))}
       </MaterialList>
       <div>
@@ -133,7 +137,8 @@ const useAvatarStyles = makeStyles((theme) => ({
   }
 }))
 
-const WishListItem = ({ id, wish, editWish }) => {
+const WishListItem = ({ id, wish, listId, editWish }) => {
+  const { removeAWish } = useWishMaking()
   const wishListItemTextClasses = useWishListItemBodyStyles()
   const avatarClasses = useAvatarStyles()
   const avatar = (
@@ -181,7 +186,11 @@ const WishListItem = ({ id, wish, editWish }) => {
         <IconButton onClick={() => editWish(id, wish)} aria-label='edit'>
           <EditIcon />
         </IconButton>
-        <IconButton edge='end' aria-label='delete'>
+        <IconButton
+          onClick={() => removeAWish(listId)(id)}
+          edge='end'
+          aria-label='delete'
+        >
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>

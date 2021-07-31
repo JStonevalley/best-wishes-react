@@ -70,23 +70,7 @@ const List = ({
       </Typography>
       <MaterialList>
         {Object.entries(listWishes).map(([id, wish]) => (
-          <ListItem alignItems='flex-start' key={id}>
-            <ListItemAvatar>
-              <Avatar
-                alt={wish.title}
-                src={wish.image || '/static/images/avatar/1.jpg'}
-              />
-            </ListItemAvatar>
-            <ListItemText primary={wish.title} secondary={id} />
-            <ListItemSecondaryAction>
-              <IconButton onClick={() => editWish(id, wish)} aria-label='edit'>
-                <EditIcon />
-              </IconButton>
-              <IconButton edge='end' aria-label='delete'>
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <WishListItem id={id} wish={wish} editWish={editWish} />
         ))}
         <Divider variant='inset' component='li' />
       </MaterialList>
@@ -102,6 +86,60 @@ const List = ({
         close={() => setWishFormIsOpen(false)}
       />
     </Paper>
+  )
+}
+
+const useWishListItemBodyStyles = makeStyles((theme) => ({
+  container: {
+    marginRight: theme.spacing(6),
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  infoBar: {
+    marginTop: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'row'
+  }
+}))
+
+const WishListItem = ({ id, wish, editWish }) => {
+  const wishListItemTextClasses = useWishListItemBodyStyles()
+  console.log(wish)
+  return (
+    <ListItem alignItems='flex-start' key={id}>
+      <ListItemAvatar>
+        <Avatar
+          alt={wish.title}
+          src={wish.image || '/static/images/avatar/1.jpg'}
+        />
+      </ListItemAvatar>
+      <ListItemText
+        disableTypography
+        primary={
+          <Typography component='h2' variant='h6'>
+            {wish.title}
+          </Typography>
+        }
+        secondary={
+          <div className={wishListItemTextClasses.container}>
+            <Typography variant='body2'>{wish.description}</Typography>
+            <div className={wishListItemTextClasses.infoBar}>
+              <Typography variant='body1'>
+                <strong>Price:</strong> {wish.price}
+              </Typography>
+            </div>
+          </div>
+        }
+      />
+      <ListItemSecondaryAction>
+        <IconButton onClick={() => editWish(id, wish)} aria-label='edit'>
+          <EditIcon />
+        </IconButton>
+        <IconButton edge='end' aria-label='delete'>
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
   )
 }
 

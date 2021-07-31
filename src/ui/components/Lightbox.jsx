@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
-} from '@material-ui/core'
+import { Dialog } from '@material-ui/core'
 
 export const Lightbox = ({
   src,

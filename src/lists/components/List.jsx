@@ -19,7 +19,7 @@ import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
 import { useUser } from '../../store/user'
 import { Lightbox } from '../../ui/components/Lightbox.jsx'
-import { ShareFormDialog } from './ShareForm.jsx'
+import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
 import { useWishMaking } from '../wishMaking'
 
 const useWishListHeaderStyles = makeStyles((theme) => ({

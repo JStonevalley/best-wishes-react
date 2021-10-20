@@ -16,8 +16,9 @@ import ShareIcon from '@material-ui/icons/Share'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
-import { materialUiFormRegister } from '../../tools/forms'
 import { useCallback } from 'react'
+import { useWishListSharing } from '../share'
+import { useUser } from '../../store/user'
 
 const useStyles = makeStyles((theme) => ({
   dialogContent: {
@@ -26,29 +27,37 @@ const useStyles = makeStyles((theme) => ({
     rowGap: theme.spacing(1)
   },
   shareFieldRow: {
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'flex-start'
+  },
+  shareFieldRowCheckbox: {
+    marginTop: '0.35rem'
   },
   shareFieldRowTextInput: {
     flexGrow: 1
+  },
+  shareFieldRowRemove: {
+    marginTop: '0.25rem'
   }
 }))
 
 const sharedTo = ['test@shared.se', 'test@shared.com']
 
 export const ShareFormDialog = ({ listId }) => {
+  const { addShare, removeShare } = useWishListSharing()
+  const user = useUser()
   const [isOpen, setIsOpen] = useState(false)
   const [confirmIsOpen, setConfirmIsOpen] = useState(false)
   const classes = useStyles()
   const {
     handleSubmit,
     control,
-    register,
     watch,
     formState: { errors }
   } = useForm({
     mode: 'onTouched',
     defaultValues: {
-      newShareEmails:
+      shareEmails:
         sharedTo.length > 0
           ? sharedTo.map((email) => ({ email, include: false }))
           : [{ email: '', include: true }]
@@ -56,14 +65,22 @@ export const ShareFormDialog = ({ listId }) => {
   })
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'newShareEmails'
+    name: 'shareEmails'
   })
-  const [newShareEmails] = watch(['newShareEmails'])
-  const addShare = useCallback(() => append({ email: '', include: true }), [
+  const [shareEmails] = watch(['shareEmails'])
+  const addShareRow = useCallback(() => append({ email: '', include: true }), [
     append
   ])
-  const submit = handleSubmit(async (data) => {
-    console.log(data)
+  const submit = handleSubmit(async ({ shareEmails }) => {
+    console.log(shareEmails)
+    await Promise.all(
+      shareEmails
+        .filter((share) => share.include)
+        .map(({ email }) =>
+          addShare({ invitedEmail: email, listId, sharedByUID: user.uid })
+        )
+    )
+    console.log('Shared')
   })
   return (
     <>
@@ -83,34 +100,51 @@ export const ShareFormDialog = ({ listId }) => {
                 <div key={fieldSpec.id} className={classes.shareFieldRow}>
                   <Controller
                     render={({ field: { value, ...field } }) => (
-                      <Checkbox checked={value} {...field} />
+                      <Checkbox
+                        className={classes.shareFieldRowCheckbox}
+                        checked={value != null ? value : fieldSpec.include}
+                        {...field}
+                      />
                     )}
-                    name={`newShareEmails.${index}.include`}
+                    name={`shareEmails.${index}.include`}
                     control={control}
                     defaultValue={fieldSpec.include}
                   />
-                  <TextField
-                    variant='outlined'
-                    type='email'
-                    error={Boolean(errors.newShareEmails?.[index]?.email)}
-                    helperText={errors.newShareEmails?.[index]?.email?.message}
-                    disabled={index < sharedTo.length}
-                    {...materialUiFormRegister(register)(
-                      `newShareEmails.${index}.email`,
-                      {
-                        required: {
-                          value: true,
-                          message: 'Email is required'
-                        },
-                        pattern: {
-                          value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-                          message: 'Invalid email'
-                        }
+                  <Controller
+                    render={({ field }) => {
+                      return (
+                        <TextField
+                          variant='outlined'
+                          type='email'
+                          error={Boolean(errors.shareEmails?.[index]?.email)}
+                          helperText={
+                            errors.shareEmails?.[index]?.email?.message
+                          }
+                          disabled={index < sharedTo.length}
+                          className={classes.shareFieldRowTextInput}
+                          {...field}
+                        />
+                      )
+                    }}
+                    name={`shareEmails.${index}.email`}
+                    control={control}
+                    defaultValue={fieldSpec.email}
+                    rules={{
+                      required: {
+                        value: true,
+                        message: 'Email is required'
+                      },
+                      pattern: {
+                        value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+                        message: 'Invalid email'
                       }
-                    )}
-                    className={classes.shareFieldRowTextInput}
+                    }}
                   />
-                  <IconButton onClick={() => remove(index)} aria-label='share'>
+                  <IconButton
+                    className={classes.shareFieldRowRemove}
+                    onClick={() => remove(index)}
+                    aria-label='share'
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </div>
@@ -118,8 +152,8 @@ export const ShareFormDialog = ({ listId }) => {
             })}
           </form>
           <IconButton
-            style={{ justifySelf: 'center' }}
-            onClick={() => addShare()}
+            style={{ alignSelf: 'center' }}
+            onClick={() => addShareRow()}
             aria-label='add share'
           >
             <AddIcon />
@@ -134,9 +168,13 @@ export const ShareFormDialog = ({ listId }) => {
         <Dialog open={confirmIsOpen} onClose={() => setConfirmIsOpen(false)}>
           <DialogTitle>{`Do you want to send invites to:`}</DialogTitle>
           <DialogContent className={classes.dialogContent}>
-            {newShareEmails?.map(({ email }) => (
-              <Typography key={`confirmNewShares-${email}`}>{email}</Typography>
-            ))}
+            {shareEmails
+              .filter(({ include }) => include)
+              .map(({ email }) => (
+                <Typography key={`confirmNewShares-${email}`}>
+                  {sharedTo.includes(email) ? `${email} (resend)` : email}
+                </Typography>
+              ))}
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setConfirmIsOpen(false)}>No</Button>

@@ -19,7 +19,6 @@ export const useWishListSharing = () => {
   }
   const removeShare = async (shareId) => {
     const shareDoc = await getDoc(doc(db, 'share', shareId))
-    console.log(shareDoc)
     if (!shareDoc.data().claimed) await deleteDoc(shareDoc.ref)
   }
   return { addShare, removeShare }

@@ -13,7 +13,7 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
-import { useLists } from '../../store/lists'
+import { useOwnLists } from '../../store/lists'
 import { pick, prop } from 'ramda'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
@@ -34,6 +34,7 @@ const useWishListHeaderStyles = makeStyles((theme) => ({
 
 const ListHeader = ({ headline, listId, editWish }) => {
   const classes = useWishListHeaderStyles()
+  const { shares } = useOwnLists()
   return (
     <div className={classes.container}>
       <Typography component='h1' variant='h4'>
@@ -43,7 +44,7 @@ const ListHeader = ({ headline, listId, editWish }) => {
         <IconButton onClick={() => editWish()}>
           <AddIcon />
         </IconButton>
-        <ShareFormDialog listId={listId} />
+        {shares && <ShareFormDialog listId={listId} shares={shares} />}
       </div>
     </div>
   )
@@ -87,8 +88,8 @@ const List = ({
     setWishFormIsOpen(true)
   }
   const classes = useWishListStyles()
-  const { lists, wishes } = useLists()
-  const list = lists[listId]
+  const { lists = {}, wishes = {} } = useOwnLists()
+  const list = lists[listId]?.data()
   if (!list) return null
   const listWishes = pick(list.wishes.map(prop('id')))(wishes)
   return (
@@ -99,15 +100,18 @@ const List = ({
         editWish={editWish}
       />
       <MaterialList>
-        {Object.entries(listWishes).map(([id, wish]) => (
-          <WishListItem
-            key={`wishListItem-${id}`}
-            id={id}
-            listId={listId}
-            wish={wish}
-            editWish={editWish}
-          />
-        ))}
+        {Object.entries(listWishes).map(([id, wishDoc]) => {
+          const wish = wishDoc.data()
+          return (
+            <WishListItem
+              key={`wishListItem-${id}`}
+              id={id}
+              listId={listId}
+              wish={wish}
+              editWish={editWish}
+            />
+          )
+        })}
       </MaterialList>
       <WishFormModal
         hookFormProps={hookFormProps}

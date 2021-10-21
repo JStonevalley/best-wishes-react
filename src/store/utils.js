@@ -6,18 +6,19 @@ import {
   getFirestore
 } from 'firebase/firestore'
 
-export const subscribeToOwnDocumentsInCollection = (user) => (coll) => (
-  onData
-) => {
+export const subscribeToDocumentsForUserInCollection = (
+  user,
+  { userUIDKey }
+) => (coll) => (onDocuments) => {
   const q = query(
     collection(getFirestore(), coll),
-    where('ownerUID', '==', user.uid)
+    where(userUIDKey, '==', user.uid)
   )
   onSnapshot(q, (querySnapshot) => {
-    const data = {}
+    const documents = {}
     querySnapshot.forEach((doc) => {
-      data[doc.id] = doc.data()
+      documents[doc.id] = doc
     })
-    onData(data)
+    onDocuments(documents)
   })
 }

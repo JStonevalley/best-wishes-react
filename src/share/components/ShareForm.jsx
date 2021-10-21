@@ -43,7 +43,10 @@ const useStyles = makeStyles((theme) => ({
 
 const sharedTo = ['test@shared.se', 'test@shared.com']
 
-export const ShareFormDialog = ({ listId }) => {
+export const ShareFormDialog = ({ listId, shares }) => {
+  const listShares = Object.values(shares).filter(
+    (shareDoc) => shareDoc.data().list.id === listId
+  )
   const { addShare, removeShare } = useWishListSharing()
   const user = useUser()
   const [isOpen, setIsOpen] = useState(false)
@@ -58,8 +61,11 @@ export const ShareFormDialog = ({ listId }) => {
     mode: 'onTouched',
     defaultValues: {
       shareEmails:
-        sharedTo.length > 0
-          ? sharedTo.map((email) => ({ email, include: false }))
+        listShares.length > 0
+          ? listShares.map((shareDoc) => ({
+              email: shareDoc.data().invitedEmail,
+              include: false
+            }))
           : [{ email: '', include: true }]
     }
   })
@@ -72,7 +78,6 @@ export const ShareFormDialog = ({ listId }) => {
     append
   ])
   const submit = handleSubmit(async ({ shareEmails }) => {
-    console.log(shareEmails)
     await Promise.all(
       shareEmails
         .filter((share) => share.include)
@@ -80,7 +85,6 @@ export const ShareFormDialog = ({ listId }) => {
           addShare({ invitedEmail: email, listId, sharedByUID: user.uid })
         )
     )
-    console.log('Shared')
   })
   return (
     <>
@@ -142,7 +146,15 @@ export const ShareFormDialog = ({ listId }) => {
                   />
                   <IconButton
                     className={classes.shareFieldRowRemove}
-                    onClick={() => remove(index)}
+                    onClick={async () => {
+                      await removeShare(
+                        listShares.find(
+                          (shareDoc) =>
+                            shareDoc.data().invitedEmail === fieldSpec.email
+                        ).id
+                      )
+                      remove(index)
+                    }}
                     aria-label='share'
                   >
                     <DeleteIcon />

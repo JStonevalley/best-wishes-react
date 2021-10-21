@@ -9,7 +9,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 import { Paper } from '@material-ui/core'
-import { useLists } from '../../store/lists'
+import { useOwnLists } from '../../store/lists'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,14 +25,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Lists = () => {
   const classes = useStyles()
-  const { lists } = useLists()
+  const { lists = {} } = useOwnLists()
   return (
     <Paper className={classes.paper}>
       <Typography component='h1' variant='h4'>
         My lists
       </Typography>
       <List>
-        {Object.entries(lists).map(([id, { headline }]) => (
+        {Object.entries(lists).map(([id, listDoc]) => (
           <ListItem
             component={Link}
             to={`list/${id}`}
@@ -44,7 +44,7 @@ const Lists = () => {
             </ListItemAvatar>
             <ListItemText
               className={classes.listItemText}
-              primary={headline}
+              primary={listDoc.data().headline}
               secondary={id}
             />
           </ListItem>

@@ -10,7 +10,7 @@ import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
 import AppBar from './ui/components/AppBar'
 import { UserProvider } from './store/user'
-import { ListsProvider } from './store/lists'
+import { OwnerListsProvider } from './store/lists'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAUXoQex0Q_2Ln0yZSoSxQ2wsd7UKvnDJc',
@@ -33,7 +33,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <UserProvider>
-        <ListsProvider>
+        <OwnerListsProvider>
           <CssBaseline />
           <BrowserRouter>
             <div
@@ -59,7 +59,7 @@ function App() {
               <BottomNav />
             </div>
           </BrowserRouter>
-        </ListsProvider>
+        </OwnerListsProvider>
       </UserProvider>
     </ThemeProvider>
   )

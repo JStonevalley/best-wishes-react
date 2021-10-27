@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
       "link link link link link link link rfb"
       "title title title title title title title title"
       "description description description description description description description description"
-      "price price image image image image image image"
+      "price price quantity quantity image image image image"
     `,
     [theme.breakpoints.down('sm')]: {
       gridTemplateAreas: `
@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme) => ({
         "link link link link link link link rfb"
         "title title title title title title title title"
         "description description description description description description description description"
-        "price price image image image image image image"
+        "price price price price quantity quantity quantity quantity"
+        "image image image image image image image image"
       `
     },
     gridGap: theme.spacing(1, 1)
@@ -63,7 +64,7 @@ const WishFormModal = ({
   hookFormProps: {
     watch,
     register,
-    formState,
+    formState: { errors },
     handleSubmit,
     setValue,
     ...hookFormProps
@@ -154,7 +155,11 @@ const WishFormModal = ({
             variant='outlined'
             style={{ gridArea: 'title' }}
             className={!wishId && !fetchedMetadata ? classes.hide : undefined}
-            {...materialUiFormRegister(register)('title')}
+            {...materialUiFormRegister(register)('title', {
+              required: 'Required'
+            })}
+            error={Boolean(errors.title)}
+            helperText={errors.title?.message}
           />
           <TextField
             label='Description'
@@ -171,7 +176,9 @@ const WishFormModal = ({
             type='number'
             style={{ gridArea: 'price' }}
             className={!wishId && !fetchedMetadata ? classes.hide : undefined}
-            {...materialUiFormRegister(register)('price')}
+            {...materialUiFormRegister(register)('price', {
+              valueAsNumber: true
+            })}
           />
           <TextField
             label='Image'
@@ -179,6 +186,19 @@ const WishFormModal = ({
             style={{ gridArea: 'image' }}
             className={!wishId && !fetchedMetadata ? classes.hide : undefined}
             {...materialUiFormRegister(register)('image')}
+          />
+          <TextField
+            label='Quantity'
+            variant='outlined'
+            type='number'
+            style={{ gridArea: 'quantity' }}
+            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
+            {...materialUiFormRegister(register)('quantity', {
+              required: 'Required',
+              valueAsNumber: true
+            })}
+            error={Boolean(errors.quantity)}
+            helperText={errors.quantity?.message}
           />
         </form>
       </DialogContent>

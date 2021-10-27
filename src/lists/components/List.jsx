@@ -79,6 +79,7 @@ const List = ({
             description: undefined,
             price: undefined,
             image: undefined,
+            quantity: 1,
             ownerUID: user.uid
           },
       {

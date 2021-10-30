@@ -41,12 +41,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const sharedTo = ['test@shared.se', 'test@shared.com']
-
 export const ShareFormDialog = ({ listId, shares }) => {
   const listShares = Object.values(shares).filter(
     (shareDoc) => shareDoc.data().list.id === listId
   )
+  const findListShare = (email) =>
+    listShares.find((shareDoc) => shareDoc.data().invitedEmail === email)
   const { addShare, removeShare } = useWishListSharing()
   const user = useUser()
   const [isOpen, setIsOpen] = useState(false)
@@ -85,6 +85,8 @@ export const ShareFormDialog = ({ listId, shares }) => {
           addShare({ invitedEmail: email, listId, sharedByUID: user.uid })
         )
     )
+    setConfirmIsOpen(false)
+    setIsOpen(false)
   })
   return (
     <>
@@ -124,7 +126,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                           helperText={
                             errors.shareEmails?.[index]?.email?.message
                           }
-                          disabled={index < sharedTo.length}
+                          disabled={index < listShares.length}
                           className={classes.shareFieldRowTextInput}
                           {...field}
                         />
@@ -147,12 +149,9 @@ export const ShareFormDialog = ({ listId, shares }) => {
                   <IconButton
                     className={classes.shareFieldRowRemove}
                     onClick={async () => {
-                      await removeShare(
-                        listShares.find(
-                          (shareDoc) =>
-                            shareDoc.data().invitedEmail === fieldSpec.email
-                        ).id
-                      )
+                      const existingListShare = findListShare(fieldSpec.email)
+                      if (existingListShare)
+                        await removeShare(existingListShare.id)
                       remove(index)
                     }}
                     aria-label='share'
@@ -184,7 +183,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
               .filter(({ include }) => include)
               .map(({ email }) => (
                 <Typography key={`confirmNewShares-${email}`}>
-                  {sharedTo.includes(email) ? `${email} (resend)` : email}
+                  {findListShare(email) ? `${email} (resend)` : email}
                 </Typography>
               ))}
           </DialogContent>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Button,
@@ -42,8 +42,12 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const ShareFormDialog = ({ listId, shares }) => {
-  const listShares = Object.values(shares).filter(
-    (shareDoc) => shareDoc.data().list.id === listId
+  const listShares = useMemo(
+    () =>
+      Object.values(shares).filter(
+        (shareDoc) => shareDoc.data().list.id === listId
+      ),
+    [listId, shares]
   )
   const findListShare = (email) =>
     listShares.find((shareDoc) => shareDoc.data().invitedEmail === email)
@@ -56,19 +60,22 @@ export const ShareFormDialog = ({ listId, shares }) => {
     handleSubmit,
     control,
     watch,
+    reset,
     formState: { errors }
-  } = useForm({
-    mode: 'onTouched',
-    defaultValues: {
-      shareEmails:
-        listShares.length > 0
-          ? listShares.map((shareDoc) => ({
-              email: shareDoc.data().invitedEmail,
-              include: false
-            }))
-          : [{ email: '', include: true }]
+  } = useForm({ mode: 'onTouched', defaultValues: { shareEmails: [] } })
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        shareEmails:
+          listShares.length > 0
+            ? listShares.map((shareDoc) => ({
+                email: shareDoc.data().invitedEmail,
+                include: false
+              }))
+            : [{ email: '', include: true }]
+      })
     }
-  })
+  }, [isOpen, reset, listShares])
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'shareEmails'
@@ -81,9 +88,18 @@ export const ShareFormDialog = ({ listId, shares }) => {
     await Promise.all(
       shareEmails
         .filter((share) => share.include)
-        .map(({ email }) =>
-          addShare({ invitedEmail: email, listId, sharedByUID: user.uid })
-        )
+        .map(({ email }) => {
+          if (findListShare(email)) {
+            console.log('TODO: RESEND', email)
+            return Promise.resolve()
+          } else {
+            return addShare({
+              invitedEmail: email,
+              listId,
+              sharedByUID: user.uid
+            })
+          }
+        })
     )
     setConfirmIsOpen(false)
     setIsOpen(false)

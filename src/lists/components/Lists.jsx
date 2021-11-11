@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useRecoilValue } from 'recoil'
 import { makeStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -9,7 +10,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 import { Paper } from '@material-ui/core'
-import { useOwnLists } from '../../store/lists'
+import { ownListsState } from '../../store/lists'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Lists = () => {
   const classes = useStyles()
-  const { lists = {} } = useOwnLists()
+  const lists = useRecoilValue(ownListsState)
   return (
     <Paper className={classes.paper}>
       <Typography component='h1' variant='h4'>

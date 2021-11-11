@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   List as MaterialList,
@@ -13,7 +14,11 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
-import { useOwnLists } from '../../store/lists'
+import {
+  ownListsState,
+  ownWishesState,
+  ownSharesState
+} from '../../store/lists'
 import { pick, prop } from 'ramda'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
@@ -34,7 +39,7 @@ const useWishListHeaderStyles = makeStyles((theme) => ({
 
 const ListHeader = ({ headline, listId, editWish }) => {
   const classes = useWishListHeaderStyles()
-  const { shares } = useOwnLists()
+  const shares = useRecoilValue(ownSharesState)
   return (
     <div className={classes.container}>
       <Typography component='h1' variant='h4'>
@@ -89,7 +94,8 @@ const List = ({
     setWishFormIsOpen(true)
   }
   const classes = useWishListStyles()
-  const { lists = {}, wishes = {} } = useOwnLists()
+  const lists = useRecoilValue(ownListsState)
+  const wishes = useRecoilValue(ownWishesState)
   const list = lists[listId]?.data()
   if (!list) return null
   const listWishes = pick(list.wishes.map(prop('id')))(wishes)

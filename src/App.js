@@ -2,6 +2,7 @@ import React from 'react'
 import { initializeApp } from 'firebase/app'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
+import { RecoilRoot } from 'recoil'
 import { Signup, Login } from './auth/AuthPages'
 import Lists from './lists/components/Lists'
 import List from './lists/components/List'
@@ -10,7 +11,6 @@ import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
 import AppBar from './ui/components/AppBar'
 import { UserProvider } from './store/user'
-import { OwnerListsProvider } from './store/lists'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAUXoQex0Q_2Ln0yZSoSxQ2wsd7UKvnDJc',
@@ -32,8 +32,8 @@ const PATTERNS = {
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <UserProvider>
-        <OwnerListsProvider>
+      <RecoilRoot>
+        <UserProvider>
           <CssBaseline />
           <BrowserRouter>
             <div
@@ -59,8 +59,8 @@ function App() {
               <BottomNav />
             </div>
           </BrowserRouter>
-        </OwnerListsProvider>
-      </UserProvider>
+        </UserProvider>
+      </RecoilRoot>
     </ThemeProvider>
   )
 }

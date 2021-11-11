@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useReducer } from 'react'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { useBaseState } from './lists'
 
 const UserContext = React.createContext()
 
@@ -31,6 +32,7 @@ const UserProvider = ({ children }) => {
       }
     })
   }, [])
+  useBaseState()
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>
 }
 

@@ -19,7 +19,7 @@ import {
   ownWishesState,
   ownSharesState
 } from '../../store/lists'
-import { pick, prop } from 'ramda'
+import { prop } from 'ramda'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
 import { useUser } from '../../store/user'
@@ -98,7 +98,6 @@ const List = ({
   const wishes = useRecoilValue(ownWishesState)
   const list = lists[listId]?.data()
   if (!list) return null
-  const listWishes = pick(list.wishes.map(prop('id')))(wishes)
   return (
     <Paper className={classes.paper}>
       <ListHeader
@@ -107,18 +106,21 @@ const List = ({
         editWish={editWish}
       />
       <MaterialList>
-        {Object.entries(listWishes).map(([id, wishDoc]) => {
-          const wish = wishDoc.data()
-          return (
-            <WishListItem
-              key={`wishListItem-${id}`}
-              id={id}
-              listId={listId}
-              wish={wish}
-              editWish={editWish}
-            />
-          )
-        })}
+        {list.wishes
+          .map(prop('id'))
+          .filter((wishId) => wishes[wishId])
+          .map((wishId) => {
+            const wish = wishes[wishId].data()
+            return (
+              <WishListItem
+                key={`wishListItem-${wishId}`}
+                id={wishId}
+                listId={listId}
+                wish={wish}
+                editWish={editWish}
+              />
+            )
+          })}
       </MaterialList>
       <WishFormModal
         hookFormProps={hookFormProps}

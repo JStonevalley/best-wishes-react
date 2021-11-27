@@ -1,7 +1,7 @@
 import React from 'react'
 import { initializeApp } from 'firebase/app'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { RecoilRoot } from 'recoil'
 import { Signup, Login } from './auth/AuthPages'
 import Lists from './lists/components/Lists'
@@ -64,7 +64,7 @@ function App() {
         </RecoilRoot>
       </ThemeProvider>
     </StyledEngineProvider>
-  );
+  )
 }
 
 export default App

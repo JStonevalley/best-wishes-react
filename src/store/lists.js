@@ -1,8 +1,5 @@
 import { useEffect } from 'react'
-import {
-  subscribeToDocumentsForUserInCollection,
-  getDocumentsForUserInCollection
-} from './utils'
+import { getDocumentsForUserInCollection } from './utils'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useSetRecoilState, atom } from 'recoil'
 
@@ -37,11 +34,9 @@ export const useBaseState = () => {
         getDocumentsForUserInCollection(user, {
           userUIDKey: 'ownerUID'
         })('wish').then(setOwnWishes)
-        subscribeToDocumentsForUserInCollection(user, {
+        getDocumentsForUserInCollection(user, {
           userUIDKey: 'sharedByUID'
-        })('share')((shares) => {
-          setOwnShares((prevShares) => ({ ...prevShares, ...shares }))
-        })
+        })('share').then(setOwnShares)
       }
     })
   }, [setOwnLists, setOwnWishes, setOwnShares])

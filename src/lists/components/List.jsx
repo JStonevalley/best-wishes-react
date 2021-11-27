@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 import {
   List as MaterialList,
   ListItem,
@@ -10,10 +10,10 @@ import {
   Typography,
   Paper,
   IconButton
-} from '@material-ui/core'
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
-import AddIcon from '@material-ui/icons/Add'
+} from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import AddIcon from '@mui/icons-material/Add'
 import {
   ownListsState,
   ownWishesState,
@@ -46,7 +46,7 @@ const ListHeader = ({ headline, listId, editWish }) => {
         {headline}
       </Typography>
       <div className={classes.toolBar}>
-        <IconButton onClick={() => editWish()}>
+        <IconButton onClick={() => editWish()} size='large'>
           <AddIcon />
         </IconButton>
         {shares && <ShareFormDialog listId={listId} shares={shares} />}
@@ -210,6 +210,7 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
                 <IconButton
                   onClick={() => editWish(id, wish)}
                   aria-label='edit'
+                  size='large'
                 >
                   <EditIcon />
                 </IconButton>
@@ -217,6 +218,7 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
                   onClick={() => removeAWish(listId)(id)}
                   edge='end'
                   aria-label='delete'
+                  size='large'
                 >
                   <DeleteIcon />
                 </IconButton>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 import {
   Button,
   TextField,
@@ -11,10 +11,10 @@ import {
   IconButton,
   Typography,
   Checkbox
-} from '@material-ui/core'
-import ShareIcon from '@material-ui/icons/Share'
-import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete'
+} from '@mui/material'
+import ShareIcon from '@mui/icons-material/Share'
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { useCallback } from 'react'
 import { useWishListSharing } from '../share'
@@ -106,7 +106,11 @@ export const ShareFormDialog = ({ listId, shares }) => {
   })
   return (
     <>
-      <IconButton onClick={() => setIsOpen(true)} aria-label='share'>
+      <IconButton
+        onClick={() => setIsOpen(true)}
+        aria-label='share'
+        size='large'
+      >
         <ShareIcon />
       </IconButton>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
@@ -171,6 +175,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                       remove(index)
                     }}
                     aria-label='share'
+                    size='large'
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -182,6 +187,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
             style={{ alignSelf: 'center' }}
             onClick={() => addShareRow()}
             aria-label='add share'
+            size='large'
           >
             <AddIcon />
           </IconButton>

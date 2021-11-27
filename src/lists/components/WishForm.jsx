@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 import {
   Button,
   TextField,
@@ -9,8 +9,8 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton
-} from '@material-ui/core'
-import RefreshIcon from '@material-ui/icons/Refresh'
+} from '@mui/material'
+import RefreshIcon from '@mui/icons-material/Refresh'
 import { materialUiFormRegister } from '../../tools/forms'
 import { useWishMaking } from '../wishMaking'
 
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
       "description description description description description description description description"
       "price price quantity quantity image image image image"
     `,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       gridTemplateAreas: `
         "introText introText introText introText introText introText introText introText"
         "link link link link link link link rfb"
@@ -145,6 +145,7 @@ const WishFormModal = ({
               }
               setFetchingMetadata(false)
             }}
+            size='large'
           >
             <RefreshIcon
               className={fetchingMetadata ? classes.loading : undefined}

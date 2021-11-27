@@ -4,8 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth'
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography, Paper } from '@material-ui/core'
+import makeStyles from '@mui/styles/makeStyles'
+import { Typography, Paper } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import AuthDetailsForm from './components/AuthForm'
 import { useUser } from '../store/user'

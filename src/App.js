@@ -1,7 +1,7 @@
 import React from 'react'
 import { initializeApp } from 'firebase/app'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import { CssBaseline, ThemeProvider } from '@material-ui/core'
+import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { RecoilRoot } from 'recoil'
 import { Signup, Login } from './auth/AuthPages'
 import Lists from './lists/components/Lists'
@@ -31,38 +31,40 @@ const PATTERNS = {
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <RecoilRoot>
-        <UserProvider>
-          <CssBaseline />
-          <BrowserRouter>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                flexGrow: 1,
-                backgroundImage: PATTERNS.HEXAGON
-              }}
-            >
-              <AppBar />
-              <ContentGrid>
-                <Switch>
-                  <Route path='/signup' component={Signup} />
-                  <Route path='/login' component={Login} />
-                  <Route path='/list/:listId' component={List} />
-                  <Route path='/list' component={Lists} />
-                  <Route path='/'>
-                    <div>Home</div>
-                  </Route>
-                </Switch>
-              </ContentGrid>
-              <BottomNav />
-            </div>
-          </BrowserRouter>
-        </UserProvider>
-      </RecoilRoot>
-    </ThemeProvider>
-  )
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <RecoilRoot>
+          <UserProvider>
+            <CssBaseline />
+            <BrowserRouter>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexGrow: 1,
+                  backgroundImage: PATTERNS.HEXAGON
+                }}
+              >
+                <AppBar />
+                <ContentGrid>
+                  <Switch>
+                    <Route path='/signup' component={Signup} />
+                    <Route path='/login' component={Login} />
+                    <Route path='/list/:listId' component={List} />
+                    <Route path='/list' component={Lists} />
+                    <Route path='/'>
+                      <div>Home</div>
+                    </Route>
+                  </Switch>
+                </ContentGrid>
+                <BottomNav />
+              </div>
+            </BrowserRouter>
+          </UserProvider>
+        </RecoilRoot>
+      </ThemeProvider>
+    </StyledEngineProvider>
+  );
 }
 
 export default App

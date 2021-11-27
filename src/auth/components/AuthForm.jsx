@@ -1,14 +1,14 @@
 import React from 'react'
 import { Link } from '../../ui/components/Link'
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography, TextField, Button } from '@material-ui/core'
+import makeStyles from '@mui/styles/makeStyles'
+import { Typography, TextField, Button } from '@mui/material'
 import { materialUiFormRegister } from '../../tools/forms'
 
 const useStyles = makeStyles((theme) => ({
   form: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr 1fr',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       gridTemplateColumns: '1fr 1fr'
     },
     gridTemplateRows: 'auto',
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   error: {
     color: theme.palette.error.main,
     gridColumn: '1 / span 4',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       gridColumn: '1 / span 2'
     }
   },
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   link: {
     alignSelf: 'center',
     gridColumn: '3 / span 2',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       gridColumn: '1 / span 2'
     }
   }

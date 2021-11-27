@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateAreas: `
       ". . . c c c c c c . . ."
     `,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       gridTemplateAreas: `
         "c c c c c c c c c c c c"
       `

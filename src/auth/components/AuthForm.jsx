@@ -4,7 +4,7 @@ import { styled } from '@mui/system'
 import { Typography, TextField, Button } from '@mui/material'
 import { materialUiFormRegister } from '../../tools/forms'
 
-const Form = styled('div')(({ theme }) => ({
+const Form = styled('form')(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr 1fr',
   [theme.breakpoints.down('md')]: {

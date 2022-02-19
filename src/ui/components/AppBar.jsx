@@ -1,31 +1,15 @@
 import React from 'react'
 import { getAuth, signOut } from 'firebase/auth'
-import makeStyles from '@mui/styles/makeStyles'
 import { AppBar, Toolbar, Typography, Button } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useUser } from '../../store/user'
 
-const useStyles = makeStyles((theme) => ({
-  menuButtonInAppBar: {
-    marginRight: theme.spacing(2)
-  },
-  menuButtonInMenu: {
-    alignSelf: 'flex-start',
-    marginLeft: theme.spacing(2),
-    marginTop: theme.spacing(1)
-  },
-  title: {
-    flexGrow: 1
-  }
-}))
-
 export default function ButtonAppBar() {
-  const classes = useStyles()
   const user = useUser()
   return (
     <AppBar position='static'>
       <Toolbar>
-        <Typography variant='h6' className={classes.title}>
+        <Typography variant='h6' sx={{ flexGrow: 1 }}>
           Bestwishes
         </Typography>
         {user === null ? (

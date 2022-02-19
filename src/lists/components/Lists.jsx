@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import makeStyles from '@mui/styles/makeStyles'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import Divider from '@mui/material/Divider'
@@ -12,23 +11,10 @@ import Typography from '@mui/material/Typography'
 import { Paper } from '@mui/material'
 import { ownListsState } from '../../store/lists'
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(2, 2)
-  },
-  inline: {
-    display: 'inline'
-  },
-  listItemText: {
-    color: theme.palette.text.primary
-  }
-}))
-
 const Lists = () => {
-  const classes = useStyles()
   const lists = useRecoilValue(ownListsState)
   return (
-    <Paper className={classes.paper}>
+    <Paper sx={{ padding: 2 }}>
       <Typography component='h1' variant='h4'>
         My lists
       </Typography>
@@ -44,7 +30,7 @@ const Lists = () => {
               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
             </ListItemAvatar>
             <ListItemText
-              className={classes.listItemText}
+              sx={{ color: 'text.primary' }}
               primary={listDoc.data().headline}
               secondary={id}
             />

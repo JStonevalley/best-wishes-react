@@ -1,38 +1,32 @@
 import React from 'react'
 import { Link } from '../../ui/components/Link'
-import makeStyles from '@mui/styles/makeStyles'
+import { styled } from '@mui/system'
 import { Typography, TextField, Button } from '@mui/material'
 import { materialUiFormRegister } from '../../tools/forms'
 
-const useStyles = makeStyles((theme) => ({
-  form: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr',
-    [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: '1fr 1fr'
-    },
-    gridTemplateRows: 'auto',
-    gap: theme.spacing(1, 1)
+const Form = styled('div')(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr',
+  [theme.breakpoints.down('md')]: {
+    gridTemplateColumns: '1fr 1fr'
   },
-  input: {
-    gridColumn: 'span 2'
-  },
-  error: {
-    color: theme.palette.error.main,
-    gridColumn: '1 / span 4',
-    [theme.breakpoints.down('md')]: {
-      gridColumn: '1 / span 2'
-    }
-  },
-  button: {
+  gridTemplateRows: 'auto',
+  gap: theme.spacing(1, 1)
+}))
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  alignSelf: 'center',
+  gridColumn: '3 / span 2',
+  [theme.breakpoints.down('md')]: {
     gridColumn: '1 / span 2'
-  },
-  link: {
-    alignSelf: 'center',
-    gridColumn: '3 / span 2',
-    [theme.breakpoints.down('md')]: {
-      gridColumn: '1 / span 2'
-    }
+  }
+}))
+
+const ErrorTypography = styled(Typography)(({ theme }) => ({
+  color: theme.palette.error.main,
+  gridColumn: '1 / span 4',
+  [theme.breakpoints.down('md')]: {
+    gridColumn: '1 / span 2'
   }
 }))
 
@@ -42,9 +36,8 @@ const AuthDetailsForm = ({
   register,
   formState: { errors }
 }) => {
-  const classes = useStyles()
   return (
-    <form onSubmit={onSubmit} className={classes.form}>
+    <Form onSubmit={onSubmit}>
       <TextField
         label='Email'
         variant='outlined'
@@ -57,7 +50,7 @@ const AuthDetailsForm = ({
         })}
         error={Boolean(errors.email)}
         helperText={errors.email?.message}
-        className={classes.input}
+        sx={{ gridColumn: 'span 2' }}
       />
       <TextField
         label='Password'
@@ -71,25 +64,24 @@ const AuthDetailsForm = ({
         })}
         error={Boolean(errors.password)}
         helperText={errors.password?.message}
-        className={classes.input}
+        sx={{ gridColumn: 'span 2' }}
       />
       {errors.general && (
-        <Typography className={classes.error}>
-          {errors.general.message}
-        </Typography>
+        <ErrorTypography>{errors.general.message}</ErrorTypography>
       )}
-      <Button variant='outlined' className={classes.button} type='submit'>
+      <Button
+        sx={{ gridColumn: '1 / span 2' }}
+        variant='outlined'
+        type='submit'
+      >
         {variant === 'login' ? 'Log in' : 'Sign up'}
       </Button>
-      <Link
-        to={variant === 'login' ? '/signup' : '/login'}
-        className={classes.link}
-      >
+      <StyledLink to={variant === 'login' ? '/signup' : '/login'}>
         {variant === 'login'
           ? 'Wish to create an account?'
           : 'Already have an account?'}
-      </Link>
-    </form>
+      </StyledLink>
+    </Form>
   )
 }
 

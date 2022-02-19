@@ -4,22 +4,17 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth'
-import makeStyles from '@mui/styles/makeStyles'
+import { styled } from '@mui/system'
 import { Typography, Paper } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import AuthDetailsForm from './components/AuthForm'
 import { useUser } from '../store/user'
 
-const useStyles = makeStyles((theme) => ({
-  page: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    flexGrow: 1
-  },
-  paper: {
-    padding: theme.spacing(2)
-  }
+const Page = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  flexGrow: 1
 }))
 
 const signupError = (error) => {
@@ -49,7 +44,6 @@ const signupError = (error) => {
 }
 
 export const Signup = ({ history }) => {
-  const classes = useStyles()
   const user = useUser()
   useEffect(() => {
     if (user) history.push('/list')
@@ -64,14 +58,14 @@ export const Signup = ({ history }) => {
     }
   })
   return (
-    <div className={classes.page}>
-      <Paper elevation={0} className={classes.paper}>
+    <Page>
+      <Paper sx={{ padding: 2 }} elevation={0}>
         <Typography variant='h6' component='h1' paragraph>
           Welcome, wish to create account?
         </Typography>
         <AuthDetailsForm variant='signin' onSubmit={onSubmit} {...formProps} />
       </Paper>
-    </div>
+    </Page>
   )
 }
 
@@ -103,7 +97,6 @@ const loginError = (error) => {
 }
 
 export const Login = ({ history }) => {
-  const classes = useStyles()
   const user = useUser()
   useEffect(() => {
     if (user) history.push('/lists')
@@ -118,13 +111,13 @@ export const Login = ({ history }) => {
     }
   })
   return (
-    <div className={classes.page}>
-      <Paper elevation={0} className={classes.paper}>
+    <Page>
+      <Paper sx={{ padding: 2 }} elevation={0}>
         <Typography variant='h6' component='h1' paragraph>
           Wishing you welcome back!
         </Typography>
         <AuthDetailsForm variant='login' onSubmit={onSubmit} {...formProps} />
       </Paper>
-    </div>
+    </Page>
   )
 }

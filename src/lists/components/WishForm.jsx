@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { styled, keyframes } from '@mui/system'
-import makeStyles from '@mui/styles/makeStyles'
+import { styled } from '@mui/system'
 import {
   Button,
   TextField,
@@ -38,20 +37,6 @@ const GridForm = styled('form')(({ theme }) => ({
   gridGap: theme.spacing(1, 1)
 }))
 
-const useStyles = makeStyles((theme) => ({
-  '@keyframes roll': {
-    from: {
-      transform: 'rotate(0)'
-    },
-    to: {
-      transform: 'rotate(360deg)'
-    }
-  },
-  loading: {
-    animation: '$roll 2s infinite'
-  }
-}))
-
 const WishFormModal = ({
   isOpen,
   wishId,
@@ -66,7 +51,6 @@ const WishFormModal = ({
     ...hookFormProps
   }
 }) => {
-  const classes = useStyles()
   const [fetchingMetadata, setFetchingMetadata] = useState(false)
   const [fetchedMetadata, setFetchedMetadata] = useState(false)
   const [title, link] = watch(['title', 'link'])
@@ -145,9 +129,7 @@ const WishFormModal = ({
             }}
             size='large'
           >
-            <RefreshIcon
-              className={fetchingMetadata ? classes.loading : undefined}
-            />
+            <RefreshIcon className={'Roll'} />
           </IconButton>
           <TextField
             label='Title'

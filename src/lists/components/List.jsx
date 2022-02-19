@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import makeStyles from '@mui/styles/makeStyles'
+import { styled } from '@mui/system'
 import {
   List as MaterialList,
   ListItem,
@@ -27,25 +27,23 @@ import { Lightbox } from '../../ui/components/Lightbox.jsx'
 import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
 import { useWishMaking } from '../wishMaking'
 
-const useWishListHeaderStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
-  toolBar: {
-    display: 'flex'
-  }
-}))
-
 const ListHeader = ({ headline, listId, editWish }) => {
-  const classes = useWishListHeaderStyles()
   const shares = useRecoilValue(ownSharesState)
   return (
-    <div className={classes.container}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between'
+      }}
+    >
       <Typography component='h1' variant='h4'>
         {headline}
       </Typography>
-      <div className={classes.toolBar}>
+      <div
+        style={{
+          display: 'flex'
+        }}
+      >
         <IconButton onClick={() => editWish()} size='large'>
           <AddIcon />
         </IconButton>
@@ -54,15 +52,6 @@ const ListHeader = ({ headline, listId, editWish }) => {
     </div>
   )
 }
-
-const useWishListStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(2, 2)
-  },
-  inline: {
-    display: 'inline'
-  }
-}))
 
 const List = ({
   match: {
@@ -93,13 +82,12 @@ const List = ({
     )
     setWishFormIsOpen(true)
   }
-  const classes = useWishListStyles()
   const lists = useRecoilValue(ownListsState)
   const wishes = useRecoilValue(ownWishesState)
   const list = lists[listId]?.data()
   if (!list) return null
   return (
-    <Paper className={classes.paper}>
+    <Paper sx={{ padding: 2 }}>
       <ListHeader
         headline={list.headline}
         listId={listId}
@@ -133,41 +121,31 @@ const List = ({
   )
 }
 
-const useWishListItemBodyStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  infoBar: {
-    marginTop: theme.spacing(1),
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  toolBar: {
-    display: 'flex',
-    flexDirection: 'row'
-  }
+const Toolbar = styled('div')({
+  display: 'flex',
+  flexDirection: 'row'
+})
+
+const InfoBar = styled('div')(({ theme }) => ({
+  marginTop: theme.spacing(1),
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between'
 }))
 
-const useAvatarStyles = makeStyles((theme) => ({
-  root: {
-    cursor: 'pointer',
-    transition: 'all .2s ease-in-out',
-    '&:hover': {
-      transform: 'scale(1.1)'
-    }
+const ZoomingAvatar = styled(Avatar)({
+  cursor: 'pointer',
+  transition: 'all .2s ease-in-out',
+  '&:hover': {
+    transform: 'scale(1.1)'
   }
-}))
+})
 
 const WishListItem = ({ id, wish, listId, editWish }) => {
   const { removeAWish } = useWishMaking()
-  const wishListItemTextClasses = useWishListItemBodyStyles()
-  const avatarClasses = useAvatarStyles()
   const avatar = (
-    <Avatar
-      classes={avatarClasses}
+    <ZoomingAvatar
       variant='rounded'
       alt={wish.title}
       src={wish.image || '/static/images/avatar/1.jpg'}
@@ -194,9 +172,14 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
           </Typography>
         }
         secondary={
-          <div className={wishListItemTextClasses.container}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
             <Typography variant='body2'>{wish.description}</Typography>
-            <div className={wishListItemTextClasses.infoBar}>
+            <InfoBar>
               <Typography variant='body1'>
                 {wish.price ? (
                   <span>
@@ -206,7 +189,7 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
                   ''
                 )}
               </Typography>
-              <div className={wishListItemTextClasses.toolBar}>
+              <Toolbar>
                 <IconButton
                   onClick={() => editWish(id, wish)}
                   aria-label='edit'
@@ -222,8 +205,8 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
                 >
                   <DeleteIcon />
                 </IconButton>
-              </div>
-            </div>
+              </Toolbar>
+            </InfoBar>
           </div>
         }
       />

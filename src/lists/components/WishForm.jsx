@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { styled, keyframes } from '@mui/system'
 import makeStyles from '@mui/styles/makeStyles'
 import {
   Button,
@@ -14,35 +15,30 @@ import RefreshIcon from '@mui/icons-material/Refresh'
 import { materialUiFormRegister } from '../../tools/forms'
 import { useWishMaking } from '../wishMaking'
 
-const useStyles = makeStyles((theme) => ({
-  dialogContent: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+const GridForm = styled('form')(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+  gridTemplateAreas: `
+    "introText introText introText introText introText introText introText introText"
+    "link link link link link link link rfb"
+    "title title title title title title title title"
+    "description description description description description description description description"
+    "price price quantity quantity image image image image"
+  `,
+  [theme.breakpoints.down('md')]: {
     gridTemplateAreas: `
       "introText introText introText introText introText introText introText introText"
       "link link link link link link link rfb"
       "title title title title title title title title"
       "description description description description description description description description"
-      "price price quantity quantity image image image image"
-    `,
-    [theme.breakpoints.down('md')]: {
-      gridTemplateAreas: `
-        "introText introText introText introText introText introText introText introText"
-        "link link link link link link link rfb"
-        "title title title title title title title title"
-        "description description description description description description description description"
-        "price price price price quantity quantity quantity quantity"
-        "image image image image image image image image"
-      `
-    },
-    gridGap: theme.spacing(1, 1)
+      "price price price price quantity quantity quantity quantity"
+      "image image image image image image image image"
+    `
   },
-  introText: {
-    gridArea: 'introText'
-  },
-  hide: {
-    display: 'none'
-  },
+  gridGap: theme.spacing(1, 1)
+}))
+
+const useStyles = makeStyles((theme) => ({
   '@keyframes roll': {
     from: {
       transform: 'rotate(0)'
@@ -83,12 +79,14 @@ const WishFormModal = ({
       console.error(error)
     }
   })
+  const hideOrDisplayInputFields =
+    !wishId && !fetchedMetadata ? { display: 'none' } : {}
   return (
     <Dialog open={isOpen} onClose={close}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <form onSubmit={submit} className={classes.dialogContent}>
-          <DialogContentText className={classes.introText}>
+        <GridForm onSubmit={submit}>
+          <DialogContentText sx={{ gridArea: 'introText' }}>
             To make wishing easier, paste a link in the field below and as much
             information as possible will be fetched for you.
           </DialogContentText>
@@ -154,8 +152,7 @@ const WishFormModal = ({
           <TextField
             label='Title'
             variant='outlined'
-            style={{ gridArea: 'title' }}
-            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
+            style={{ gridArea: 'title', ...hideOrDisplayInputFields }}
             {...materialUiFormRegister(register)('title', {
               required: 'Required'
             })}
@@ -167,16 +164,14 @@ const WishFormModal = ({
             variant='outlined'
             multiline
             rows={4}
-            style={{ gridArea: 'description' }}
-            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
+            style={{ gridArea: 'description', ...hideOrDisplayInputFields }}
             {...materialUiFormRegister(register)('description')}
           />
           <TextField
             label='Price'
             variant='outlined'
             type='number'
-            style={{ gridArea: 'price' }}
-            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
+            style={{ gridArea: 'price', ...hideOrDisplayInputFields }}
             {...materialUiFormRegister(register)('price', {
               valueAsNumber: true
             })}
@@ -184,16 +179,14 @@ const WishFormModal = ({
           <TextField
             label='Image'
             variant='outlined'
-            style={{ gridArea: 'image' }}
-            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
+            style={{ gridArea: 'image', ...hideOrDisplayInputFields }}
             {...materialUiFormRegister(register)('image')}
           />
           <TextField
             label='Quantity'
             variant='outlined'
             type='number'
-            style={{ gridArea: 'quantity' }}
-            className={!wishId && !fetchedMetadata ? classes.hide : undefined}
+            style={{ gridArea: 'quantity', ...hideOrDisplayInputFields }}
             {...materialUiFormRegister(register)('quantity', {
               required: 'Required',
               valueAsNumber: true
@@ -201,7 +194,7 @@ const WishFormModal = ({
             error={Boolean(errors.quantity)}
             helperText={errors.quantity?.message}
           />
-        </form>
+        </GridForm>
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>

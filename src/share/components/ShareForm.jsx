@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import makeStyles from '@mui/styles/makeStyles'
 import {
   Button,
   TextField,
@@ -20,27 +19,6 @@ import { useCallback } from 'react'
 import { useWishListSharing } from '../share'
 import { useUser } from '../../store/user'
 
-const useStyles = makeStyles((theme) => ({
-  dialogContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    rowGap: theme.spacing(1)
-  },
-  shareFieldRow: {
-    display: 'flex',
-    alignItems: 'flex-start'
-  },
-  shareFieldRowCheckbox: {
-    marginTop: '0.35rem'
-  },
-  shareFieldRowTextInput: {
-    flexGrow: 1
-  },
-  shareFieldRowRemove: {
-    marginTop: '0.25rem'
-  }
-}))
-
 export const ShareFormDialog = ({ listId, shares }) => {
   const listShares = useMemo(
     () =>
@@ -55,7 +33,6 @@ export const ShareFormDialog = ({ listId, shares }) => {
   const user = useUser()
   const [isOpen, setIsOpen] = useState(false)
   const [confirmIsOpen, setConfirmIsOpen] = useState(false)
-  const classes = useStyles()
   const {
     handleSubmit,
     control,
@@ -90,7 +67,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
         .filter((share) => share.include)
         .map(({ email }) => {
           if (findListShare(email)) {
-            console.log('TODO: RESEND', email)
+            console.log('TODO: RESEND', email) // TODO resend email
             return Promise.resolve()
           } else {
             return addShare({
@@ -115,19 +92,38 @@ export const ShareFormDialog = ({ listId, shares }) => {
       </IconButton>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
         <DialogTitle>{`Send your wishes`}</DialogTitle>
-        <DialogContent className={classes.dialogContent}>
-          <form onSubmit={submit} className={classes.dialogContent}>
-            <DialogContentText className={classes.introText}>
+        <DialogContent
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            rowGap: 1
+          }}
+        >
+          <form
+            onSubmit={submit}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              rowGap: 1
+            }}
+          >
+            <DialogContentText>
               Enter the emails addresses of friends and family who want to make
               your wishes come true.
             </DialogContentText>
             {fields.map((fieldSpec, index) => {
               return (
-                <div key={fieldSpec.id} className={classes.shareFieldRow}>
+                <div
+                  key={fieldSpec.id}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'flex-start'
+                  }}
+                >
                   <Controller
                     render={({ field: { value, ...field } }) => (
                       <Checkbox
-                        className={classes.shareFieldRowCheckbox}
+                        sx={{ marginTop: '0.35rem' }}
                         checked={value != null ? value : fieldSpec.include}
                         {...field}
                       />
@@ -147,7 +143,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                             errors.shareEmails?.[index]?.email?.message
                           }
                           disabled={index < listShares.length}
-                          className={classes.shareFieldRowTextInput}
+                          sx={{ flexGrow: 1 }}
                           {...field}
                         />
                       )
@@ -167,7 +163,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                     }}
                   />
                   <IconButton
-                    className={classes.shareFieldRowRemove}
+                    sx={{ marginTop: '0.25rem' }}
                     onClick={async () => {
                       const existingListShare = findListShare(fieldSpec.email)
                       if (existingListShare)
@@ -200,7 +196,13 @@ export const ShareFormDialog = ({ listId, shares }) => {
         </DialogActions>
         <Dialog open={confirmIsOpen} onClose={() => setConfirmIsOpen(false)}>
           <DialogTitle>{`Do you want to send invites to:`}</DialogTitle>
-          <DialogContent className={classes.dialogContent}>
+          <DialogContent
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              rowGap: 1
+            }}
+          >
             {shareEmails
               .filter(({ include }) => include)
               .map(({ email }) => (

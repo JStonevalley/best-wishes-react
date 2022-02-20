@@ -129,7 +129,12 @@ const WishFormModal = ({
             }}
             size='large'
           >
-            <RefreshIcon className={'Roll'} />
+            <RefreshIcon
+              style={
+                fetchingMetadata ? { animation: 'roll infinite 2s' } : undefined
+              }
+              className='Roll'
+            />
           </IconButton>
           <TextField
             label='Title'

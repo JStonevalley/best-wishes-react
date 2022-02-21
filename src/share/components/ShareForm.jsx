@@ -11,6 +11,7 @@ import {
   Typography,
   Checkbox
 } from '@mui/material'
+import { styled } from '@mui/system'
 import ShareIcon from '@mui/icons-material/Share'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -18,6 +19,12 @@ import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { useCallback } from 'react'
 import { useWishListSharing } from '../share'
 import { useUser } from '../../store/user'
+
+const StyledForm = styled('form')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: theme.spacing(1)
+}))
 
 export const ShareFormDialog = ({ listId, shares }) => {
   const listShares = useMemo(
@@ -99,14 +106,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
             rowGap: 1
           }}
         >
-          <form
-            onSubmit={submit}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              rowGap: 1
-            }}
-          >
+          <StyledForm onSubmit={submit}>
             <DialogContentText>
               Enter the emails addresses of friends and family who want to make
               your wishes come true.
@@ -115,7 +115,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
               return (
                 <div
                   key={fieldSpec.id}
-                  sx={{
+                  style={{
                     display: 'flex',
                     alignItems: 'flex-start'
                   }}
@@ -178,7 +178,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                 </div>
               )
             })}
-          </form>
+          </StyledForm>
           <IconButton
             style={{ alignSelf: 'center' }}
             onClick={() => addShareRow()}

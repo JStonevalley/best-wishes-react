@@ -19,6 +19,7 @@ import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { useCallback } from 'react'
 import { useWishListSharing } from '../share'
 import { useUser } from '../../store/user'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 const StyledForm = styled('form')(({ theme }) => ({
   display: 'flex',
@@ -72,17 +73,19 @@ export const ShareFormDialog = ({ listId, shares }) => {
     await Promise.all(
       shareEmails
         .filter((share) => share.include)
-        .map(({ email }) => {
-          if (findListShare(email)) {
-            console.log('TODO: RESEND', email) // TODO resend email
-            return Promise.resolve()
-          } else {
-            return addShare({
+        .map(async ({ email }) => {
+          const shareDoc =
+            findListShare(email) ||
+            (await addShare({
               invitedEmail: email,
               listId,
               sharedByUID: user.uid
-            })
-          }
+            }))
+          const response = await httpsCallable(
+            getFunctions(),
+            'sendShareEmail'
+          )({ shareId: shareDoc.id })
+          console.log(response)
         })
     )
     setConfirmIsOpen(false)

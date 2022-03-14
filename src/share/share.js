@@ -22,6 +22,7 @@ export const useWishListSharing = () => {
     await updateDoc(doc(db, 'list', listId), {
       shares: arrayUnion(shareDoc)
     })
+    return shareDoc
   }
   const removeShare = async (shareId) => {
     const shareDoc = await getDoc(doc(db, 'share', shareId))

@@ -26,6 +26,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
+        // user.getIdToken().then(console.log)
         dispatch({ type: ACTION_TYPES.LOGIN, user })
       } else {
         dispatch({ type: ACTION_TYPES.LOGOUT })

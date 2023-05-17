@@ -60,7 +60,7 @@ const List = ({
 }) => {
   const [wishFormIsOpen, setWishFormIsOpen] = useState(false)
   const [formWishId, setFormWishId] = useState()
-  const googleUser = useUser()
+  const { googleUser } = useUser()
   const hookFormProps = useForm()
   const editWish = (id, wish) => {
     setFormWishId(id)

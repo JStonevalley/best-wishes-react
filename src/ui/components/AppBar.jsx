@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { useUser } from '../../store/user'
 
 export default function ButtonAppBar() {
-  const googleUser = useUser()
+  const { googleUser } = useUser()
   return (
     <AppBar position='static'>
       <Toolbar>

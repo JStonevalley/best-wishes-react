@@ -38,7 +38,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
   const findListShare = (email) =>
     listShares.find((shareDoc) => shareDoc.data().invitedEmail === email)
   const { addShare, removeShare } = useWishListSharing()
-  const googleUser = useUser()
+  const { googleUser } = useUser()
   const [isOpen, setIsOpen] = useState(false)
   const [confirmIsOpen, setConfirmIsOpen] = useState(false)
   const {

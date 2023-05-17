@@ -9,7 +9,7 @@ import { setContext } from '@apollo/client/link/context'
 import { useUser } from '../../store/user'
 
 const httpLink = createHttpLink({
-  uri: 'localhost:4000'
+  uri: 'localhost:4000/graphql'
 })
 
 const apolloClient = new ApolloClient({
@@ -23,6 +23,7 @@ export const AuthenticatedApolloProvider = ({ children }) => {
   useEffect(() => {
     if (googleUser)
       googleUser.getIdToken().then((idToken) => {
+        console.log(idToken)
         const authLink = setContext((_, { headers }) => {
           return {
             headers: {

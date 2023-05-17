@@ -97,9 +97,11 @@ const loginError = (error) => {
 }
 
 export const Login = ({ history }) => {
-  const googleUser = useUser()
+  const { googleUser } = useUser()
   useEffect(() => {
-    if (googleUser) history.push('/lists')
+    if (googleUser) {
+      history.push('/lists')
+    }
   })
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {

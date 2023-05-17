@@ -11,6 +11,7 @@ import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
 import AppBar from './ui/components/AppBar'
 import { UserProvider } from './store/user'
+import { AuthenticatedApolloProvider } from './apollo/components/AuthenticatedApolloProvider'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAUXoQex0Q_2Ln0yZSoSxQ2wsd7UKvnDJc',
@@ -35,31 +36,33 @@ function App() {
       <ThemeProvider theme={theme}>
         <RecoilRoot>
           <UserProvider>
-            <CssBaseline />
-            <BrowserRouter>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flexGrow: 1,
-                  backgroundImage: PATTERNS.HEXAGON
-                }}
-              >
-                <AppBar />
-                <ContentGrid>
-                  <Switch>
-                    <Route path='/signup' component={Signup} />
-                    <Route path='/login' component={Login} />
-                    <Route path='/list/:listId' component={List} />
-                    <Route path='/list' component={Lists} />
-                    <Route path='/'>
-                      <div>Home</div>
-                    </Route>
-                  </Switch>
-                </ContentGrid>
-                <BottomNav />
-              </div>
-            </BrowserRouter>
+            <AuthenticatedApolloProvider>
+              <CssBaseline />
+              <BrowserRouter>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexGrow: 1,
+                    backgroundImage: PATTERNS.HEXAGON
+                  }}
+                >
+                  <AppBar />
+                  <ContentGrid>
+                    <Switch>
+                      <Route path='/signup' component={Signup} />
+                      <Route path='/login' component={Login} />
+                      <Route path='/list/:listId' component={List} />
+                      <Route path='/list' component={Lists} />
+                      <Route path='/'>
+                        <div>Home</div>
+                      </Route>
+                    </Switch>
+                  </ContentGrid>
+                  <BottomNav />
+                </div>
+              </BrowserRouter>
+            </AuthenticatedApolloProvider>
           </UserProvider>
         </RecoilRoot>
       </ThemeProvider>

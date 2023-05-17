@@ -10,8 +10,8 @@ const NAV_DESTINATIONS = [['/list'], ['/shared']]
 
 const BottomNav = () => {
   const location = useLocation()
-  const user = useUser()
-  if (!user) return null
+  const googleUser = useUser()
+  if (!googleUser) return null
   return (
     <BottomNavigation
       value={NAV_DESTINATIONS.findIndex((destinations) =>

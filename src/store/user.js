@@ -6,15 +6,18 @@ const UserContext = React.createContext()
 
 const ACTION_TYPES = {
   LOGIN: 'LOGIN',
+  USER_FETCHED: 'USER_FETCHED',
   LOGOUT: 'LOGOUT'
 }
 
-const userReducer = (state, { type, user }) => {
+const userReducer = (state, { type, googleUser, user }) => {
   switch (type) {
     case ACTION_TYPES.LOGIN:
-      return { user }
+      return { ...state, googleUser }
+    case ACTION_TYPES.USER_FETCHED:
+      return { ...state, user }
     case ACTION_TYPES.LOGOUT:
-      return { user: null }
+      return { googleUser: null, user: null }
     default: {
       throw new Error(`Unhandled action type: ${type}`)
     }
@@ -22,19 +25,23 @@ const userReducer = (state, { type, user }) => {
 }
 
 const UserProvider = ({ children }) => {
-  const [user, dispatch] = useReducer(userReducer, { user: undefined })
+  const [userState, dispatch] = useReducer(userReducer, {
+    user: undefined,
+    googleUser: undefined
+  })
   useEffect(() => {
-    onAuthStateChanged(getAuth(), (user) => {
-      if (user) {
-        // user.getIdToken().then(console.log)
-        dispatch({ type: ACTION_TYPES.LOGIN, user })
+    onAuthStateChanged(getAuth(), (googleUser) => {
+      if (googleUser) {
+        dispatch({ type: ACTION_TYPES.LOGIN, googleUser })
       } else {
         dispatch({ type: ACTION_TYPES.LOGOUT })
       }
     })
   }, [])
   useBaseState()
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>
+  return (
+    <UserContext.Provider value={userState}>{children}</UserContext.Provider>
+  )
 }
 
 const useUser = () => {
@@ -42,7 +49,7 @@ const useUser = () => {
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider')
   }
-  return context.user
+  return context
 }
 
 export { UserProvider, useUser }

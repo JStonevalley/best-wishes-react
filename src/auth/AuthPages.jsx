@@ -44,9 +44,9 @@ const signupError = (error) => {
 }
 
 export const Signup = ({ history }) => {
-  const user = useUser()
+  const { googleUser } = useUser()
   useEffect(() => {
-    if (user) history.push('/list')
+    if (googleUser) history.push('/list')
   })
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {
@@ -97,9 +97,9 @@ const loginError = (error) => {
 }
 
 export const Login = ({ history }) => {
-  const user = useUser()
+  const googleUser = useUser()
   useEffect(() => {
-    if (user) history.push('/lists')
+    if (googleUser) history.push('/lists')
   })
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {

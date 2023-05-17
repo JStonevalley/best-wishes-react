@@ -38,7 +38,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
   const findListShare = (email) =>
     listShares.find((shareDoc) => shareDoc.data().invitedEmail === email)
   const { addShare, removeShare } = useWishListSharing()
-  const user = useUser()
+  const googleUser = useUser()
   const [isOpen, setIsOpen] = useState(false)
   const [confirmIsOpen, setConfirmIsOpen] = useState(false)
   const {
@@ -79,7 +79,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
             (await addShare({
               invitedEmail: email,
               listId,
-              sharedByUID: user.uid
+              sharedByUID: googleUser.uid
             }))
           const response = await httpsCallable(
             getFunctions(),

@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom'
 import { useUser } from '../../store/user'
 
 export default function ButtonAppBar() {
-  const user = useUser()
+  const googleUser = useUser()
   return (
     <AppBar position='static'>
       <Toolbar>
         <Typography variant='h6' sx={{ flexGrow: 1 }}>
           Bestwishes
         </Typography>
-        {user === null ? (
+        {googleUser === null ? (
           <>
             <Link
               to='/login'

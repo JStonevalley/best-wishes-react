@@ -6,18 +6,15 @@ const UserContext = React.createContext()
 
 const ACTION_TYPES = {
   LOGIN: 'LOGIN',
-  USER_FETCHED: 'USER_FETCHED',
   LOGOUT: 'LOGOUT'
 }
 
-const userReducer = (state, { type, googleUser, user }) => {
+const userReducer = (state, { type, googleUser }) => {
   switch (type) {
     case ACTION_TYPES.LOGIN:
       return { ...state, googleUser }
-    case ACTION_TYPES.USER_FETCHED:
-      return { ...state, user }
     case ACTION_TYPES.LOGOUT:
-      return { googleUser: null, user: null }
+      return { googleUser: null }
     default: {
       throw new Error(`Unhandled action type: ${type}`)
     }
@@ -26,7 +23,6 @@ const userReducer = (state, { type, googleUser, user }) => {
 
 const UserProvider = ({ children }) => {
   const [userState, dispatch] = useReducer(userReducer, {
-    user: undefined,
     googleUser: undefined
   })
   useEffect(() => {

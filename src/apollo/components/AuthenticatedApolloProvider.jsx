@@ -3,13 +3,14 @@ import {
   ApolloClient,
   ApolloProvider,
   createHttpLink,
+  gql,
   InMemoryCache
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { useUser } from '../../store/user'
 
 const httpLink = createHttpLink({
-  uri: 'localhost:4000/graphql'
+  uri: 'http://localhost:4000/graphql'
 })
 
 const apolloClient = new ApolloClient({
@@ -23,7 +24,6 @@ export const AuthenticatedApolloProvider = ({ children }) => {
   useEffect(() => {
     if (googleUser)
       googleUser.getIdToken().then((idToken) => {
-        console.log(idToken)
         const authLink = setContext((_, { headers }) => {
           return {
             headers: {
@@ -32,12 +32,24 @@ export const AuthenticatedApolloProvider = ({ children }) => {
             }
           }
         })
-        setClient(
-          new ApolloClient({
-            link: authLink.concat(httpLink),
-            cache: new InMemoryCache()
+        const newClient = new ApolloClient({
+          link: authLink.concat(httpLink),
+          cache: new InMemoryCache()
+        })
+        setClient(newClient)
+        newClient
+          .query({
+            query: gql`
+              query getCurrentUser {
+                user: getCurrentUser {
+                  id
+                  email
+                  googleUserId
+                }
+              }
+            `
           })
-        )
+          .then(console.log)
       })
   }, [googleUser])
   return <ApolloProvider client={client}>{children}</ApolloProvider>

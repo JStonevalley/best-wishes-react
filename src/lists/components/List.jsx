@@ -22,10 +22,11 @@ import {
 import { prop } from 'ramda'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
-import { useUser } from '../../store/user'
 import { Lightbox } from '../../ui/components/Lightbox.jsx'
 import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
 import { useWishMaking } from '../wishMaking'
+import { GET_CURRENT_USER } from '../../auth/gql'
+import { useQuery } from '@apollo/client'
 
 const ListHeader = ({ headline, listId, editWish }) => {
   const shares = useRecoilValue(ownSharesState)
@@ -60,7 +61,7 @@ const List = ({
 }) => {
   const [wishFormIsOpen, setWishFormIsOpen] = useState(false)
   const [formWishId, setFormWishId] = useState()
-  const { googleUser } = useUser()
+  const { data: userData } = useQuery(GET_CURRENT_USER)
   const hookFormProps = useForm()
   const editWish = (id, wish) => {
     setFormWishId(id)
@@ -74,7 +75,7 @@ const List = ({
             price: undefined,
             image: undefined,
             quantity: 1,
-            ownerUID: googleUser.uid
+            ownerUID: userData?.user.googleUserId
           },
       {
         keepValues: false

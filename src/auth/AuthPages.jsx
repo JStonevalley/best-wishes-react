@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -8,7 +8,8 @@ import { styled } from '@mui/system'
 import { Typography, Paper } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import AuthDetailsForm from './components/AuthForm'
-import { useUser } from '../store/user'
+import { useQuery } from '@apollo/client'
+import { GET_CURRENT_USER } from './gql'
 
 const Page = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -44,9 +45,12 @@ const signupError = (error) => {
 }
 
 export const Signup = ({ history }) => {
-  const { googleUser } = useUser()
-  useEffect(() => {
-    if (googleUser) history.push('/list')
+  useQuery(GET_CURRENT_USER, {
+    onCompleted: (userData) => {
+      if (userData?.user) {
+        history.push('/list')
+      }
+    }
   })
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {
@@ -97,10 +101,11 @@ const loginError = (error) => {
 }
 
 export const Login = ({ history }) => {
-  const { googleUser } = useUser()
-  useEffect(() => {
-    if (googleUser) {
-      history.push('/lists')
+  useQuery(GET_CURRENT_USER, {
+    onCompleted: (userData) => {
+      if (userData?.user) {
+        history.push('/list')
+      }
     }
   })
   const { handleSubmit, setError, ...formProps } = useForm()

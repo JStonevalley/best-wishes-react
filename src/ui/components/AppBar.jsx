@@ -2,17 +2,18 @@ import React from 'react'
 import { getAuth, signOut } from 'firebase/auth'
 import { AppBar, Toolbar, Typography, Button } from '@mui/material'
 import { Link } from 'react-router-dom'
-import { useUser } from '../../store/user'
+import { useQuery } from '@apollo/client'
+import { GET_CURRENT_USER } from '../../auth/gql'
 
 export default function ButtonAppBar() {
-  const { googleUser } = useUser()
+  const { data: userData } = useQuery(GET_CURRENT_USER)
   return (
     <AppBar position='static'>
       <Toolbar>
         <Typography variant='h6' sx={{ flexGrow: 1 }}>
           Bestwishes
         </Typography>
-        {googleUser === null ? (
+        {!userData?.user ? (
           <>
             <Link
               to='/login'

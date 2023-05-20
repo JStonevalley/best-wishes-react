@@ -18,8 +18,9 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { useCallback } from 'react'
 import { useWishListSharing } from '../share'
-import { useUser } from '../../store/user'
 import { getFunctions, httpsCallable } from 'firebase/functions'
+import { GET_CURRENT_USER } from '../../auth/gql'
+import { useQuery } from '@apollo/client'
 
 const StyledForm = styled('form')(({ theme }) => ({
   display: 'flex',
@@ -38,7 +39,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
   const findListShare = (email) =>
     listShares.find((shareDoc) => shareDoc.data().invitedEmail === email)
   const { addShare, removeShare } = useWishListSharing()
-  const { googleUser } = useUser()
+  const { data: userData } = useQuery(GET_CURRENT_USER)
   const [isOpen, setIsOpen] = useState(false)
   const [confirmIsOpen, setConfirmIsOpen] = useState(false)
   const {
@@ -79,7 +80,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
             (await addShare({
               invitedEmail: email,
               listId,
-              sharedByUID: googleUser.uid
+              sharedByUID: userData?.user.googleUserId
             }))
           const response = await httpsCallable(
             getFunctions(),
@@ -91,6 +92,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
     setConfirmIsOpen(false)
     setIsOpen(false)
   })
+  if (!userData) return null
   return (
     <>
       <IconButton

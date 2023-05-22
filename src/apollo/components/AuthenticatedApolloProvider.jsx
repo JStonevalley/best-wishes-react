@@ -31,7 +31,6 @@ export const AuthenticatedApolloProvider = ({ children }) => {
   // TODO Handle logout better
   useEffect(() => {
     onAuthStateChanged(getAuth(), (newGoogleUser) => {
-      console.log(newGoogleUser)
       if (newGoogleUser) {
         setGoogleUser(newGoogleUser)
       } else {
@@ -43,7 +42,6 @@ export const AuthenticatedApolloProvider = ({ children }) => {
   useEffect(() => {
     if (googleUser) {
       googleUser.getIdToken().then((googleIdToken) => {
-        console.log(googleIdToken)
         const authLink = setContext((_, { headers }) => {
           return {
             headers: {

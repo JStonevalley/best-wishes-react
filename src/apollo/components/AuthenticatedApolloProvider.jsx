@@ -42,6 +42,7 @@ export const AuthenticatedApolloProvider = ({ children }) => {
   useEffect(() => {
     if (googleUser) {
       googleUser.getIdToken().then((googleIdToken) => {
+        console.log(googleIdToken)
         const authLink = setContext((_, { headers }) => {
           return {
             headers: {
@@ -64,7 +65,6 @@ export const AuthenticatedApolloProvider = ({ children }) => {
           .query({
             query: GET_CURRENT_USER
           })
-          .then(console.log)
           .catch((error) => {
             if (
               error?.graphQLErrors[0] &&

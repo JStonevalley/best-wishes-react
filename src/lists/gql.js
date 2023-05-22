@@ -4,9 +4,6 @@ export const MINIMUM_WISHLIST_PROPERITES = gql`
   fragment MinimumWishListProperties on WishList {
     id
     headline
-    user {
-      id
-    }
   }
 `
 

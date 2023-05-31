@@ -14,12 +14,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import AddIcon from '@mui/icons-material/Add'
-import {
-  ownListsState,
-  ownWishesState,
-  ownSharesState
-} from '../../store/lists'
-import { prop } from 'ramda'
+import { ownSharesState } from '../../store/lists'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
 import { Lightbox } from '../../ui/components/Lightbox.jsx'
@@ -27,6 +22,7 @@ import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
 import { useWishMaking } from '../wishMaking'
 import { GET_CURRENT_USER } from '../../auth/gql'
 import { useQuery } from '@apollo/client'
+import { GET_OWN_WISH_LIST } from '../gql'
 
 const ListHeader = ({ headline, listId, editWish }) => {
   const shares = useRecoilValue(ownSharesState)
@@ -83,9 +79,10 @@ const List = ({
     )
     setWishFormIsOpen(true)
   }
-  const lists = useRecoilValue(ownListsState)
-  const wishes = useRecoilValue(ownWishesState)
-  const list = lists[listId]?.data()
+  const { data: wishListData } = useQuery(GET_OWN_WISH_LIST, {
+    variables: { id: listId }
+  })
+  const list = wishListData?.wishList
   if (!list) return null
   return (
     <Paper sx={{ padding: 2 }}>
@@ -95,21 +92,17 @@ const List = ({
         editWish={editWish}
       />
       <MaterialList>
-        {list.wishes
-          .map(prop('id'))
-          .filter((wishId) => wishes[wishId])
-          .map((wishId) => {
-            const wish = wishes[wishId].data()
-            return (
-              <WishListItem
-                key={`wishListItem-${wishId}`}
-                id={wishId}
-                listId={listId}
-                wish={wish}
-                editWish={editWish}
-              />
-            )
-          })}
+        {list.wishes.map((wish) => {
+          return (
+            <WishListItem
+              key={`wishListItem-${wish.id}`}
+              id={wish.id}
+              listId={listId}
+              wish={wish}
+              editWish={editWish}
+            />
+          )
+        })}
       </MaterialList>
       <WishFormModal
         hookFormProps={hookFormProps}
@@ -184,7 +177,8 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
               <Typography variant='body1'>
                 {wish.price ? (
                   <span>
-                    <strong>Price:</strong> {wish.price}
+                    <strong>Price:</strong> {wish.price.amount / 100}{' '}
+                    <strong>{wish.price.currency}</strong>
                   </span>
                 ) : (
                   ''

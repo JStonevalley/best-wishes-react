@@ -12,15 +12,15 @@ import { useQuery } from '@apollo/client'
 import { GET_OWN_WISH_LISTS } from '../gql'
 
 const Lists = () => {
-  const { data: listsData } = useQuery(GET_OWN_WISH_LISTS)
+  const { data: wishListsData } = useQuery(GET_OWN_WISH_LISTS)
   return (
     <Paper sx={{ padding: 2 }}>
       <Typography component='h1' variant='h4'>
         My lists
       </Typography>
-      {listsData?.wishLists && (
+      {wishListsData?.wishLists && (
         <List>
-          {listsData.wishLists.map(({ id, headline }) => (
+          {wishListsData.wishLists.map(({ id, headline }) => (
             <ListItem
               component={Link}
               to={`list/${id}`}

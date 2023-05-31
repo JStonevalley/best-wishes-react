@@ -13,6 +13,8 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { materialUiFormRegister } from '../../tools/forms'
 import { useWishMaking } from '../wishMaking'
+import { CHANGE_A_WISH, MAKE_A_WISH } from '../gql'
+import { useMutation } from '@apollo/client'
 
 const GridForm = styled('form')(({ theme }) => ({
   display: 'grid',
@@ -54,10 +56,15 @@ const WishFormModal = ({
   const [fetchingMetadata, setFetchingMetadata] = useState(false)
   const [fetchedMetadata, setFetchedMetadata] = useState(false)
   const [title, link] = watch(['title', 'link'])
-  const { makeAWish, changeAWish } = useWishMaking()
+  const [makeAWish] = useMutation(MAKE_A_WISH, {
+    refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
+  })
+  const [changeAWish] = useMutation(CHANGE_A_WISH)
   const submit = handleSubmit(async (data) => {
     try {
-      wishId ? changeAWish(wishId)(data) : makeAWish(listId)(data)
+      wishId
+        ? changeAWish({ variables: { id: wishId, ...data } })
+        : makeAWish({ variables: { wishListId: listId, ...data } })
       close()
     } catch (error) {
       console.error(error)

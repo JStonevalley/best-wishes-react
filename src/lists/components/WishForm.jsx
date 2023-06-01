@@ -8,13 +8,17 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton
+  IconButton,
+  Select,
+  InputLabel,
+  MenuItem,
+  FormControl
 } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { materialUiFormRegister } from '../../tools/forms'
-import { useWishMaking } from '../wishMaking'
 import { CHANGE_A_WISH, MAKE_A_WISH } from '../gql'
 import { useMutation } from '@apollo/client'
+import { Controller } from 'react-hook-form'
 
 const GridForm = styled('form')(({ theme }) => ({
   display: 'grid',
@@ -24,7 +28,8 @@ const GridForm = styled('form')(({ theme }) => ({
     "link link link link link link link rfb"
     "title title title title title title title title"
     "description description description description description description description description"
-    "price price quantity quantity image image image image"
+    "price_amount price_amount price_amount price_currency price_currency price_currency quantity quantity"
+    "image image image image image image image image"
   `,
   [theme.breakpoints.down('md')]: {
     gridTemplateAreas: `
@@ -32,8 +37,8 @@ const GridForm = styled('form')(({ theme }) => ({
       "link link link link link link link rfb"
       "title title title title title title title title"
       "description description description description description description description description"
-      "price price price price quantity quantity quantity quantity"
-      "image image image image image image image image"
+      "price_amount price_amount price_amount price_amount price_currency price_currency price_currency price_currency"
+      "quantity quantity image image image image image image"
     `
   },
   gridGap: theme.spacing(1, 1)
@@ -50,21 +55,24 @@ const WishFormModal = ({
     formState: { errors },
     handleSubmit,
     setValue,
+    control,
     ...hookFormProps
   }
 }) => {
   const [fetchingMetadata, setFetchingMetadata] = useState(false)
   const [fetchedMetadata, setFetchedMetadata] = useState(false)
   const [title, link] = watch(['title', 'link'])
-  const [makeAWish] = useMutation(MAKE_A_WISH, {
+  const [makeAWish, { loadingMakeAWish }] = useMutation(MAKE_A_WISH, {
     refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
   })
-  const [changeAWish] = useMutation(CHANGE_A_WISH)
+  const [changeAWish, { loadingChangeAWish }] = useMutation(CHANGE_A_WISH)
+  const loading = loadingMakeAWish || loadingChangeAWish
   const submit = handleSubmit(async (data) => {
+    if (data.price?.amount != null) data.price.amount = data.price.amount * 100
     try {
-      wishId
+      await (wishId
         ? changeAWish({ variables: { id: wishId, ...data } })
-        : makeAWish({ variables: { wishListId: listId, ...data } })
+        : makeAWish({ variables: { wishListId: listId, ...data } }))
       close()
     } catch (error) {
       console.error(error)
@@ -165,11 +173,34 @@ const WishFormModal = ({
             label='Price'
             variant='outlined'
             type='number'
-            style={{ gridArea: 'price', ...hideOrDisplayInputFields }}
-            {...materialUiFormRegister(register)('price', {
+            style={{ gridArea: 'price_amount', ...hideOrDisplayInputFields }}
+            {...materialUiFormRegister(register)('price.amount', {
               valueAsNumber: true
             })}
           />
+          <FormControl
+            style={{ gridArea: 'price_currency', ...hideOrDisplayInputFields }}
+          >
+            <InputLabel id='price_currency_select_label'>Currency</InputLabel>
+            <Controller
+              control={control}
+              name='price.currency'
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  id='price_currency_select'
+                  label='Currency'
+                  labelId='price_currency_select_label'
+                >
+                  <MenuItem value='SEK'>SEK</MenuItem>
+                  <MenuItem value='EUR'>EUR</MenuItem>
+                  <MenuItem value='USD'>USD</MenuItem>
+                  <MenuItem value='GBP'>GBP</MenuItem>
+                </Select>
+              )}
+            />
+          </FormControl>
+
           <TextField
             label='Image'
             variant='outlined'
@@ -191,9 +222,11 @@ const WishFormModal = ({
         </GridForm>
       </DialogContent>
       <DialogActions>
-        <Button onClick={close}>Cancel</Button>
+        <Button onClick={close} disabled={loading}>
+          Cancel
+        </Button>
         {(wishId || fetchedMetadata) && (
-          <Button onClick={submit} color='primary'>
+          <Button onClick={submit} disabled={loading} color='primary'>
             {!wishId ? 'Make my wish' : 'Change my wish'}
           </Button>
         )}

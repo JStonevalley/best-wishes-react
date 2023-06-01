@@ -61,22 +61,28 @@ const List = ({
   const hookFormProps = useForm()
   const editWish = (id, wish) => {
     setFormWishId(id)
-    hookFormProps.reset(
-      wish
-        ? wish
-        : {
-            link: undefined,
-            title: undefined,
-            description: undefined,
-            price: undefined,
-            image: undefined,
-            quantity: 1,
-            ownerUID: userData?.user.googleUserId
-          },
-      {
-        keepValues: false
-      }
-    )
+    const defaultValues = wish
+      ? {
+          ...wish,
+          price: wish.price
+            ? {
+                amount: wish.price.amount / 100,
+                currency: wish.price.currency
+              }
+            : undefined
+        }
+      : {
+          link: undefined,
+          title: undefined,
+          description: undefined,
+          price: { amount: undefined, currency: 'SEK' },
+          image: undefined,
+          quantity: 1,
+          ownerUID: userData?.user.googleUserId
+        }
+    hookFormProps.reset(defaultValues, {
+      keepValues: false
+    })
     setWishFormIsOpen(true)
   }
   const { data: wishListData } = useQuery(GET_OWN_WISH_LIST, {

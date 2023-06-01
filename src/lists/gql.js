@@ -45,6 +45,7 @@ export const GET_OWN_WISH_LIST = gql`
 `
 
 export const MAKE_A_WISH = gql`
+  ${DEFAULT_WISH_PROPERITES}
   mutation makeAWish(
     $wishListId: String!
     $link: String
@@ -69,6 +70,7 @@ export const MAKE_A_WISH = gql`
 `
 
 export const CHANGE_A_WISH = gql`
+  ${DEFAULT_WISH_PROPERITES}
   mutation changeAWish(
     $id: String!
     $link: String

@@ -78,7 +78,7 @@ const List = ({
           price: { amount: undefined, currency: 'SEK' },
           image: undefined,
           quantity: 1,
-          ownerUID: userData?.user.googleUserId
+          ownerUID: userData?.user?.googleUserId
         }
     hookFormProps.reset(defaultValues, {
       keepValues: false
@@ -86,7 +86,8 @@ const List = ({
     setWishFormIsOpen(true)
   }
   const { data: wishListData } = useQuery(GET_OWN_WISH_LIST, {
-    variables: { id: listId }
+    variables: { id: listId },
+    skip: !userData?.user?.id
   })
   const list = wishListData?.wishList
   if (!list) return null

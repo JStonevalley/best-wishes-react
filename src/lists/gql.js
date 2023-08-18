@@ -80,7 +80,7 @@ export const CHANGE_A_WISH = gql`
     $quantity: Int
     $price: ValueObjectInput
   ) {
-    wish: createWish(
+    wish: changeWish(
       id: $id
       link: $link
       title: $title

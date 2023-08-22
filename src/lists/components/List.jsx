@@ -17,12 +17,11 @@ import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
 import { Lightbox } from '../../ui/components/Lightbox.jsx'
 import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
-import { useWishMaking } from '../wishMaking'
 import { GET_CURRENT_USER } from '../../auth/gql'
 import { useQuery } from '@apollo/client'
 import { GET_OWN_WISH_LIST } from '../gql'
 
-const ListHeader = ({ headline, listId, editWish, shares }) => {
+const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
     <div
       style={{
@@ -38,7 +37,7 @@ const ListHeader = ({ headline, listId, editWish, shares }) => {
           display: 'flex'
         }}
       >
-        <IconButton onClick={() => editWish()} size='large'>
+        <IconButton onClick={addWish} size='large'>
           <AddIcon />
         </IconButton>
         {shares && <ShareFormDialog listId={listId} shares={shares} />}
@@ -89,11 +88,33 @@ const List = ({
   const list = wishListData?.wishList
   if (!list) return null
   return (
+    <ListPresentation
+      list={list}
+      ownerProps={{
+        editWish,
+        hookFormProps,
+        formWishId,
+        wishFormIsOpen,
+        setWishFormIsOpen
+      }}
+    />
+  )
+}
+
+const ListPresentation = ({ list, ownerProps }) => {
+  const {
+    editWish,
+    hookFormProps,
+    formWishId,
+    wishFormIsOpen,
+    setWishFormIsOpen
+  } = ownerProps
+  return (
     <Paper sx={{ padding: 2 }}>
       <ListHeader
         headline={list.headline}
-        listId={listId}
-        editWish={editWish}
+        listId={list.id}
+        addWish={() => editWish()}
         shares={list.shares}
       />
       <MaterialList>
@@ -102,20 +123,22 @@ const List = ({
             <WishListItem
               key={`wishListItem-${wish.id}`}
               id={wish.id}
-              listId={listId}
+              listId={list.id}
               wish={wish}
               editWish={editWish}
             />
           )
         })}
       </MaterialList>
-      <WishFormModal
-        hookFormProps={hookFormProps}
-        wishId={formWishId}
-        isOpen={wishFormIsOpen}
-        listId={listId}
-        close={() => setWishFormIsOpen(false)}
-      />
+      {ownerProps && (
+        <WishFormModal
+          hookFormProps={hookFormProps}
+          wishId={formWishId}
+          isOpen={wishFormIsOpen}
+          listId={list.id}
+          close={() => setWishFormIsOpen(false)}
+        />
+      )}
     </Paper>
   )
 }
@@ -142,7 +165,6 @@ const ZoomingAvatar = styled(Avatar)({
 })
 
 const WishListItem = ({ id, wish, listId, editWish }) => {
-  const { removeAWish } = useWishMaking()
   const avatar = (
     <ZoomingAvatar
       variant='rounded'
@@ -195,15 +217,17 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
                 </span>
               </Typography>
               <Toolbar>
+                {editWish && (
+                  <IconButton
+                    onClick={() => editWish(id, wish)}
+                    aria-label='edit'
+                    size='large'
+                  >
+                    <EditIcon />
+                  </IconButton>
+                )}
                 <IconButton
-                  onClick={() => editWish(id, wish)}
-                  aria-label='edit'
-                  size='large'
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  onClick={() => removeAWish(listId)(id)}
+                  onClick={() => alert('TODO: remove wish')}
                   edge='end'
                   aria-label='delete'
                   size='large'

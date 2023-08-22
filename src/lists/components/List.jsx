@@ -189,6 +189,11 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
                   ''
                 )}
               </Typography>
+              <Typography variant='body1'>
+                <span>
+                  <strong>Quantity:</strong> {wish.quantity}
+                </span>
+              </Typography>
               <Toolbar>
                 <IconButton
                   onClick={() => editWish(id, wish)}

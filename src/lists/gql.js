@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { DEFAULT_SHARE_PROPERITES } from '../share/gql'
 
 export const MINIMUM_WISHLIST_PROPERITES = gql`
   fragment MinimumWishListProperties on WishList {
@@ -34,11 +35,15 @@ export const GET_OWN_WISH_LISTS = gql`
 export const GET_OWN_WISH_LIST = gql`
   ${MINIMUM_WISHLIST_PROPERITES}
   ${DEFAULT_WISH_PROPERITES}
+  ${DEFAULT_SHARE_PROPERITES}
   query getOwnWishList($id: String!) {
     wishList: getOwnWishList(id: $id) {
       ...MinimumWishListProperties
       wishes {
         ...DefaultWishProperties
+      }
+      shares {
+        ...DefaultShareProperties
       }
     }
   }

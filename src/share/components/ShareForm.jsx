@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   TextField,
@@ -17,10 +17,9 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { useCallback } from 'react'
-import { useWishListSharing } from '../share'
-import { getFunctions, httpsCallable } from 'firebase/functions'
 import { GET_CURRENT_USER } from '../../auth/gql'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
+import { CREATE_SHARE, REMOVE_SHARE } from '../gql'
 
 const StyledForm = styled('form')(({ theme }) => ({
   display: 'flex',
@@ -29,16 +28,12 @@ const StyledForm = styled('form')(({ theme }) => ({
 }))
 
 export const ShareFormDialog = ({ listId, shares }) => {
-  const listShares = useMemo(
-    () =>
-      Object.values(shares).filter(
-        (shareDoc) => shareDoc.data().list.id === listId
-      ),
-    [listId, shares]
-  )
-  const findListShare = (email) =>
-    listShares.find((shareDoc) => shareDoc.data().invitedEmail === email)
-  const { addShare, removeShare } = useWishListSharing()
+  const [createShare] = useMutation(CREATE_SHARE, {
+    refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
+  })
+  const [removeShare] = useMutation(REMOVE_SHARE, {
+    refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
+  })
   const { data: userData } = useQuery(GET_CURRENT_USER)
   const [isOpen, setIsOpen] = useState(false)
   const [confirmIsOpen, setConfirmIsOpen] = useState(false)
@@ -53,15 +48,15 @@ export const ShareFormDialog = ({ listId, shares }) => {
     if (isOpen) {
       reset({
         shareEmails:
-          listShares.length > 0
-            ? listShares.map((shareDoc) => ({
-                email: shareDoc.data().invitedEmail,
+          shares.length > 0
+            ? shares.map((share) => ({
+                email: share.invitedEmail,
                 include: false
               }))
             : [{ email: '', include: true }]
       })
     }
-  }, [isOpen, reset, listShares])
+  }, [isOpen, reset, shares])
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'shareEmails'
@@ -73,20 +68,14 @@ export const ShareFormDialog = ({ listId, shares }) => {
   const submit = handleSubmit(async ({ shareEmails }) => {
     await Promise.all(
       shareEmails
-        .filter((share) => share.include)
+        .filter((shareField) => shareField.include)
         .map(async ({ email }) => {
-          const shareDoc =
-            findListShare(email) ||
-            (await addShare({
-              invitedEmail: email,
-              listId,
-              sharedByUID: userData?.user.googleUserId
+          // eslint-disable-next-line no-unused-vars
+          const share =
+            shares.find((share) => share.invitedEmail === email) ||
+            (await createShare({
+              variables: { invitedEmail: email, wishListId: listId }
             }))
-          const response = await httpsCallable(
-            getFunctions(),
-            'sendShareEmail'
-          )({ shareId: shareDoc.id })
-          console.log(response)
         })
     )
     setConfirmIsOpen(false)
@@ -147,7 +136,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                           helperText={
                             errors.shareEmails?.[index]?.email?.message
                           }
-                          disabled={index < listShares.length}
+                          disabled={index < shares.length}
                           sx={{ flexGrow: 1 }}
                           {...field}
                         />
@@ -170,9 +159,13 @@ export const ShareFormDialog = ({ listId, shares }) => {
                   <IconButton
                     sx={{ marginTop: '0.25rem' }}
                     onClick={async () => {
-                      const existingListShare = findListShare(fieldSpec.email)
+                      const existingListShare = shares.find(
+                        (share) => share.email === fieldSpec.email
+                      )
                       if (existingListShare)
-                        await removeShare(existingListShare.id)
+                        await removeShare({
+                          variables: { id: existingListShare.id }
+                        })
                       remove(index)
                     }}
                     aria-label='share'
@@ -212,7 +205,9 @@ export const ShareFormDialog = ({ listId, shares }) => {
               .filter(({ include }) => include)
               .map(({ email }) => (
                 <Typography key={`confirmNewShares-${email}`}>
-                  {findListShare(email) ? `${email} (resend)` : email}
+                  {shares.find((share) => share.email === email)
+                    ? `${email} (resend)`
+                    : email}
                 </Typography>
               ))}
           </DialogContent>

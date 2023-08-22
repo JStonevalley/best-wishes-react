@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useRecoilValue } from 'recoil'
 import { styled } from '@mui/system'
 import {
   List as MaterialList,
@@ -14,7 +13,6 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import AddIcon from '@mui/icons-material/Add'
-import { ownSharesState } from '../../store/lists'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
 import { Lightbox } from '../../ui/components/Lightbox.jsx'
@@ -24,8 +22,7 @@ import { GET_CURRENT_USER } from '../../auth/gql'
 import { useQuery } from '@apollo/client'
 import { GET_OWN_WISH_LIST } from '../gql'
 
-const ListHeader = ({ headline, listId, editWish }) => {
-  const shares = useRecoilValue(ownSharesState)
+const ListHeader = ({ headline, listId, editWish, shares }) => {
   return (
     <div
       style={{
@@ -97,6 +94,7 @@ const List = ({
         headline={list.headline}
         listId={listId}
         editWish={editWish}
+        shares={list.shares}
       />
       <MaterialList>
         {list.wishes.map((wish) => {

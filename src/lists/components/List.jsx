@@ -20,6 +20,7 @@ import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
 import { GET_CURRENT_USER } from '../../auth/gql'
 import { useQuery } from '@apollo/client'
 import { GET_OWN_WISH_LIST } from '../gql'
+import { GET_SHARE } from '../../share/gql'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
@@ -37,16 +38,18 @@ const ListHeader = ({ headline, listId, addWish, shares }) => {
           display: 'flex'
         }}
       >
-        <IconButton onClick={addWish} size='large'>
-          <AddIcon />
-        </IconButton>
+        {addWish && (
+          <IconButton onClick={addWish} size='large'>
+            <AddIcon />
+          </IconButton>
+        )}
         {shares && <ShareFormDialog listId={listId} shares={shares} />}
       </div>
     </div>
   )
 }
 
-const List = ({
+export const OwnerList = ({
   match: {
     params: { listId }
   }
@@ -73,8 +76,7 @@ const List = ({
           description: undefined,
           price: { amount: undefined, currency: 'SEK' },
           image: undefined,
-          quantity: 1,
-          ownerUID: userData?.user?.googleUserId
+          quantity: 1
         }
     hookFormProps.reset(defaultValues, {
       keepValues: false
@@ -101,20 +103,35 @@ const List = ({
   )
 }
 
-const ListPresentation = ({ list, ownerProps }) => {
-  const {
+export const SharedList = ({
+  match: {
+    params: { shareId }
+  }
+}) => {
+  const { data: shareData } = useQuery(GET_SHARE, {
+    variables: { id: shareId }
+  })
+  const share = shareData?.share
+  if (!share) return null
+  return <ListPresentation list={share.wishList} />
+}
+
+const ListPresentation = ({
+  list,
+  ownerProps: {
     editWish,
     hookFormProps,
     formWishId,
     wishFormIsOpen,
     setWishFormIsOpen
-  } = ownerProps
+  } = {}
+}) => {
   return (
     <Paper sx={{ padding: 2 }}>
       <ListHeader
         headline={list.headline}
         listId={list.id}
-        addWish={() => editWish()}
+        addWish={editWish ? () => editWish() : undefined}
         shares={list.shares}
       />
       <MaterialList>
@@ -130,7 +147,7 @@ const ListPresentation = ({ list, ownerProps }) => {
           )
         })}
       </MaterialList>
-      {ownerProps && (
+      {hookFormProps && (
         <WishFormModal
           hookFormProps={hookFormProps}
           wishId={formWishId}
@@ -242,5 +259,3 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
     </ListItem>
   )
 }
-
-export default List

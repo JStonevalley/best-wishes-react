@@ -1,27 +1,9 @@
 import { gql } from '@apollo/client'
-import { DEFAULT_SHARE_PROPERITES } from '../share/gql'
-
-export const MINIMUM_WISHLIST_PROPERITES = gql`
-  fragment MinimumWishListProperties on WishList {
-    id
-    headline
-  }
-`
-
-export const DEFAULT_WISH_PROPERITES = gql`
-  fragment DefaultWishProperties on Wish {
-    id
-    title
-    description
-    image
-    link
-    quantity
-    price {
-      amount
-      currency
-    }
-  }
-`
+import {
+  DEFAULT_WISH_PROPERITES,
+  MINIMUM_WISHLIST_PROPERITES
+} from './fragments'
+import { DEFAULT_SHARE_PROPERITES } from '../share/fragments'
 
 export const GET_OWN_WISH_LISTS = gql`
   ${MINIMUM_WISHLIST_PROPERITES}

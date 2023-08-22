@@ -5,7 +5,7 @@ import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { RecoilRoot } from 'recoil'
 import { Signup, Login } from './auth/AuthPages'
 import Lists from './lists/components/Lists'
-import List from './lists/components/List'
+import { OwnerList, SharedList } from './lists/components/List'
 import ContentGrid from './ui/components/ContentGrid'
 import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
@@ -50,8 +50,9 @@ function App() {
                   <Switch>
                     <Route path='/signup' component={Signup} />
                     <Route path='/login' component={Login} />
-                    <Route path='/list/:listId' component={List} />
+                    <Route path='/list/:listId' component={OwnerList} />
                     <Route path='/list' component={Lists} />
+                    <Route path='/share/:shareId' component={SharedList} />
                     <Route path='/'>
                       <div>Home</div>
                     </Route>

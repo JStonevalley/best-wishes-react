@@ -20,6 +20,7 @@ import { useCallback } from 'react'
 import { GET_CURRENT_USER } from '../../auth/gql'
 import { useMutation, useQuery } from '@apollo/client'
 import { CREATE_SHARE, REMOVE_SHARE } from '../gql'
+import { prop } from 'ramda'
 
 const StyledForm = styled('form')(({ theme }) => ({
   display: 'flex',
@@ -67,16 +68,14 @@ export const ShareFormDialog = ({ listId, shares }) => {
   ])
   const submit = handleSubmit(async ({ shareEmails }) => {
     await Promise.all(
-      shareEmails
-        .filter((shareField) => shareField.include)
-        .map(async ({ email }) => {
-          // eslint-disable-next-line no-unused-vars
-          const share =
-            shares.find((share) => share.invitedEmail === email) ||
-            (await createShare({
-              variables: { invitedEmail: email, wishListId: listId }
-            }))
-        })
+      shareEmails.filter(prop('include')).map(async ({ email }) => {
+        // eslint-disable-next-line no-unused-vars
+        const share =
+          shares.find((share) => share.invitedEmail === email) ||
+          (await createShare({
+            variables: { invitedEmail: email, wishListId: listId }
+          }))
+      })
     )
     setConfirmIsOpen(false)
     setIsOpen(false)
@@ -160,7 +159,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                     sx={{ marginTop: '0.25rem' }}
                     onClick={async () => {
                       const existingListShare = shares.find(
-                        (share) => share.email === fieldSpec.email
+                        (share) => share.invitedEmail === fieldSpec.email
                       )
                       if (existingListShare)
                         await removeShare({
@@ -201,15 +200,13 @@ export const ShareFormDialog = ({ listId, shares }) => {
               rowGap: 1
             }}
           >
-            {shareEmails
-              .filter(({ include }) => include)
-              .map(({ email }) => (
-                <Typography key={`confirmNewShares-${email}`}>
-                  {shares.find((share) => share.email === email)
-                    ? `${email} (resend)`
-                    : email}
-                </Typography>
-              ))}
+            {shareEmails.filter(prop('include')).map(({ email }) => (
+              <Typography key={`confirmNewShares-${email}`}>
+                {shares.find((share) => share.invitedEmail === email)
+                  ? `${email} (resend)`
+                  : email}
+              </Typography>
+            ))}
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setConfirmIsOpen(false)}>No</Button>

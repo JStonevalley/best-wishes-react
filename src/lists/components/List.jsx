@@ -8,7 +8,9 @@ import {
   Avatar,
   Typography,
   Paper,
-  IconButton
+  IconButton,
+  Tooltip,
+  Button
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
@@ -21,6 +23,8 @@ import { GET_CURRENT_USER } from '../../auth/gql'
 import { useQuery } from '@apollo/client'
 import { GET_OWN_WISH_LIST } from '../gql'
 import { GET_SHARE } from '../../share/gql'
+import { CircularProgressWithLabel } from '../../ui/components/CircularProgressWithLabel'
+import { mapObjIndexed } from 'ramda'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
@@ -143,6 +147,7 @@ const ListPresentation = ({
               listId={list.id}
               wish={wish}
               editWish={editWish}
+              shares={list.shares}
             />
           )
         })}
@@ -181,13 +186,26 @@ const ZoomingAvatar = styled(Avatar)({
   }
 })
 
-const WishListItem = ({ id, wish, listId, editWish }) => {
+const WishListItem = ({ id, wish, listId, editWish, shares }) => {
   const avatar = (
     <ZoomingAvatar
       variant='rounded'
       alt={wish.title}
       src={wish.image || '/static/images/avatar/1.jpg'}
     />
+  )
+
+  const claimedByEmail = (shares || []).reduce((quantityByShare, share) => {
+    quantityByShare[share.invitedEmail] =
+      (quantityByShare[share.invitedEmail] || 0) +
+      share.claimedWishIds.filter((claimedWishId) => claimedWishId === wish.id)
+        .length
+    return quantityByShare
+  }, {})
+
+  const totalClaimedQuantity = Object.values(claimedByEmail).reduce(
+    (total, quantity) => total + quantity,
+    0
   )
   return (
     <ListItem alignItems='flex-start' key={id}>
@@ -228,11 +246,13 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
                   ''
                 )}
               </Typography>
-              <Typography variant='body1'>
-                <span>
-                  <strong>Quantity:</strong> {wish.quantity}
-                </span>
-              </Typography>
+              {editWish && (
+                <Typography variant='body1'>
+                  <span>
+                    <strong>Quantity:</strong> {wish.quantity}
+                  </span>
+                </Typography>
+              )}
               <Toolbar>
                 {editWish && (
                   <IconButton
@@ -243,14 +263,44 @@ const WishListItem = ({ id, wish, listId, editWish }) => {
                     <EditIcon />
                   </IconButton>
                 )}
-                <IconButton
-                  onClick={() => alert('TODO: remove wish')}
-                  edge='end'
-                  aria-label='delete'
-                  size='large'
-                >
-                  <DeleteIcon />
-                </IconButton>
+                {editWish && (
+                  <IconButton
+                    onClick={() => alert('TODO: remove wish')}
+                    edge='end'
+                    aria-label='delete'
+                    size='large'
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                )}
+                {!editWish && (
+                  <Button
+                    onClick={() => {
+                      alert('TODO claim wish')
+                    }}
+                    variant='outlined'
+                    size='small'
+                  >
+                    Claim wish
+                  </Button>
+                )}
+                {!editWish && (
+                  <Tooltip
+                    disableFocusListener
+                    title={
+                      Object.values(
+                        mapObjIndexed(
+                          (quantity, email) => `${email}: ${quantity}`
+                        )(claimedByEmail)
+                      ).join(', ') || ''
+                    }
+                  >
+                    <CircularProgressWithLabel
+                      label={`${totalClaimedQuantity}/${wish.quantity}`}
+                      value={(totalClaimedQuantity / wish.quantity) * 100}
+                    />
+                  </Tooltip>
+                )}
               </Toolbar>
             </InfoBar>
           </div>

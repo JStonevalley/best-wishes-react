@@ -13,8 +13,8 @@ const OuterGrid = styled('div')(({ theme }) => ({
       "c c c c c c c c c c c c"
     `
   },
-  gridGap: theme.spacing(1, 1),
-  margin: theme.spacing(1, 1),
+  gridGap: theme.spacing(2, 2),
+  margin: theme.spacing(2, 2),
   flexGrow: 1,
   overflowX: 'auto'
 }))

@@ -11,7 +11,7 @@ const Form = styled('form')(({ theme }) => ({
     gridTemplateColumns: '1fr 1fr'
   },
   gridTemplateRows: 'auto',
-  gap: theme.spacing(1, 1)
+  gap: theme.spacing(2, 2)
 }))
 
 const StyledLink = styled(Link)(({ theme }) => ({

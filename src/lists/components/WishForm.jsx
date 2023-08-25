@@ -41,7 +41,7 @@ const GridForm = styled('form')(({ theme }) => ({
       "quantity quantity image image image image image image"
     `
   },
-  gridGap: theme.spacing(1, 1)
+  gridGap: theme.spacing(2, 2)
 }))
 
 const WishFormModal = ({

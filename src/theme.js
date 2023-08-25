@@ -8,7 +8,7 @@ const theme = createTheme({
       main: pink[500]
     }
   },
-  spacing: 10
+  spacing: 4
 })
 
 export default theme

@@ -25,7 +25,7 @@ import { prop } from 'ramda'
 const StyledForm = styled('form')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  rowGap: theme.spacing(1)
+  rowGap: theme.spacing(2)
 }))
 
 export const ShareFormDialog = ({ listId, shares }) => {

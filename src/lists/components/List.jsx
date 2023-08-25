@@ -23,8 +23,9 @@ import { GET_CURRENT_USER } from '../../auth/gql'
 import { useQuery } from '@apollo/client'
 import { GET_OWN_WISH_LIST } from '../gql'
 import { GET_SHARE } from '../../share/gql'
-import { CircularProgressWithLabel } from '../../ui/components/CircularProgressWithLabel'
 import { mapObjIndexed } from 'ramda'
+import { QuantityIndicator } from '../../ui/components/QuantityIndicator'
+import { GiveGift } from './GiveGift'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
@@ -117,11 +118,12 @@ export const SharedList = ({
   })
   const share = shareData?.share
   if (!share) return null
-  return <ListPresentation list={share.wishList} />
+  return <ListPresentation share={share} />
 }
 
 const ListPresentation = ({
   list,
+  share,
   ownerProps: {
     editWish,
     hookFormProps,
@@ -130,6 +132,8 @@ const ListPresentation = ({
     setWishFormIsOpen
   } = {}
 }) => {
+  list = list || share.wishList
+  console.log(share)
   return (
     <Paper sx={{ padding: 2 }}>
       <ListHeader
@@ -147,6 +151,7 @@ const ListPresentation = ({
               listId={list.id}
               wish={wish}
               editWish={editWish}
+              share={share}
               shares={list.shares}
             />
           )
@@ -171,7 +176,7 @@ const Toolbar = styled('div')({
 })
 
 const InfoBar = styled('div')(({ theme }) => ({
-  marginTop: theme.spacing(1),
+  marginTop: theme.spacing(2),
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
@@ -186,7 +191,7 @@ const ZoomingAvatar = styled(Avatar)({
   }
 })
 
-const WishListItem = ({ id, wish, listId, editWish, shares }) => {
+const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
   const avatar = (
     <ZoomingAvatar
       variant='rounded'
@@ -207,6 +212,9 @@ const WishListItem = ({ id, wish, listId, editWish, shares }) => {
     (total, quantity) => total + quantity,
     0
   )
+
+  const amountClaimedByOthers =
+    totalClaimedQuantity - claimedByEmail[share.invitedEmail] || 0
   return (
     <ListItem alignItems='flex-start' key={id}>
       <ListItemAvatar>
@@ -253,53 +261,55 @@ const WishListItem = ({ id, wish, listId, editWish, shares }) => {
                   </span>
                 </Typography>
               )}
-              <Toolbar>
+              <Toolbar sx={{ alignItems: 'center' }}>
                 {editWish && (
-                  <IconButton
-                    onClick={() => editWish(id, wish)}
-                    aria-label='edit'
-                    size='large'
-                  >
-                    <EditIcon />
-                  </IconButton>
-                )}
-                {editWish && (
-                  <IconButton
-                    onClick={() => alert('TODO: remove wish')}
-                    edge='end'
-                    aria-label='delete'
-                    size='large'
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  <>
+                    <IconButton
+                      onClick={() => editWish(id, wish)}
+                      aria-label='edit'
+                      size='large'
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => alert('TODO: remove wish')}
+                      edge='end'
+                      aria-label='delete'
+                      size='large'
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </>
                 )}
                 {!editWish && (
-                  <Button
-                    onClick={() => {
-                      alert('TODO claim wish')
-                    }}
-                    variant='outlined'
-                    size='small'
-                  >
-                    Claim wish
-                  </Button>
-                )}
-                {!editWish && (
-                  <Tooltip
-                    disableFocusListener
-                    title={
-                      Object.values(
-                        mapObjIndexed(
-                          (quantity, email) => `${email}: ${quantity}`
-                        )(claimedByEmail)
-                      ).join(', ') || ''
-                    }
-                  >
-                    <CircularProgressWithLabel
-                      label={`${totalClaimedQuantity}/${wish.quantity}`}
-                      value={(totalClaimedQuantity / wish.quantity) * 100}
+                  <>
+                    <Tooltip
+                      disableFocusListener
+                      title={
+                        Object.values(
+                          mapObjIndexed(
+                            (quantity, email) => `${email}: ${quantity}`
+                          )(claimedByEmail)
+                        ).join(', ') || ''
+                      }
+                    >
+                      <QuantityIndicator
+                        amountClaimedByOthers={amountClaimedByOthers}
+                        amountClaimedByYou={
+                          claimedByEmail[share.invitedEmail] || 0
+                        }
+                        total={wish.quantity}
+                        sx={{
+                          margin: '8px'
+                        }}
+                      />
+                    </Tooltip>
+                    <GiveGift
+                      amountClaimedByYou={
+                        claimedByEmail[share.invitedEmail] || 0
+                      }
                     />
-                  </Tooltip>
+                  </>
                 )}
               </Toolbar>
             </InfoBar>

@@ -3,12 +3,16 @@ import React from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import RedeemIcon from '@mui/icons-material/Redeem'
+import { useMutation } from '@apollo/client'
+import { CLAIM_WISH } from '../../share/gql'
 
-export const GiveGift = ({
+export const ClaimWish = ({
+  share,
+  wishId,
   amountClaimedByYou,
-  claimWish,
   removeWishClaim
 }) => {
+  const [claimWish] = useMutation(CLAIM_WISH)
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
       <IconButton
@@ -21,8 +25,7 @@ export const GiveGift = ({
         <RedeemIcon />
       </Badge>
       <IconButton
-        onClick={() => alert('TODO: claim wish')}
-        aria-label='edit'
+        onClick={() => claimWish({ variables: { id: share.id, wishId } })}
         size='large'
       >
         <AddIcon />

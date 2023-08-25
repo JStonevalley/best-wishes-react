@@ -8,7 +8,7 @@ export const QuantityIndicator = React.forwardRef(
       color:
         index < amountClaimedByOthers
           ? `${grey[500]}`
-          : index >= total - amountClaimedByOthers
+          : index >= total - amountClaimedByYou
           ? 'success.main'
           : `primary.main`,
       opacity: index < amountClaimedByOthers ? 1 : 0.5

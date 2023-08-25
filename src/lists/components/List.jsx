@@ -9,8 +9,7 @@ import {
   Typography,
   Paper,
   IconButton,
-  Tooltip,
-  Button
+  Tooltip
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
@@ -25,7 +24,7 @@ import { GET_OWN_WISH_LIST } from '../gql'
 import { GET_SHARE } from '../../share/gql'
 import { mapObjIndexed } from 'ramda'
 import { QuantityIndicator } from '../../ui/components/QuantityIndicator'
-import { GiveGift } from './GiveGift'
+import { ClaimWish } from './ClaimWish'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
@@ -133,7 +132,6 @@ const ListPresentation = ({
   } = {}
 }) => {
   list = list || share.wishList
-  console.log(share)
   return (
     <Paper sx={{ padding: 2 }}>
       <ListHeader
@@ -254,7 +252,7 @@ const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
                   ''
                 )}
               </Typography>
-              {editWish && (
+              {!share && (
                 <Typography variant='body1'>
                   <span>
                     <strong>Quantity:</strong> {wish.quantity}
@@ -262,7 +260,7 @@ const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
                 </Typography>
               )}
               <Toolbar sx={{ alignItems: 'center' }}>
-                {editWish && (
+                {!share && (
                   <>
                     <IconButton
                       onClick={() => editWish(id, wish)}
@@ -281,7 +279,7 @@ const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
                     </IconButton>
                   </>
                 )}
-                {!editWish && (
+                {share && (
                   <>
                     <Tooltip
                       disableFocusListener
@@ -304,7 +302,9 @@ const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
                         }}
                       />
                     </Tooltip>
-                    <GiveGift
+                    <ClaimWish
+                      share={share}
+                      wishId={wish.id}
                       amountClaimedByYou={
                         claimedByEmail[share.invitedEmail] || 0
                       }

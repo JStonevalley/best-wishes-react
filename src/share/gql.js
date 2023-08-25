@@ -34,7 +34,19 @@ export const GET_SHARE = gql`
         wishes {
           ...DefaultWishProperties
         }
+        shares {
+          ...DefaultShareProperties
+        }
       }
+    }
+  }
+`
+
+export const CLAIM_WISH = gql`
+  mutation claimWish($id: String!, $wishId: String!) {
+    share: claimWish(id: $id, wishId: $wishId) {
+      id
+      claimedWishIds
     }
   }
 `

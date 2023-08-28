@@ -5,7 +5,7 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import RedeemIcon from '@mui/icons-material/Redeem'
 import { useMutation } from '@apollo/client'
 import { CLAIM_WISH, REMOVE_WISH_CLAIM } from '../../share/gql'
-import { filter, join, mapObjIndexed, pipe } from 'ramda'
+import { filter, join, mapObjIndexed, pipe, when } from 'ramda'
 import { QuantityIndicator } from '../../ui/components/QuantityIndicator'
 
 export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
@@ -22,6 +22,13 @@ export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
     filter((amountClaimed) => amountClaimed > 0),
     mapObjIndexed((quantity, email) => `${email}: ${quantity}`),
     Object.values,
+    when(
+      () => totalClaimedQuantity < wishQuantity,
+      (titleComponents) => [
+        ...titleComponents,
+        `Available: ${wishQuantity - totalClaimedQuantity}`
+      ]
+    ),
     join(', ')
   )(claimedByEmail)
   return (

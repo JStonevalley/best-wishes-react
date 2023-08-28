@@ -42,6 +42,21 @@ export const GET_SHARE = gql`
   }
 `
 
+export const GET_OWN_SHARES = gql`
+  ${MINIMUM_WISHLIST_PROPERITES}
+  query getOwnShares() {
+    share: getOwnShares() {
+      id
+      wishList {
+        ...MinimumWishListProperties
+        wishes {
+          image
+        }
+      }
+    }
+  }
+`
+
 export const CLAIM_WISH = gql`
   mutation claimWish($id: String!, $wishId: String!) {
     share: claimWish(id: $id, wishId: $wishId) {

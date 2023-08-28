@@ -10,6 +10,9 @@ export const GET_OWN_WISH_LISTS = gql`
   query getOwnWishLists {
     wishLists: getOwnWishLists {
       ...MinimumWishListProperties
+      wishes {
+        image
+      }
     }
   }
 `

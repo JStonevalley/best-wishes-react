@@ -8,6 +8,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import { Paper } from '@mui/material'
+import CakeIcon from '@mui/icons-material/Cake'
 import { useQuery } from '@apollo/client'
 import { GET_OWN_WISH_LISTS } from '../gql'
 
@@ -15,28 +16,43 @@ const Lists = () => {
   const { data: wishListsData } = useQuery(GET_OWN_WISH_LISTS)
   return (
     <Paper sx={{ padding: 2 }}>
-      <Typography component='h1' variant='h4'>
+      <Typography
+        component='h1'
+        variant='h4'
+        sx={{ marginTop: 3, marginLeft: 3, marginRight: 3 }}
+      >
         My lists
       </Typography>
       {wishListsData?.wishLists && (
-        <List>
-          {wishListsData.wishLists.map(({ id, headline }) => (
-            <ListItem
-              component={Link}
-              to={`list/${id}`}
-              alignItems='flex-start'
-              key={id}
-            >
-              <ListItemAvatar>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-              </ListItemAvatar>
-              <ListItemText
-                sx={{ color: 'text.primary' }}
-                primary={headline}
-                secondary={id}
-              />
-            </ListItem>
-          ))}
+        <List dense>
+          {wishListsData.wishLists.map(({ id, headline, wishes }) => {
+            const image = wishes.map((wish) => wish.image).filter(Boolean)[0]
+            return (
+              <ListItem
+                component={Link}
+                to={`list/${id}`}
+                alignItems='flex-start'
+                key={id}
+              >
+                <ListItemAvatar>
+                  <Avatar>
+                    {image ? (
+                      <Avatar alt='Gift' src={image} />
+                    ) : (
+                      <Avatar>
+                        <CakeIcon />
+                      </Avatar>
+                    )}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  sx={{ color: 'text.primary' }}
+                  primary={headline}
+                  primaryTypographyProps={{ variant: 'h6' }}
+                />
+              </ListItem>
+            )
+          })}
           <Divider variant='inset' component='li' />
         </List>
       )}

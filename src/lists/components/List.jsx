@@ -9,7 +9,6 @@ import {
   Typography,
   Paper,
   IconButton,
-  Tooltip,
   Box
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -23,8 +22,6 @@ import { GET_CURRENT_USER } from '../../auth/gql'
 import { useQuery } from '@apollo/client'
 import { GET_OWN_WISH_LIST } from '../gql'
 import { GET_SHARE } from '../../share/gql'
-import { mapObjIndexed } from 'ramda'
-import { QuantityIndicator } from '../../ui/components/QuantityIndicator'
 import { ClaimWish } from './ClaimWish'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
@@ -209,14 +206,6 @@ const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
         .length
     return quantityByShare
   }, {})
-
-  const totalClaimedQuantity = Object.values(claimedByEmail).reduce(
-    (total, quantity) => total + quantity,
-    0
-  )
-
-  const amountClaimedByOthers =
-    totalClaimedQuantity - claimedByEmail[share.invitedEmail] || 0
   return (
     <ListItem alignItems='flex-start' key={id}>
       <ListItemAvatar>
@@ -285,34 +274,11 @@ const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
                 )}
                 {share && (
                   <>
-                    <Tooltip
-                      disableFocusListener
-                      title={
-                        Object.values(
-                          mapObjIndexed(
-                            (quantity, email) => `${email}: ${quantity}`
-                          )(claimedByEmail)
-                        ).join(', ') || ''
-                      }
-                    >
-                      <QuantityIndicator
-                        amountClaimedByOthers={amountClaimedByOthers}
-                        amountClaimedByYou={
-                          claimedByEmail[share.invitedEmail] || 0
-                        }
-                        total={wish.quantity}
-                        sx={{
-                          margin: '8px'
-                        }}
-                      />
-                    </Tooltip>
                     <ClaimWish
                       share={share}
                       wishId={wish.id}
-                      amountClaimedByYou={
-                        claimedByEmail[share.invitedEmail] || 0
-                      }
-                      disableCreateClaim={totalClaimedQuantity >= wish.quantity}
+                      wishQuantity={wish.quantity}
+                      claimedByEmail={claimedByEmail}
                     />
                   </>
                 )}

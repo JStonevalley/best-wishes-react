@@ -9,7 +9,8 @@ import {
   Typography,
   Paper,
   IconButton,
-  Tooltip
+  Tooltip,
+  Box
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
@@ -28,16 +29,19 @@ import { ClaimWish } from './ClaimWish'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginTop: 3,
+        marginLeft: 3,
+        marginRight: 3
       }}
     >
       <Typography component='h1' variant='h4'>
         {headline}
       </Typography>
-      <div
+      <Box
         style={{
           display: 'flex'
         }}
@@ -48,8 +52,8 @@ const ListHeader = ({ headline, listId, addWish, shares }) => {
           </IconButton>
         )}
         {shares && <ShareFormDialog listId={listId} shares={shares} />}
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 
@@ -308,6 +312,7 @@ const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
                       amountClaimedByYou={
                         claimedByEmail[share.invitedEmail] || 0
                       }
+                      disableCreateClaim={totalClaimedQuantity >= wish.quantity}
                     />
                   </>
                 )}

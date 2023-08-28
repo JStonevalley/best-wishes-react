@@ -50,3 +50,12 @@ export const CLAIM_WISH = gql`
     }
   }
 `
+
+export const REMOVE_WISH_CLAIM = gql`
+  mutation removeWishClaim($id: String!, $wishId: String!) {
+    share: removeWishClaim(id: $id, wishId: $wishId) {
+      id
+      claimedWishIds
+    }
+  }
+`

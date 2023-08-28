@@ -83,3 +83,9 @@ export const CHANGE_A_WISH = gql`
     }
   }
 `
+
+export const REMOVE_A_WISH = gql`
+  mutation removeAWish($id: String!) {
+    id: removeAWish(id: $id)
+  }
+`

@@ -19,8 +19,8 @@ import { useForm } from 'react-hook-form'
 import { Lightbox } from '../../ui/components/Lightbox.jsx'
 import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
 import { GET_CURRENT_USER } from '../../auth/gql'
-import { useQuery } from '@apollo/client'
-import { GET_OWN_WISH_LIST } from '../gql'
+import { useMutation, useQuery } from '@apollo/client'
+import { GET_OWN_WISH_LIST, REMOVE_A_WISH } from '../gql'
 import { GET_SHARE } from '../../share/gql'
 import { ClaimWish } from './ClaimWish'
 
@@ -62,6 +62,9 @@ export const OwnerList = ({
   const [wishFormIsOpen, setWishFormIsOpen] = useState(false)
   const [formWishId, setFormWishId] = useState()
   const { data: userData } = useQuery(GET_CURRENT_USER)
+  const [removeAWish] = useMutation(REMOVE_A_WISH, {
+    refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
+  })
   const hookFormProps = useForm()
   const editWish = (id, wish) => {
     setFormWishId(id)
@@ -99,6 +102,7 @@ export const OwnerList = ({
       list={list}
       ownerProps={{
         editWish,
+        removeAWish,
         hookFormProps,
         formWishId,
         wishFormIsOpen,
@@ -126,6 +130,7 @@ const ListPresentation = ({
   share,
   ownerProps: {
     editWish,
+    removeAWish,
     hookFormProps,
     formWishId,
     wishFormIsOpen,
@@ -146,10 +151,10 @@ const ListPresentation = ({
           return (
             <WishListItem
               key={`wishListItem-${wish.id}`}
-              id={wish.id}
               listId={list.id}
               wish={wish}
               editWish={editWish}
+              removeAWish={removeAWish}
               share={share}
               shares={list.shares}
             />
@@ -190,7 +195,14 @@ const ZoomingAvatar = styled(Avatar)({
   }
 })
 
-const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
+const WishListItem = ({
+  wish,
+  listId,
+  editWish,
+  removeAWish,
+  share,
+  shares
+}) => {
   const avatar = (
     <ZoomingAvatar
       variant='rounded'
@@ -207,7 +219,7 @@ const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
     return quantityByShare
   }, {})
   return (
-    <ListItem alignItems='flex-start' key={id}>
+    <ListItem alignItems='flex-start' key={wish.id}>
       <ListItemAvatar>
         {wish.image ? (
           <Lightbox
@@ -256,17 +268,20 @@ const WishListItem = ({ id, wish, listId, editWish, share, shares }) => {
                 {!share && (
                   <>
                     <IconButton
-                      onClick={() => editWish(id, wish)}
+                      onClick={() => editWish(wish.id, wish)}
                       aria-label='edit'
                       size='large'
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton
-                      onClick={() => alert('TODO: remove wish')}
+                      onClick={() =>
+                        removeAWish({ variables: { id: wish.id } })
+                      }
                       edge='end'
                       aria-label='delete'
                       size='large'
+                      color='error'
                     >
                       <DeleteIcon />
                     </IconButton>

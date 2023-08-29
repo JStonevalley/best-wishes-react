@@ -43,6 +43,24 @@ export const CREATE_WISH_LIST = gql`
   }
 `
 
+export const ARCHIVE_WISH_LIST = gql`
+  mutation archiveWishList($id: String!) {
+    wishList: archiveWishList(id: $id) {
+      id
+      archivedAt
+    }
+  }
+`
+
+export const UNARCHIVE_WISH_LIST = gql`
+  mutation unarchiveWishList($id: String!) {
+    wishList: unarchiveWishList(id: $id) {
+      id
+      archivedAt
+    }
+  }
+`
+
 export const MAKE_A_WISH = gql`
   ${DEFAULT_WISH_PROPERITES}
   mutation makeAWish(

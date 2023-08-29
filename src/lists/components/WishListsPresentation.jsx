@@ -1,14 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import Avatar from '@mui/material/Avatar'
+import {
+  IconButton,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar
+} from '@mui/material'
 import CakeIcon from '@mui/icons-material/Cake'
+import ArchiveIcon from '@mui/icons-material/Archive'
+import UnarchiveIcon from '@mui/icons-material/Unarchive'
 
 export const WishListListItem = ({
   shareId,
-  wishList: { id, headline, wishes }
+  wishList: { id, headline, wishes },
+  archiveWishList,
+  unarchiveWishList
 }) => {
   const image = wishes.map((wish) => wish.image).filter(Boolean)[0]
   return (
@@ -16,7 +23,34 @@ export const WishListListItem = ({
       component={Link}
       to={shareId ? `shared/${shareId}` : `list/${id}`}
       alignItems='flex-start'
-      key={id}
+      secondaryAction={
+        (archiveWishList || unarchiveWishList) &&
+        (archiveWishList ? (
+          <IconButton
+            onClick={(event) => {
+              archiveWishList({ variables: { id } })
+              event.preventDefault()
+            }}
+            edge='end'
+            aria-label='archive-wish-list'
+            size='large'
+          >
+            <ArchiveIcon />
+          </IconButton>
+        ) : (
+          <IconButton
+            onClick={(event) => {
+              unarchiveWishList({ variables: { id } })
+              event.preventDefault()
+            }}
+            edge='end'
+            aria-label='unarchive-wish-list'
+            size='large'
+          >
+            <UnarchiveIcon />
+          </IconButton>
+        ))
+      }
     >
       <ListItemAvatar>
         <Avatar>

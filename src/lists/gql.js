@@ -34,6 +34,15 @@ export const GET_OWN_WISH_LIST = gql`
   }
 `
 
+export const CREATE_WISH_LIST = gql`
+  ${MINIMUM_WISHLIST_PROPERITES}
+  mutation createWishList($headline: String!) {
+    wishList: createWishList(headline: $headline) {
+      ...MinimumWishListProperties
+    }
+  }
+`
+
 export const MAKE_A_WISH = gql`
   ${DEFAULT_WISH_PROPERITES}
   mutation makeAWish(

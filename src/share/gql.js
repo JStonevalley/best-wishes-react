@@ -44,8 +44,8 @@ export const GET_SHARE = gql`
 
 export const GET_OWN_SHARES = gql`
   ${MINIMUM_WISHLIST_PROPERITES}
-  query getOwnShares() {
-    share: getOwnShares() {
+  query getOwnShares {
+    shares: getOwnShares {
       id
       wishList {
         ...MinimumWishListProperties

@@ -4,13 +4,14 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { RecoilRoot } from 'recoil'
 import { Signup, Login } from './auth/AuthPages'
-import Lists from './lists/components/Lists'
+import { OwnerLists } from './lists/components/OwnerLists'
 import { OwnerList, SharedList } from './lists/components/List'
 import ContentGrid from './ui/components/ContentGrid'
 import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
 import AppBar from './ui/components/AppBar'
 import { AuthenticatedApolloProvider } from './apollo/components/AuthenticatedApolloProvider'
+import { OwnerShares } from './share/Shares'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAUXoQex0Q_2Ln0yZSoSxQ2wsd7UKvnDJc',
@@ -51,8 +52,9 @@ function App() {
                     <Route path='/signup' component={Signup} />
                     <Route path='/login' component={Login} />
                     <Route path='/list/:listId' component={OwnerList} />
-                    <Route path='/list' component={Lists} />
-                    <Route path='/share/:shareId' component={SharedList} />
+                    <Route path='/list' component={OwnerLists} />
+                    <Route path='/shared/:shareId' component={SharedList} />
+                    <Route path='/shared' component={OwnerShares} />
                     <Route path='/'>
                       <div>Home</div>
                     </Route>

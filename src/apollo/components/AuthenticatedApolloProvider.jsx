@@ -65,11 +65,8 @@ export const AuthenticatedApolloProvider = ({ children }) => {
           .query({
             query: GET_CURRENT_USER
           })
-          .catch((error) => {
-            if (
-              error?.graphQLErrors[0] &&
-              error.graphQLErrors[0].extensions.code === 'UNAUTHENTICATED'
-            ) {
+          .then(({ errors }) => {
+            if (errors && errors[0].extensions.code === 'UNAUTHENTICATED') {
               newClient.mutate({
                 mutation: gql`
                   mutation createUser($email: String!) {

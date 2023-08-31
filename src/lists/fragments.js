@@ -5,6 +5,7 @@ export const MINIMUM_WISHLIST_PROPERITES = gql`
     id
     headline
     archivedAt
+    wishOrder
   }
 `
 

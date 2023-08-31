@@ -14,15 +14,22 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import AddIcon from '@mui/icons-material/Add'
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import WishFormModal from './WishForm'
 import { useForm } from 'react-hook-form'
 import { Lightbox } from '../../ui/components/Lightbox.jsx'
 import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
 import { GET_CURRENT_USER } from '../../auth/gql'
 import { useMutation, useQuery } from '@apollo/client'
-import { GET_OWN_WISH_LIST, REMOVE_A_WISH } from '../gql'
+import {
+  GET_OWN_WISH_LIST,
+  REMOVE_A_WISH,
+  UPDATE_WISH_ORDER_FOR_WISH_LIST
+} from '../gql'
 import { GET_SHARE } from '../../share/gql'
 import { ClaimWish } from './ClaimWish'
+import { swap } from 'ramda'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
@@ -65,6 +72,9 @@ export const OwnerList = ({
   const [removeAWish] = useMutation(REMOVE_A_WISH, {
     refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
   })
+  const [updateWishOrderForWishList] = useMutation(
+    UPDATE_WISH_ORDER_FOR_WISH_LIST
+  )
   const hookFormProps = useForm()
   const editWish = (id, wish) => {
     setFormWishId(id)
@@ -103,6 +113,7 @@ export const OwnerList = ({
       ownerProps={{
         editWish,
         removeAWish,
+        updateWishOrderForWishList,
         hookFormProps,
         formWishId,
         wishFormIsOpen,
@@ -131,6 +142,7 @@ const ListPresentation = ({
   ownerProps: {
     editWish,
     removeAWish,
+    updateWishOrderForWishList,
     hookFormProps,
     formWishId,
     wishFormIsOpen,
@@ -147,19 +159,25 @@ const ListPresentation = ({
         shares={list.shares}
       />
       <MaterialList>
-        {list.wishes.map((wish) => {
-          return (
-            <WishListItem
-              key={`wishListItem-${wish.id}`}
-              listId={list.id}
-              wish={wish}
-              editWish={editWish}
-              removeAWish={removeAWish}
-              share={share}
-              shares={list.shares}
-            />
-          )
-        })}
+        {list.wishOrder
+          .map((wishId) => list.wishes.find((wish) => wish.id === wishId))
+          .filter(Boolean)
+          .map((wish, index) => {
+            return (
+              <WishListItem
+                key={`wishListItem-${wish.id}`}
+                wishList={list}
+                wish={wish}
+                editWish={editWish}
+                removeAWish={removeAWish}
+                updateWishOrderForWishList={updateWishOrderForWishList}
+                share={share}
+                shares={list.shares}
+                first={index === 0}
+                last={index === list.wishes.length - 1}
+              />
+            )
+          })}
       </MaterialList>
       {hookFormProps && (
         <WishFormModal
@@ -197,11 +215,14 @@ const ZoomingAvatar = styled(Avatar)({
 
 const WishListItem = ({
   wish,
-  listId,
+  wishList,
   editWish,
   removeAWish,
+  updateWishOrderForWishList,
   share,
-  shares
+  shares,
+  first,
+  last
 }) => {
   const avatar = (
     <ZoomingAvatar
@@ -268,9 +289,63 @@ const WishListItem = ({
                 {!share && (
                   <>
                     <IconButton
+                      onClick={() => {
+                        const indexOfWish = wishList.wishOrder.indexOf(wish.id)
+                        const newWishOrder = swap(
+                          indexOfWish,
+                          indexOfWish - 1
+                        )(wishList.wishOrder)
+                        updateWishOrderForWishList({
+                          variables: {
+                            id: wishList.id,
+                            wishOrder: newWishOrder
+                          },
+                          optimisticResponse: {
+                            wishList: {
+                              id: wishList.id,
+                              __typename: 'WishList',
+                              wishOrder: newWishOrder
+                            }
+                          }
+                        })
+                      }}
+                      aria-label='move-up'
+                      size='small'
+                      disabled={first}
+                    >
+                      <ArrowUpwardIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => {
+                        const indexOfWish = wishList.wishOrder.indexOf(wish.id)
+                        const newWishOrder = swap(
+                          indexOfWish,
+                          indexOfWish + 1
+                        )(wishList.wishOrder)
+                        updateWishOrderForWishList({
+                          variables: {
+                            id: wishList.id,
+                            wishOrder: newWishOrder
+                          },
+                          optimisticResponse: {
+                            wishList: {
+                              id: wishList.id,
+                              __typename: 'WishList',
+                              wishOrder: newWishOrder
+                            }
+                          }
+                        })
+                      }}
+                      aria-label='move-down'
+                      size='small'
+                      disabled={last}
+                    >
+                      <ArrowDownwardIcon />
+                    </IconButton>
+                    <IconButton
                       onClick={() => editWish(wish.id, wish)}
                       aria-label='edit'
-                      size='large'
+                      size='small'
                     >
                       <EditIcon />
                     </IconButton>
@@ -280,7 +355,7 @@ const WishListItem = ({
                       }
                       edge='end'
                       aria-label='delete'
-                      size='large'
+                      size='small'
                       color='error'
                     >
                       <DeleteIcon />

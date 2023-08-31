@@ -61,6 +61,15 @@ export const UNARCHIVE_WISH_LIST = gql`
   }
 `
 
+export const UPDATE_WISH_ORDER_FOR_WISH_LIST = gql`
+  mutation updateWishOrderForWishList($id: String!, $wishOrder: [String!]!) {
+    wishList: updateWishOrderForWishList(id: $id, wishOrder: $wishOrder) {
+      id
+      wishOrder
+    }
+  }
+`
+
 export const MAKE_A_WISH = gql`
   ${DEFAULT_WISH_PROPERITES}
   mutation makeAWish(

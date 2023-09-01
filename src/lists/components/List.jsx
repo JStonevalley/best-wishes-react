@@ -9,7 +9,8 @@ import {
   Typography,
   Paper,
   IconButton,
-  Box
+  Box,
+  Badge
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
@@ -30,6 +31,7 @@ import {
 import { GET_SHARE } from '../../share/gql'
 import { ClaimWish } from './ClaimWish'
 import { swap } from 'ramda'
+import { QuantityIndicator } from '../../ui/components/QuantityIndicator'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
@@ -213,6 +215,15 @@ const ZoomingAvatar = styled(Avatar)({
   }
 })
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    left: -3,
+    top: 6,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px'
+  }
+}))
+
 const WishListItem = ({
   wish,
   wishList,
@@ -241,17 +252,26 @@ const WishListItem = ({
   }, {})
   return (
     <ListItem alignItems='flex-start' key={wish.id}>
-      <ListItemAvatar>
-        {wish.image ? (
-          <Lightbox
-            src={wish.image}
-            alt={wish.title}
-            activationElement={avatar}
-          />
-        ) : (
-          avatar
-        )}
-      </ListItemAvatar>
+      <StyledBadge
+        badgeContent={wish.quantity}
+        color='primary'
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+      >
+        <ListItemAvatar>
+          {wish.image ? (
+            <Lightbox
+              src={wish.image}
+              alt={wish.title}
+              activationElement={avatar}
+            />
+          ) : (
+            avatar
+          )}
+        </ListItemAvatar>
+      </StyledBadge>
       <ListItemText
         disableTypography
         primary={
@@ -271,20 +291,13 @@ const WishListItem = ({
               <Typography variant='body1'>
                 {wish.price ? (
                   <span>
-                    <strong>Price:</strong> {wish.price.amount / 100}{' '}
+                    {wish.price.amount / 100}{' '}
                     <strong>{wish.price.currency}</strong>
                   </span>
                 ) : (
                   ''
                 )}
               </Typography>
-              {!share && (
-                <Typography variant='body1'>
-                  <span>
-                    <strong>Quantity:</strong> {wish.quantity}
-                  </span>
-                </Typography>
-              )}
               <Toolbar sx={{ alignItems: 'center' }}>
                 {!share && (
                   <>

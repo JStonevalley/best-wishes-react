@@ -10,7 +10,8 @@ import {
   Paper,
   IconButton,
   Box,
-  Badge
+  Badge,
+  CircularProgress
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
@@ -102,7 +103,7 @@ export const OwnerList = ({
     })
     setWishFormIsOpen(true)
   }
-  const { data: wishListData } = useQuery(GET_OWN_WISH_LIST, {
+  const { data: wishListData, loading } = useQuery(GET_OWN_WISH_LIST, {
     variables: { id: listId },
     skip: !userData?.user?.id
   })
@@ -111,6 +112,7 @@ export const OwnerList = ({
   return (
     <ListPresentation
       list={list}
+      loading={loading}
       ownerProps={{
         editWish,
         removeAWish,
@@ -140,6 +142,7 @@ export const SharedList = ({
 const ListPresentation = ({
   list,
   share,
+  loading,
   ownerProps: {
     editWish,
     removeAWish,
@@ -152,13 +155,20 @@ const ListPresentation = ({
 }) => {
   list = list || share.wishList
   return (
-    <Paper sx={{ padding: 2 }}>
+    <Paper
+      sx={{
+        padding: 2,
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
       <ListHeader
         headline={list.headline}
         listId={list.id}
         addWish={editWish ? () => editWish() : undefined}
         shares={list.shares}
       />
+      {loading && <CircularProgress sx={{ alignSelf: 'center' }} />}
       <MaterialList>
         {list.wishOrder
           .map((wishId) => list.wishes.find((wish) => wish.id === wishId))

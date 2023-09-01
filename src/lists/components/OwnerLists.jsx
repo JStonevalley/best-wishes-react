@@ -20,7 +20,8 @@ import {
   Button,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  CircularProgress
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -109,9 +110,13 @@ const ListHeader = ({ headline, createWishList }) => {
 }
 
 export const OwnerLists = ({ wishLists, shares }) => {
-  const { data: wishListsData } = useQuery(GET_OWN_WISH_LISTS)
-  const [archiveWishList] = useMutation(ARCHIVE_WISH_LIST)
-  const [unarchiveWishList] = useMutation(UNARCHIVE_WISH_LIST)
+  const { data: wishListsData, loading } = useQuery(GET_OWN_WISH_LISTS)
+  const [archiveWishList, { loading: loadingArchive }] = useMutation(
+    ARCHIVE_WISH_LIST
+  )
+  const [unarchiveWishList, { loading: loadingUnarchive }] = useMutation(
+    UNARCHIVE_WISH_LIST
+  )
   const activeWishLists = wishListsData?.wishLists?.filter(
     (wishList) => !wishList.archivedAt
   )
@@ -119,8 +124,9 @@ export const OwnerLists = ({ wishLists, shares }) => {
     (wishList) => wishList.archivedAt
   )
   return (
-    <Paper sx={{ padding: 2 }}>
+    <Paper sx={{ padding: 2, display: 'flex', flexDirection: 'column' }}>
       <ListHeader headline='My Lists' />
+      {loading && <CircularProgress sx={{ alignSelf: 'center' }} />}
       {activeWishLists && (
         <List>
           {activeWishLists.map((wishList) => (
@@ -128,6 +134,7 @@ export const OwnerLists = ({ wishLists, shares }) => {
               key={wishList.id}
               wishList={wishList}
               archiveWishList={archiveWishList}
+              loading={loadingArchive || loadingUnarchive}
             />
           ))}
         </List>
@@ -148,6 +155,7 @@ export const OwnerLists = ({ wishLists, shares }) => {
                   key={wishList.id}
                   wishList={wishList}
                   unarchiveWishList={unarchiveWishList}
+                  loading={loadingArchive || loadingUnarchive}
                 />
               ))}
             </List>

@@ -15,7 +15,8 @@ export const WishListListItem = ({
   shareId,
   wishList: { id, headline, wishes },
   archiveWishList,
-  unarchiveWishList
+  unarchiveWishList,
+  loading
 }) => {
   const image = wishes.map((wish) => wish.image).filter(Boolean)[0]
   return (
@@ -28,24 +29,44 @@ export const WishListListItem = ({
         (archiveWishList ? (
           <IconButton
             onClick={(event) => {
-              archiveWishList({ variables: { id } })
+              archiveWishList({
+                variables: { id },
+                optimisticResponse: {
+                  wishList: {
+                    id,
+                    __typename: 'WishList',
+                    archivedAt: new Date()
+                  }
+                }
+              })
               event.preventDefault()
             }}
             edge='end'
             aria-label='archive-wish-list'
             size='large'
+            disabled={loading}
           >
             <ArchiveIcon />
           </IconButton>
         ) : (
           <IconButton
             onClick={(event) => {
-              unarchiveWishList({ variables: { id } })
+              unarchiveWishList({
+                variables: { id },
+                optimisticResponse: {
+                  wishList: {
+                    id,
+                    __typename: 'WishList',
+                    archivedAt: null
+                  }
+                }
+              })
               event.preventDefault()
             }}
             edge='end'
             aria-label='unarchive-wish-list'
             size='large'
+            disabled={loading}
           >
             <UnarchiveIcon />
           </IconButton>

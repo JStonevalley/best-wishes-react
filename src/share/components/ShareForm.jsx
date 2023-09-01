@@ -30,12 +30,18 @@ const StyledForm = styled('form')(({ theme }) => ({
 }))
 
 export const ShareFormDialog = ({ listId, shares }) => {
-  const [createShare] = useMutation(CREATE_SHARE, {
-    refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
-  })
-  const [removeShare] = useMutation(REMOVE_SHARE, {
-    refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
-  })
+  const [createShare, { loading: loadingCreateShare }] = useMutation(
+    CREATE_SHARE,
+    {
+      refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
+    }
+  )
+  const [removeShare, { loading: loadingRemoveShare }] = useMutation(
+    REMOVE_SHARE,
+    {
+      refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
+    }
+  )
   const { data: userData } = useQuery(GET_CURRENT_USER)
   const [isOpen, setIsOpen] = useState(false)
   const [confirmIsOpen, setConfirmIsOpen] = useState(false)
@@ -170,6 +176,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                     }}
                     aria-label='share'
                     size='large'
+                    disabled={loadingRemoveShare}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -182,13 +189,23 @@ export const ShareFormDialog = ({ listId, shares }) => {
             onClick={() => addShareRow()}
             aria-label='add share'
             size='large'
+            disabled={loadingRemoveShare}
           >
             <AddIcon />
           </IconButton>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsOpen(false)}>Cancel</Button>
-          <Button onClick={() => setConfirmIsOpen(true)} color='primary'>
+          <Button
+            onClick={() => setIsOpen(false)}
+            disabled={loadingRemoveShare}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => setConfirmIsOpen(true)}
+            color='primary'
+            disabled={loadingRemoveShare}
+          >
             Send email invites
           </Button>
         </DialogActions>
@@ -211,7 +228,11 @@ export const ShareFormDialog = ({ listId, shares }) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setConfirmIsOpen(false)}>No</Button>
-            <Button onClick={submit} color='primary'>
+            <Button
+              onClick={submit}
+              color='primary'
+              disabled={loadingCreateShare}
+            >
               Yes
             </Button>
           </DialogActions>

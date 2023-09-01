@@ -62,10 +62,12 @@ const WishFormModal = ({
   const [fetchingMetadata, setFetchingMetadata] = useState(false)
   const [fetchedMetadata, setFetchedMetadata] = useState(false)
   const [title, link] = watch(['title', 'link'])
-  const [makeAWish, { loadingMakeAWish }] = useMutation(MAKE_A_WISH, {
+  const [makeAWish, { loading: loadingMakeAWish }] = useMutation(MAKE_A_WISH, {
     refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
   })
-  const [changeAWish, { loadingChangeAWish }] = useMutation(CHANGE_A_WISH)
+  const [changeAWish, { loading: loadingChangeAWish }] = useMutation(
+    CHANGE_A_WISH
+  )
   const loading = loadingMakeAWish || loadingChangeAWish
   const submit = handleSubmit(async (data) => {
     if (data.price?.amount != null) data.price.amount = data.price.amount * 100

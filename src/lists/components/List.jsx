@@ -71,7 +71,7 @@ export const OwnerList = ({
   const [formWishId, setFormWishId] = useState()
   const { data: userData } = useQuery(GET_CURRENT_USER)
   const [removeAWish] = useMutation(REMOVE_A_WISH, {
-    refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
+    refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
   })
   const [updateWishOrderForWishList] = useMutation(
     UPDATE_WISH_ORDER_FOR_WISH_LIST

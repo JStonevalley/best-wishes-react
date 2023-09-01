@@ -21,6 +21,7 @@ import { GET_CURRENT_USER } from '../../auth/gql'
 import { useMutation, useQuery } from '@apollo/client'
 import { CREATE_SHARE, REMOVE_SHARE } from '../gql'
 import { prop } from 'ramda'
+import { GET_OWN_WISH_LIST } from '../../lists/gql'
 
 const StyledForm = styled('form')(({ theme }) => ({
   display: 'flex',
@@ -30,10 +31,10 @@ const StyledForm = styled('form')(({ theme }) => ({
 
 export const ShareFormDialog = ({ listId, shares }) => {
   const [createShare] = useMutation(CREATE_SHARE, {
-    refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
+    refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
   })
   const [removeShare] = useMutation(REMOVE_SHARE, {
-    refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
+    refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
   })
   const { data: userData } = useQuery(GET_CURRENT_USER)
   const [isOpen, setIsOpen] = useState(false)

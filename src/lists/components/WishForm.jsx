@@ -16,7 +16,7 @@ import {
 } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { materialUiFormRegister } from '../../tools/forms'
-import { CHANGE_A_WISH, MAKE_A_WISH } from '../gql'
+import { CHANGE_A_WISH, GET_OWN_WISH_LIST, MAKE_A_WISH } from '../gql'
 import { useMutation } from '@apollo/client'
 import { Controller } from 'react-hook-form'
 
@@ -63,7 +63,7 @@ const WishFormModal = ({
   const [fetchedMetadata, setFetchedMetadata] = useState(false)
   const [title, link] = watch(['title', 'link'])
   const [makeAWish, { loadingMakeAWish }] = useMutation(MAKE_A_WISH, {
-    refetchQueries: [`getOwnWishList({"id":"${listId}"})`]
+    refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
   })
   const [changeAWish, { loadingChangeAWish }] = useMutation(CHANGE_A_WISH)
   const loading = loadingMakeAWish || loadingChangeAWish

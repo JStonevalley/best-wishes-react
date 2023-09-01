@@ -18,6 +18,7 @@ const httpLink = createHttpLink({
 const apolloClient = new ApolloClient({
   link: httpLink,
   cache: new InMemoryCache(),
+  connectToDevTools: false, // Only the first client to connect to devtools will be picked up by the extension.
   defaultOptions: {
     watchQuery: {
       errorPolicy: 'all'
@@ -54,6 +55,7 @@ export const AuthenticatedApolloProvider = ({ children }) => {
         const newClient = new ApolloClient({
           link: authLink.concat(httpLink),
           cache: new InMemoryCache(),
+          connectToDevTools: true,
           defaultOptions: {
             watchQuery: {
               errorPolicy: 'all'

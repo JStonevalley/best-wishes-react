@@ -31,7 +31,6 @@ import {
 import { GET_SHARE } from '../../share/gql'
 import { ClaimWish } from './ClaimWish'
 import { swap } from 'ramda'
-import { QuantityIndicator } from '../../ui/components/QuantityIndicator'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (

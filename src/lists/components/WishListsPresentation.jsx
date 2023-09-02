@@ -22,7 +22,7 @@ export const WishListListItem = ({
   return (
     <ListItem
       component={Link}
-      to={shareId ? `shared/${shareId}` : `list/${id}`}
+      to={shareId || id}
       alignItems='flex-start'
       secondaryAction={
         (archiveWishList || unarchiveWishList) &&

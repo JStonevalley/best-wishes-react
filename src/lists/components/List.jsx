@@ -32,6 +32,7 @@ import {
 import { GET_SHARE } from '../../share/gql'
 import { ClaimWish } from './ClaimWish'
 import { swap } from 'ramda'
+import { useParams } from 'react-router-dom'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
@@ -65,11 +66,8 @@ const ListHeader = ({ headline, listId, addWish, shares }) => {
   )
 }
 
-export const OwnerList = ({
-  match: {
-    params: { listId }
-  }
-}) => {
+export const OwnerList = () => {
+  const { listId } = useParams()
   const [wishFormIsOpen, setWishFormIsOpen] = useState(false)
   const [formWishId, setFormWishId] = useState()
   const { data: userData } = useQuery(GET_CURRENT_USER)
@@ -128,11 +126,8 @@ export const OwnerList = ({
   )
 }
 
-export const SharedList = ({
-  match: {
-    params: { shareId }
-  }
-}) => {
+export const SharedList = () => {
+  const { shareId } = useParams()
   const { data: shareData } = useQuery(GET_SHARE, {
     variables: { id: shareId }
   })

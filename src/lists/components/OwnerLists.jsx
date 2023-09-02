@@ -28,6 +28,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { materialUiFormRegister } from '../../tools/forms'
+import { Route, Routes } from 'react-router-dom'
+import { OwnerList } from './List'
 
 const CreateWishListFormModal = () => {
   const [createWishList] = useMutation(CREATE_WISH_LIST)
@@ -124,51 +126,56 @@ export const OwnerLists = ({ wishLists, shares }) => {
     (wishList) => wishList.archivedAt
   )
   return (
-    <Paper sx={{ padding: 2, display: 'flex', flexDirection: 'column' }}>
-      <ListHeader headline='My Lists' />
-      {loading && <CircularProgress sx={{ alignSelf: 'center' }} />}
-      {!loading &&
-        !Boolean(achivedWishLists?.length) &&
-        !Boolean(activeWishLists?.length) && (
-          <Typography sx={{ margin: 3 }}>
-            You have not created any wish lists yet. Get started!
-          </Typography>
+    <>
+      <Routes>
+        <Route path=':listId' element={<OwnerList />} />
+      </Routes>
+      <Paper sx={{ padding: 2, display: 'flex', flexDirection: 'column' }}>
+        <ListHeader headline='My Lists' />
+        {loading && <CircularProgress sx={{ alignSelf: 'center' }} />}
+        {!loading &&
+          !Boolean(achivedWishLists?.length) &&
+          !Boolean(activeWishLists?.length) && (
+            <Typography sx={{ margin: 3 }}>
+              You have not created any wish lists yet. Get started!
+            </Typography>
+          )}
+        {Boolean(activeWishLists?.length) && (
+          <List>
+            {activeWishLists.map((wishList) => (
+              <WishListListItem
+                key={wishList.id}
+                wishList={wishList}
+                archiveWishList={archiveWishList}
+                loading={loadingArchive || loadingUnarchive}
+              />
+            ))}
+          </List>
         )}
-      {Boolean(activeWishLists?.length) && (
-        <List>
-          {activeWishLists.map((wishList) => (
-            <WishListListItem
-              key={wishList.id}
-              wishList={wishList}
-              archiveWishList={archiveWishList}
-              loading={loadingArchive || loadingUnarchive}
-            />
-          ))}
-        </List>
-      )}
-      {Boolean(achivedWishLists?.length) && (
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls='archived-lists-header'
-            id='archived-lists-header'
-          >
-            <Typography>Archived lists</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <List>
-              {achivedWishLists.map((wishList) => (
-                <WishListListItem
-                  key={wishList.id}
-                  wishList={wishList}
-                  unarchiveWishList={unarchiveWishList}
-                  loading={loadingArchive || loadingUnarchive}
-                />
-              ))}
-            </List>
-          </AccordionDetails>
-        </Accordion>
-      )}
-    </Paper>
+        {Boolean(achivedWishLists?.length) && (
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls='archived-lists-header'
+              id='archived-lists-header'
+            >
+              <Typography>Archived lists</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <List>
+                {achivedWishLists.map((wishList) => (
+                  <WishListListItem
+                    key={wishList.id}
+                    wishList={wishList}
+                    unarchiveWishList={unarchiveWishList}
+                    loading={loadingArchive || loadingUnarchive}
+                  />
+                ))}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        )}
+      </Paper>
+    </>
   )
 }

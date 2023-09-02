@@ -1,10 +1,9 @@
 import React from 'react'
 import { initializeApp } from 'firebase/app'
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { Signup, Login } from './auth/AuthPages'
 import { OwnerLists } from './lists/components/OwnerLists'
-import { OwnerList, SharedList } from './lists/components/List'
 import ContentGrid from './ui/components/ContentGrid'
 import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
@@ -46,15 +45,13 @@ function App() {
             >
               <AppBar />
               <ContentGrid>
-                <Switch>
-                  <Route path='/signup' component={Signup} />
-                  <Route path='/login' component={Login} />
-                  <Route path='/list/:listId' component={OwnerList} />
-                  <Route path='/list' component={OwnerLists} />
-                  <Route path='/shared/:shareId' component={SharedList} />
-                  <Route path='/shared' component={OwnerShares} />
-                  <Redirect from='/' to='/list' />
-                </Switch>
+                <Routes>
+                  <Route path='signup' element={<Signup />} />
+                  <Route path='login' element={<Login />} />
+                  <Route path='list/*' element={<OwnerLists />} />
+                  <Route path='shared/*' element={<OwnerShares />} />
+                  <Route path='*' element={<Navigate to='/list' replace />} />
+                </Routes>
               </ContentGrid>
               <BottomNav />
             </div>

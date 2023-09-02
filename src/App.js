@@ -2,7 +2,6 @@ import React from 'react'
 import { initializeApp } from 'firebase/app'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
-import { RecoilRoot } from 'recoil'
 import { Signup, Login } from './auth/AuthPages'
 import { OwnerLists } from './lists/components/OwnerLists'
 import { OwnerList, SharedList } from './lists/components/List'
@@ -34,35 +33,33 @@ function App() {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <RecoilRoot>
-          <AuthenticatedApolloProvider>
-            <CssBaseline />
-            <BrowserRouter>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flexGrow: 1,
-                  backgroundImage: PATTERNS.HEXAGON
-                }}
-              >
-                <AppBar />
-                <ContentGrid>
-                  <Switch>
-                    <Route path='/signup' component={Signup} />
-                    <Route path='/login' component={Login} />
-                    <Route path='/list/:listId' component={OwnerList} />
-                    <Route path='/list' component={OwnerLists} />
-                    <Route path='/shared/:shareId' component={SharedList} />
-                    <Route path='/shared' component={OwnerShares} />
-                    <Redirect from='/' to='/list' />
-                  </Switch>
-                </ContentGrid>
-                <BottomNav />
-              </div>
-            </BrowserRouter>
-          </AuthenticatedApolloProvider>
-        </RecoilRoot>
+        <AuthenticatedApolloProvider>
+          <CssBaseline />
+          <BrowserRouter>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                flexGrow: 1,
+                backgroundImage: PATTERNS.HEXAGON
+              }}
+            >
+              <AppBar />
+              <ContentGrid>
+                <Switch>
+                  <Route path='/signup' component={Signup} />
+                  <Route path='/login' component={Login} />
+                  <Route path='/list/:listId' component={OwnerList} />
+                  <Route path='/list' component={OwnerLists} />
+                  <Route path='/shared/:shareId' component={SharedList} />
+                  <Route path='/shared' component={OwnerShares} />
+                  <Redirect from='/' to='/list' />
+                </Switch>
+              </ContentGrid>
+              <BottomNav />
+            </div>
+          </BrowserRouter>
+        </AuthenticatedApolloProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   )

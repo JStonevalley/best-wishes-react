@@ -9,7 +9,6 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { GET_CURRENT_USER } from '../../auth/gql'
-import { useBaseState } from '../../store/lists'
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql'
@@ -87,6 +86,5 @@ export const AuthenticatedApolloProvider = ({ children }) => {
       })
     }
   }, [googleUser])
-  useBaseState() // TODO Remove when all state is migrated to Apollo client
   return <ApolloProvider client={client}>{children}</ApolloProvider>
 }

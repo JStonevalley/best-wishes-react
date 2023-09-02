@@ -1,6 +1,6 @@
 import React from 'react'
 import { initializeApp } from 'firebase/app'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { RecoilRoot } from 'recoil'
 import { Signup, Login } from './auth/AuthPages'
@@ -55,9 +55,7 @@ function App() {
                     <Route path='/list' component={OwnerLists} />
                     <Route path='/shared/:shareId' component={SharedList} />
                     <Route path='/shared' component={OwnerShares} />
-                    <Route path='/'>
-                      <div>Home</div>
-                    </Route>
+                    <Redirect from='/' to='/list' />
                   </Switch>
                 </ContentGrid>
                 <BottomNav />

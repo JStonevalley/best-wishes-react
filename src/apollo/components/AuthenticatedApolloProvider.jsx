@@ -35,6 +35,7 @@ export const AuthenticatedApolloProvider = ({ children }) => {
       if (newGoogleUser) {
         setGoogleUser(newGoogleUser)
       } else {
+        console.log('logout')
         client.resetStore()
         setGoogleUser(null)
       }

@@ -1,5 +1,6 @@
-import { Badge, Box, IconButton, Tooltip } from '@mui/material'
 import React from 'react'
+import { Badge, Box, IconButton, Tooltip } from '@mui/material'
+import { styled } from '@mui/system'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import RedeemIcon from '@mui/icons-material/Redeem'
@@ -7,6 +8,15 @@ import { useMutation } from '@apollo/client'
 import { CLAIM_WISH, REMOVE_WISH_CLAIM } from '../../share/gql'
 import { filter, join, mapObjIndexed, pipe, when } from 'ramda'
 import { QuantityIndicator } from '../../ui/components/QuantityIndicator'
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: 12,
+    top: 15,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px'
+  }
+}))
 
 export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
   const [claimWish] = useMutation(CLAIM_WISH)
@@ -45,10 +55,17 @@ export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
         >
           <RemoveIcon />
         </IconButton>
-        <Tooltip disableFocusListener title={tooltipTitle}>
-          <Badge badgeContent={amountClaimedByYou} color='success'>
-            <RedeemIcon />
-          </Badge>
+        <Tooltip
+          disableFocusListener
+          enterTouchDelay={0}
+          title={tooltipTitle}
+          leaveTouchDelay={5000}
+        >
+          <StyledBadge badgeContent={amountClaimedByYou} color='success'>
+            <IconButton size='large'>
+              <RedeemIcon />
+            </IconButton>
+          </StyledBadge>
         </Tooltip>
         <IconButton
           onClick={() =>
@@ -62,7 +79,12 @@ export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
           <AddIcon />
         </IconButton>
       </Box>
-      <Tooltip disableFocusListener title={tooltipTitle}>
+      <Tooltip
+        disableFocusListener
+        enterTouchDelay={0}
+        title={tooltipTitle}
+        leaveTouchDelay={5000}
+      >
         <QuantityIndicator
           amountClaimedByOthers={amountClaimedByOthers}
           amountClaimedByYou={claimedByEmail[share.invitedEmail] || 0}

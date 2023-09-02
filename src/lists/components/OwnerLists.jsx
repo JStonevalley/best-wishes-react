@@ -127,7 +127,14 @@ export const OwnerLists = ({ wishLists, shares }) => {
     <Paper sx={{ padding: 2, display: 'flex', flexDirection: 'column' }}>
       <ListHeader headline='My Lists' />
       {loading && <CircularProgress sx={{ alignSelf: 'center' }} />}
-      {activeWishLists && (
+      {!loading &&
+        !Boolean(achivedWishLists?.length) &&
+        !Boolean(activeWishLists?.length) && (
+          <Typography sx={{ margin: 3 }}>
+            You have not created any wish lists yet. Get started!
+          </Typography>
+        )}
+      {Boolean(activeWishLists?.length) && (
         <List>
           {activeWishLists.map((wishList) => (
             <WishListListItem

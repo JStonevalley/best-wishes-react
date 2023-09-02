@@ -57,7 +57,9 @@ const ListHeader = ({ headline, listId, addWish, shares }) => {
             <AddIcon />
           </IconButton>
         )}
-        {shares && <ShareFormDialog listId={listId} shares={shares} />}
+        {addWish && shares && (
+          <ShareFormDialog listId={listId} shares={shares} />
+        )}
       </Box>
     </Box>
   )

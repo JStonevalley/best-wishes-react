@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, createContext } from 'react'
 import {
   ApolloClient,
   ApolloProvider,
@@ -9,6 +9,8 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { GET_CURRENT_USER } from '../../auth/gql'
+
+export const UserContext = createContext({})
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql'
@@ -86,5 +88,9 @@ export const AuthenticatedApolloProvider = ({ children }) => {
       })
     }
   }, [googleUser])
-  return <ApolloProvider client={client}>{children}</ApolloProvider>
+  return (
+    <UserContext.Provider value={{ googleUser }}>
+      <ApolloProvider client={client}>{children}</ApolloProvider>
+    </UserContext.Provider>
+  )
 }

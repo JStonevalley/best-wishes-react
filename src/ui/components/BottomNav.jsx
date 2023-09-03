@@ -4,15 +4,14 @@ import InboxIcon from '@mui/icons-material/MoveToInbox'
 import ListIcon from '@mui/icons-material/List'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
-import { GET_CURRENT_USER } from '../../auth/gql'
-import { useQuery } from '@apollo/client'
+import { useUser } from '../../apollo/components/AuthenticatedApolloProvider'
 
 const NAV_DESTINATIONS = [['/list'], ['/shared']]
 
 const BottomNav = () => {
   const location = useLocation()
-  const { data: userData } = useQuery(GET_CURRENT_USER)
-  if (!userData?.user) return null
+  const { googleUser } = useUser()
+  if (!googleUser) return null
   return (
     <BottomNavigation
       value={NAV_DESTINATIONS.findIndex((destinations) =>

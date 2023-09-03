@@ -3,14 +3,13 @@ import {
   ApolloClient,
   ApolloProvider,
   createHttpLink,
-  gql,
   InMemoryCache
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { GET_CURRENT_USER } from '../../auth/gql'
 
-export const UserContext = createContext({})
+const UserContext = createContext({})
+export const useUser = () => React.useContext(UserContext)
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql'
@@ -65,26 +64,6 @@ export const AuthenticatedApolloProvider = ({ children }) => {
           }
         })
         setClient(newClient)
-        newClient
-          .query({
-            query: GET_CURRENT_USER
-          })
-          .then(({ errors }) => {
-            if (errors && errors[0].extensions.code === 'UNAUTHENTICATED') {
-              newClient.mutate({
-                mutation: gql`
-                  mutation createUser($email: String!) {
-                    user: createUser(email: $email) {
-                      id
-                      email
-                      googleUserId
-                    }
-                  }
-                `,
-                variables: { email: googleUser.email }
-              })
-            }
-          })
       })
     }
   }, [googleUser])

@@ -36,7 +36,6 @@ export const AuthenticatedApolloProvider = ({ children }) => {
   const [client, setClient] = useState(apolloClient)
   const [googleUser, setGoogleUser] = useState()
   const [isClientAuthenticated, setIsClientAuthenticated] = useState(false)
-  // TODO Handle logout better
   useEffect(() => {
     onAuthStateChanged(getAuth(), (newGoogleUser) => {
       if (newGoogleUser) {

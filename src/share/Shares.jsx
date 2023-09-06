@@ -12,8 +12,6 @@ import {
   CircularProgress
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Route, Routes } from 'react-router-dom'
-import { SharedList } from '../lists/components/List'
 
 export const OwnerShares = () => {
   const { data: sharesData, loading } = useQuery(GET_OWN_SHARES)
@@ -25,9 +23,6 @@ export const OwnerShares = () => {
   )
   return (
     <>
-      <Routes>
-        <Route path=':shareId' element={<SharedList />} />
-      </Routes>
       <Paper sx={{ padding: 2, display: 'flex', flexDirection: 'column' }}>
         <Typography
           component='h1'

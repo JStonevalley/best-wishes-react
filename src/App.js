@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { initializeApp } from 'firebase/app'
 import {
   BrowserRouter,
@@ -19,6 +19,7 @@ import {
   useUser
 } from './apollo/components/AuthenticatedApolloProvider'
 import { OwnerShares } from './share/Shares'
+import { OwnerList, SharedList } from './lists/components/List'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAUXoQex0Q_2Ln0yZSoSxQ2wsd7UKvnDJc',
@@ -39,14 +40,12 @@ const PATTERNS = {
 
 const ProtectedRoute = ({ children }) => {
   const currentPathname = useLocation().pathname
-  const { googleUser } = useUser()
-  if (googleUser === undefined) {
-    return null
-  }
+  const { googleUser, isClientAuthenticated } = useUser()
+  if (isClientAuthenticated) return children
   if (googleUser === null) {
     return <Navigate to='/login' replace state={{ from: currentPathname }} />
   }
-  return children
+  return null
 }
 
 function App() {
@@ -77,7 +76,16 @@ function App() {
                       </ProtectedRoute>
                     }
                   />
+                  <Route
+                    path='list/:listId'
+                    element={
+                      <ProtectedRoute>
+                        <OwnerList />
+                      </ProtectedRoute>
+                    }
+                  />
                   <Route path='shared/*' element={<OwnerShares />} />
+                  <Route path='shared/:shareId' element={<SharedList />} />
                   <Route path='*' element={<Navigate to='/list' replace />} />
                 </Routes>
               </ContentGrid>

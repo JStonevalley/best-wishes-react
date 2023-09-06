@@ -28,8 +28,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { materialUiFormRegister } from '../../tools/forms'
-import { Route, Routes } from 'react-router-dom'
-import { OwnerList } from './List'
 
 const CreateWishListFormModal = () => {
   const [createWishList] = useMutation(CREATE_WISH_LIST)
@@ -127,9 +125,6 @@ export const OwnerLists = ({ wishLists, shares }) => {
   )
   return (
     <>
-      <Routes>
-        <Route path=':listId' element={<OwnerList />} />
-      </Routes>
       <Paper sx={{ padding: 2, display: 'flex', flexDirection: 'column' }}>
         <ListHeader headline='My Lists' />
         {loading && <CircularProgress sx={{ alignSelf: 'center' }} />}

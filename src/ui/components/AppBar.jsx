@@ -1,11 +1,12 @@
 import React from 'react'
 import { getAuth, signOut } from 'firebase/auth'
 import { AppBar, Toolbar, Typography, Button } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../../apollo/components/AuthenticatedApolloProvider'
 
 export default function ButtonAppBar() {
   const { googleUser } = useUser()
+  const navigate = useNavigate()
   return (
     <AppBar position='static'>
       <Toolbar>
@@ -28,7 +29,13 @@ export default function ButtonAppBar() {
             </Link>
           </>
         ) : (
-          <Button color='inherit' onClick={() => signOut(getAuth())}>
+          <Button
+            color='inherit'
+            onClick={() => {
+              signOut(getAuth())
+              navigate('/login')
+            }}
+          >
             Logout
           </Button>
         )}

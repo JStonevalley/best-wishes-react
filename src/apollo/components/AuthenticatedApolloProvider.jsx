@@ -21,10 +21,66 @@ const httpLink = createHttpLink({
 let googleFirebaseIdTokenPromise = null
 let googleFirebaseIdTokenFethedAt = null
 
+const authLink = setContext((_, { headers }) => {
+  const googleFirebaseUserIdToken = localStorage.getItem(
+    'googleFirebaseUserIdToken'
+  )
+  if (googleFirebaseUserIdToken) {
+    return {
+      headers: {
+        ...headers,
+        authorization: googleFirebaseUserIdToken
+      }
+    }
+  } else {
+    return { headers }
+  }
+})
+
+const errorLink = onError(
+  ({ graphQLErrors, networkError, operation, forward }) => {
+    if (graphQLErrors) {
+      const authenticationError = graphQLErrors.find(
+        (graphQLError) => graphQLError.extensions.code === 'INVALID_ID_TOKEN'
+      )
+      if (authenticationError && getAuth().currentUser) {
+        googleFirebaseIdTokenPromise =
+          googleFirebaseIdTokenFethedAt &&
+          Date.now() - googleFirebaseIdTokenFethedAt < 10000
+            ? googleFirebaseIdTokenPromise
+            : getAuth()
+                .currentUser.getIdToken()
+                .catch((error) => {
+                  console.error('Could not refresh access token', error)
+                  return null
+                })
+                .then((newGoogleFirebaseIdToken) => {
+                  console.log(
+                    'Refetched google firebase id token for user. Applying to headers and retrying request.'
+                  )
+                  return newGoogleFirebaseIdToken
+                })
+        googleFirebaseIdTokenFethedAt = Date.now()
+        return fromPromise(googleFirebaseIdTokenPromise)
+          .filter(Boolean)
+          .flatMap((googleIdToken) => {
+            operation.setContext({
+              headers: {
+                ...operation.getContext().headers,
+                authorization: googleIdToken
+              }
+            })
+            return forward(operation)
+          })
+      }
+    }
+  }
+)
+
 const apolloClient = new ApolloClient({
-  link: httpLink,
+  link: from([authLink, errorLink, httpLink]),
   cache: new InMemoryCache(),
-  connectToDevTools: false, // Only the first client to connect to devtools will be picked up by the extension.
+  connectToDevTools: true,
   defaultOptions: {
     watchQuery: {
       errorPolicy: 'all'
@@ -33,89 +89,23 @@ const apolloClient = new ApolloClient({
 })
 
 export const AuthenticatedApolloProvider = ({ children }) => {
-  const [client, setClient] = useState(apolloClient)
   const [googleUser, setGoogleUser] = useState()
-  const [isClientAuthenticated, setIsClientAuthenticated] = useState(false)
   useEffect(() => {
-    onAuthStateChanged(getAuth(), (newGoogleUser) => {
+    onAuthStateChanged(getAuth(), async (newGoogleUser) => {
       if (newGoogleUser) {
+        const newGoogleUserIdToken = await newGoogleUser.getIdToken()
+        localStorage.setItem('googleFirebaseUserIdToken', newGoogleUserIdToken)
         setGoogleUser(newGoogleUser)
       } else {
-        client.resetStore()
+        apolloClient.resetStore()
         setGoogleUser(undefined)
-        setIsClientAuthenticated(false)
+        localStorage.removeItem('googleFirebaseUserIdToken')
       }
     })
-  }, [client])
-  useEffect(() => {
-    if (googleUser) {
-      googleUser.getIdToken().then((googleIdToken) => {
-        const authLink = setContext((_, { headers }) => {
-          return {
-            headers: {
-              ...headers,
-              authorization: googleIdToken
-            }
-          }
-        })
-        const errorLink = onError(
-          ({ graphQLErrors, networkError, operation, forward }) => {
-            if (graphQLErrors) {
-              const authenticationError = graphQLErrors.find(
-                (graphQLError) =>
-                  graphQLError.extensions.code === 'INVALID_ID_TOKEN'
-              )
-              if (authenticationError) {
-                googleFirebaseIdTokenPromise =
-                  googleFirebaseIdTokenFethedAt &&
-                  Date.now() - googleFirebaseIdTokenFethedAt < 10000
-                    ? googleFirebaseIdTokenPromise
-                    : googleUser
-                        .getIdToken()
-                        .catch((error) => {
-                          console.error('Could not refresh access token', error)
-                          return null
-                        })
-                        .then((newGoogleFirebaseIdToken) => {
-                          console.log(
-                            'Refetched google firebase id token for user. Applying to headers and retrying request.'
-                          )
-                          return newGoogleFirebaseIdToken
-                        })
-                googleFirebaseIdTokenFethedAt = Date.now()
-                return fromPromise(googleFirebaseIdTokenPromise)
-                  .filter(Boolean)
-                  .flatMap((googleIdToken) => {
-                    operation.setContext({
-                      headers: {
-                        ...operation.getContext().headers,
-                        authorization: googleIdToken
-                      }
-                    })
-                    return forward(operation)
-                  })
-              }
-            }
-          }
-        )
-        const newClient = new ApolloClient({
-          link: from([authLink, errorLink, httpLink]),
-          cache: new InMemoryCache(),
-          connectToDevTools: true,
-          defaultOptions: {
-            watchQuery: {
-              errorPolicy: 'all'
-            }
-          }
-        })
-        setClient(newClient)
-        setIsClientAuthenticated(Boolean(googleUser))
-      })
-    }
-  }, [googleUser])
+  })
   return (
-    <UserContext.Provider value={{ googleUser, isClientAuthenticated }}>
-      <ApolloProvider client={client}>{children}</ApolloProvider>
+    <UserContext.Provider value={{ googleUser }}>
+      <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
     </UserContext.Provider>
   )
 }

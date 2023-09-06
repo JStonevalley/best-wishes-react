@@ -40,8 +40,8 @@ const PATTERNS = {
 
 const ProtectedRoute = ({ children }) => {
   const currentPathname = useLocation().pathname
-  const { googleUser, isClientAuthenticated } = useUser()
-  if (isClientAuthenticated) return children
+  const { googleUser } = useUser()
+  if (googleUser) return children
   if (googleUser === null) {
     return <Navigate to='/login' replace state={{ from: currentPathname }} />
   }

@@ -22,6 +22,12 @@ export const REMOVE_SHARE = gql`
   }
 `
 
+export const SEND_SHARE_EMAILS = gql`
+  mutation sendShareEmails($shareIds: [String!]!) {
+    sentSuccessfully: sendShareEmails(shareIds: $shareIds)
+  }
+`
+
 export const GET_SHARE = gql`
   ${DEFAULT_SHARE_PROPERITES}
   ${MINIMUM_WISHLIST_PROPERITES}

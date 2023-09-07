@@ -19,7 +19,7 @@ import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { useCallback } from 'react'
 import { GET_CURRENT_USER } from '../../auth/gql'
 import { useMutation, useQuery } from '@apollo/client'
-import { CREATE_SHARE, REMOVE_SHARE } from '../gql'
+import { CREATE_SHARE, REMOVE_SHARE, SEND_SHARE_EMAILS } from '../gql'
 import { prop } from 'ramda'
 import { GET_OWN_WISH_LIST } from '../../lists/gql'
 
@@ -41,6 +41,9 @@ export const ShareFormDialog = ({ listId, shares }) => {
     {
       refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
     }
+  )
+  const [sendShareEmails, { loading: loadingSendShareEmails }] = useMutation(
+    SEND_SHARE_EMAILS
   )
   const { data: userData } = useQuery(GET_CURRENT_USER)
   const [isOpen, setIsOpen] = useState(false)
@@ -74,16 +77,19 @@ export const ShareFormDialog = ({ listId, shares }) => {
     append
   ])
   const submit = handleSubmit(async ({ shareEmails }) => {
-    await Promise.all(
+    const sharesToSendEmailsFor = await Promise.all(
       shareEmails.filter(prop('include')).map(async ({ email }) => {
-        // eslint-disable-next-line no-unused-vars
-        const share =
+        return (
           shares.find((share) => share.invitedEmail === email) ||
           (await createShare({
             variables: { invitedEmail: email, wishListId: listId }
           }))
+        )
       })
     )
+    await sendShareEmails({
+      variables: { shareIds: sharesToSendEmailsFor.map(prop('id')) }
+    })
     setConfirmIsOpen(false)
     setIsOpen(false)
   })
@@ -231,7 +237,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
             <Button
               onClick={submit}
               color='primary'
-              disabled={loadingCreateShare}
+              disabled={loadingCreateShare || loadingSendShareEmails}
             >
               Yes
             </Button>

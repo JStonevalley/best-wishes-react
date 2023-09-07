@@ -41,7 +41,9 @@ const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
       const authenticationError = graphQLErrors.find(
-        (graphQLError) => graphQLError.extensions.code === 'INVALID_ID_TOKEN'
+        (graphQLError) =>
+          graphQLError.extensions.code === 'INVALID_ID_TOKEN' &&
+          graphQLError.extensions.firebaseCode === 'auth/id-token-expired'
       )
       if (authenticationError && getAuth().currentUser) {
         googleFirebaseIdTokenPromise =

@@ -31,7 +31,7 @@ const GridForm = styled('form')(({ theme }) => ({
     "price_amount price_amount price_amount price_currency price_currency price_currency quantity quantity"
     "image image image image image image image image"
   `,
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('lg')]: {
     gridTemplateAreas: `
       "introText introText introText introText introText introText introText introText"
       "link link link link link link link rfb"

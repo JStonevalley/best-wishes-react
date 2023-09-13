@@ -9,10 +9,10 @@ import {
   Typography,
   Paper,
   IconButton,
-  Box,
   Badge,
   CircularProgress
 } from '@mui/material'
+import Box from '@mui/material/Box'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import AddIcon from '@mui/icons-material/Add'

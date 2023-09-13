@@ -52,8 +52,8 @@ function App() {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <AuthenticatedApolloProvider>
-          <CssBaseline />
           <BrowserRouter>
             <div
               style={{

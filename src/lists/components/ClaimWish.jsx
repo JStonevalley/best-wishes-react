@@ -1,6 +1,7 @@
 import React from 'react'
-import { Badge, Box, IconButton, Tooltip } from '@mui/material'
 import { styled } from '@mui/system'
+import { Badge, IconButton, Tooltip } from '@mui/material'
+import Box from '@mui/material/Box'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import RedeemIcon from '@mui/icons-material/Redeem'

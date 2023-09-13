@@ -8,7 +8,7 @@ const OuterGrid = styled('div')(({ theme }) => ({
   gridTemplateAreas: `
     ". . . c c c c c c . . ."
   `,
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('lg')]: {
     gridTemplateAreas: `
       "c c c c c c c c c c c c"
     `

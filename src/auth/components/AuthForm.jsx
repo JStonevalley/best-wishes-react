@@ -7,7 +7,7 @@ import { materialUiFormRegister } from '../../tools/forms'
 const Form = styled('form')(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr 1fr',
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('lg')]: {
     gridTemplateColumns: '1fr 1fr'
   },
   gridTemplateRows: 'auto',
@@ -17,7 +17,7 @@ const Form = styled('form')(({ theme }) => ({
 const StyledLink = styled(Link)(({ theme }) => ({
   alignSelf: 'center',
   gridColumn: '3 / span 2',
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('lg')]: {
     gridColumn: '1 / span 2'
   }
 }))
@@ -25,7 +25,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const ErrorTypography = styled(Typography)(({ theme }) => ({
   color: theme.palette.error.main,
   gridColumn: '1 / span 4',
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('lg')]: {
     gridColumn: '1 / span 2'
   }
 }))

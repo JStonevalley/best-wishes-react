@@ -11,7 +11,6 @@ import {
   Paper,
   Typography,
   List,
-  Box,
   IconButton,
   Dialog,
   DialogTitle,
@@ -23,6 +22,7 @@ import {
   AccordionDetails,
   CircularProgress
 } from '@mui/material'
+import Box from '@mui/material/Box'
 import AddIcon from '@mui/icons-material/Add'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useState } from 'react'

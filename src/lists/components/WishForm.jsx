@@ -105,7 +105,7 @@ const WishFormModal = ({
               setFetchingMetadata(true)
               try {
                 const pageMetadata = await fetch(
-                  `${process.env.VITE_API_BASE}/fetchPageMetadata`,
+                  `${import.meta.env.VITE_API_BASE}/fetchPageMetadata`,
                   {
                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
                     headers: {

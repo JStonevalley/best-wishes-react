@@ -15,7 +15,7 @@ const UserContext = createContext({})
 export const useUser = () => React.useContext(UserContext)
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/graphql'
+  uri: `${import.meta.env.VITE_GQL_API_BASE}:4000/graphql`
 })
 
 let googleFirebaseIdTokenPromise = null

@@ -20,7 +20,7 @@
   "scripts": {
     "serve": "vite preview",
     "build": "vite build",
-    "start": "env-cmd --file ./.env-local.json vite"
+    "start": "vite"
   },
   "eslintConfig": {
     "extends": [

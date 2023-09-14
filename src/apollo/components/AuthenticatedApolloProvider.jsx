@@ -100,7 +100,7 @@ export const AuthenticatedApolloProvider = ({ children }) => {
         setGoogleUser(newGoogleUser)
       } else {
         apolloClient.resetStore()
-        setGoogleUser(undefined)
+        setGoogleUser(null)
         localStorage.removeItem('googleFirebaseUserIdToken')
       }
     })

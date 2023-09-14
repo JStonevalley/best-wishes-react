@@ -22,12 +22,12 @@ import { OwnerShares } from './share/Shares'
 import { OwnerList, SharedList } from './lists/components/List'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAUXoQex0Q_2Ln0yZSoSxQ2wsd7UKvnDJc',
-  authDomain: 'bestwishes-ab288.firebaseapp.com',
-  projectId: 'bestwishes-ab288',
-  storageBucket: 'bestwishes-ab288.appspot.com',
-  messagingSenderId: '680661551723',
-  appId: '1:680661551723:web:b68f41f4605d92ec513f2e'
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 }
 
 initializeApp(firebaseConfig)

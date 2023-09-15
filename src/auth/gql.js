@@ -18,8 +18,8 @@ export const GET_CURRENT_USER = gql`
 `
 
 export const CREATE_USER = gql`
+  ${MINIMUM_USER_PROPERITES}
   mutation createUser($email: String!) {
-    ${MINIMUM_USER_PROPERITES}
     user: createUser(email: $email) {
       ...MinimumUserProperties
     }

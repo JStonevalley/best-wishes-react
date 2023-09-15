@@ -69,3 +69,6 @@ build/
 dist/
 node_modules/
 awsconfiguration.json
+
+.env.development.local
+.env.production.local

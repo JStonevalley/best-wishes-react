@@ -14,6 +14,8 @@ import { signOut } from './user/actions'
 import { SignIn, SignUp, ConfirmSignUp, SignInStatus } from './user/SignInUp'
 import { Home } from './home/components/Home'
 
+// Deploy counter: 0
+
 const styles = theme => ({
   signOutButtonText: {
     color: theme.palette.primary.contrastText,

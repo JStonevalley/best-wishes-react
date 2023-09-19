@@ -36,7 +36,7 @@ export const OwnerShares = () => {
           !Boolean(achivedShares?.length) &&
           !Boolean(activeShares?.length) && (
             <Typography sx={{ margin: 3 }}>
-              Nothing has been shared with you yet
+              Nothing has been shared with you yet.
             </Typography>
           )}
         {Boolean(activeShares?.length) && (

@@ -121,7 +121,7 @@ export const Login = ({ history }) => {
         <Typography variant='h6' component='h1' paragraph>
           Wishing you welcome back!
         </Typography>
-        <Typography variant='p' component='h2' paragraph>
+        <Typography variant='subtitle1' component='h2' paragraph>
           This is the brand new best wishes! List sorting and quantity are the
           main features of the new version. A new login system has also been
           implemented which means that you need to recreate your account. Data

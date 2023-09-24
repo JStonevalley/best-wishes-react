@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/system'
 import {
   Button,
@@ -25,7 +25,9 @@ const GridForm = styled('form')(({ theme }) => ({
   gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
   gridTemplateAreas: `
     "introText introText introText introText introText introText introText introText"
-    "link link link link link link link rfb"
+    "link link link link link link link rfb"    
+    "fetchBtn fetchBtn fetchBtn fetchBtn fetchBtn fetchBtn fetchBtn fetchBtn"
+    "noFetchBtn noFetchBtn noFetchBtn noFetchBtn noFetchBtn noFetchBtn noFetchBtn noFetchBtn"
     "title title title title title title title title"
     "description description description description description description description description"
     "price_amount price_amount price_amount price_currency price_currency price_currency quantity quantity"
@@ -35,6 +37,8 @@ const GridForm = styled('form')(({ theme }) => ({
     gridTemplateAreas: `
       "introText introText introText introText introText introText introText introText"
       "link link link link link link link rfb"
+      "fetchBtn fetchBtn fetchBtn fetchBtn fetchBtn fetchBtn noFetchBtn noFetchBtn"
+      "noFetchBtn noFetchBtn noFetchBtn noFetchBtn noFetchBtn noFetchBtn noFetchBtn noFetchBtn"
       "title title title title title title title title"
       "description description description description description description description description"
       "price_amount price_amount price_amount price_amount price_currency price_currency price_currency price_currency"
@@ -68,6 +72,9 @@ const WishFormModal = ({
   const [changeAWish, { loading: loadingChangeAWish }] = useMutation(
     CHANGE_A_WISH
   )
+  useEffect(() => {
+    if (isOpen === true && fetchedMetadata === true) setFetchedMetadata(false)
+  }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps
   const loading = loadingMakeAWish || loadingChangeAWish
   const submit = handleSubmit(async (data) => {
     if (data.price?.amount != null) data.price.amount = data.price.amount * 100
@@ -84,6 +91,51 @@ const WishFormModal = ({
   })
   const hideOrDisplayInputFields =
     !wishId && !fetchedMetadata ? { display: 'none' } : {}
+
+  const fetchMetaData = async () => {
+    setFetchingMetadata(true)
+    try {
+      const pageMetadata = await fetch(
+        `${import.meta.env.VITE_API_BASE}/fetchPageMetadata`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ url: link })
+        }
+      ).then((res) => res.json())
+      setFetchedMetadata(true)
+      if (pageMetadata?.title) {
+        setValue('title', pageMetadata?.title, {
+          shouldTouch: true,
+          shouldDirty: true
+        })
+      }
+      if (pageMetadata?.description) {
+        setValue('description', pageMetadata?.description, {
+          shouldTouch: true,
+          shouldDirty: true
+        })
+      }
+      if (pageMetadata?.price) {
+        setValue('price', pageMetadata?.price, {
+          shouldTouch: true,
+          shouldDirty: true
+        })
+      }
+      if (pageMetadata?.image) {
+        setValue('image', pageMetadata?.image, {
+          shouldTouch: true,
+          shouldDirty: true
+        })
+      }
+    } catch (error) {
+      console.error(error)
+    }
+    setFetchingMetadata(false)
+  }
+
   return (
     <Dialog open={isOpen} onClose={close}>
       <DialogTitle>{title}</DialogTitle>
@@ -103,49 +155,7 @@ const WishFormModal = ({
           <IconButton
             style={{ gridArea: 'rfb' }}
             disabled={fetchingMetadata}
-            onClick={async () => {
-              setFetchingMetadata(true)
-              try {
-                const pageMetadata = await fetch(
-                  `${import.meta.env.VITE_API_BASE}/fetchPageMetadata`,
-                  {
-                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ url: link })
-                  }
-                ).then((res) => res.json())
-                setFetchedMetadata(true)
-                if (pageMetadata?.title) {
-                  setValue('title', pageMetadata?.title, {
-                    shouldTouch: true,
-                    shouldDirty: true
-                  })
-                }
-                if (pageMetadata?.description) {
-                  setValue('description', pageMetadata?.description, {
-                    shouldTouch: true,
-                    shouldDirty: true
-                  })
-                }
-                if (pageMetadata?.price) {
-                  setValue('price', pageMetadata?.price, {
-                    shouldTouch: true,
-                    shouldDirty: true
-                  })
-                }
-                if (pageMetadata?.image) {
-                  setValue('image', pageMetadata?.image, {
-                    shouldTouch: true,
-                    shouldDirty: true
-                  })
-                }
-              } catch (error) {
-                console.error(error)
-              }
-              setFetchingMetadata(false)
-            }}
+            onClick={fetchMetaData}
             size='large'
           >
             <RefreshIcon
@@ -155,6 +165,25 @@ const WishFormModal = ({
               className='Roll'
             />
           </IconButton>
+          {!wishId && !fetchedMetadata && (
+            <Button
+              onClick={fetchMetaData}
+              disabled={loading}
+              color='success'
+              style={{ gridArea: 'fetchBtn' }}
+            >
+              Fetch info
+            </Button>
+          )}
+          {!wishId && !fetchedMetadata && (
+            <Button
+              onClick={() => setFetchedMetadata(true)}
+              disabled={loading}
+              style={{ gridArea: 'noFetchBtn' }}
+            >
+              Continue without fetching info
+            </Button>
+          )}
           <TextField
             label='Title'
             variant='outlined'

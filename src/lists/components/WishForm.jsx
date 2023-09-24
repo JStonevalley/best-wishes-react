@@ -71,6 +71,7 @@ const WishFormModal = ({
   const loading = loadingMakeAWish || loadingChangeAWish
   const submit = handleSubmit(async (data) => {
     if (data.price?.amount != null) data.price.amount = data.price.amount * 100
+    if (data.price?.amount == null || data.price?.currency) delete data.price
     try {
       await (wishId
         ? changeAWish({ variables: { id: wishId, ...data } })

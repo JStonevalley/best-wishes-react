@@ -30,7 +30,9 @@ import { useForm } from 'react-hook-form'
 import { materialUiFormRegister } from '../../tools/forms'
 
 const CreateWishListFormModal = () => {
-  const [createWishList] = useMutation(CREATE_WISH_LIST)
+  const [createWishList] = useMutation(CREATE_WISH_LIST, {
+    refetchQueries: [{ query: GET_OWN_WISH_LISTS }]
+  })
   const [createWishListFormOpen, setCreateWishListFormOpen] = useState(false)
   const {
     handleSubmit,

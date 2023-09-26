@@ -2,7 +2,6 @@ import React from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import {
   ARCHIVE_WISH_LIST,
-  CREATE_WISH_LIST,
   GET_OWN_WISH_LISTS,
   UNARCHIVE_WISH_LIST
 } from '../gql'
@@ -11,82 +10,16 @@ import {
   Paper,
   Typography,
   List,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  Button,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   CircularProgress
 } from '@mui/material'
 import Box from '@mui/material/Box'
-import AddIcon from '@mui/icons-material/Add'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { materialUiFormRegister } from '../../tools/forms'
+import { CreateWishListFormModal } from './WishListForm'
 
-const CreateWishListFormModal = () => {
-  const [createWishList] = useMutation(CREATE_WISH_LIST, {
-    refetchQueries: [{ query: GET_OWN_WISH_LISTS }]
-  })
-  const [createWishListFormOpen, setCreateWishListFormOpen] = useState(false)
-  const {
-    handleSubmit,
-    register,
-    formState: { errors }
-  } = useForm()
-  return (
-    <>
-      <IconButton onClick={() => setCreateWishListFormOpen(true)} size='large'>
-        <AddIcon />
-      </IconButton>
-      <Dialog
-        open={createWishListFormOpen}
-        onClose={() => setCreateWishListFormOpen(false)}
-      >
-        <DialogTitle>Create a wish list</DialogTitle>
-        <DialogContent>
-          <form
-            style={{ display: 'flex', flexDirection: 'column' }}
-            onSubmit={handleSubmit(({ headline }) =>
-              createWishList({ variables: { headline } }).then(() =>
-                setCreateWishListFormOpen(false)
-              )
-            )}
-          >
-            <TextField
-              label='Headline'
-              variant='outlined'
-              {...materialUiFormRegister(register)('headline', {
-                required: {
-                  value: true,
-                  message: 'Headline is required'
-                }
-              })}
-              error={Boolean(errors.headline)}
-              helperText={errors.headline?.message}
-              sx={{ marginTop: 2 }}
-            />
-            <Button
-              color='success'
-              sx={{ marginTop: 2 }}
-              variant='outlined'
-              type='submit'
-            >
-              Create
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
-  )
-}
-
-const ListHeader = ({ headline, createWishList }) => {
+const ListHeader = ({ headline }) => {
   return (
     <Box
       sx={{
@@ -111,14 +44,12 @@ const ListHeader = ({ headline, createWishList }) => {
   )
 }
 
-export const OwnerLists = ({ wishLists, shares }) => {
+export const OwnerLists = () => {
   const { data: wishListsData, loading } = useQuery(GET_OWN_WISH_LISTS)
-  const [archiveWishList, { loading: loadingArchive }] = useMutation(
-    ARCHIVE_WISH_LIST
-  )
-  const [unarchiveWishList, { loading: loadingUnarchive }] = useMutation(
-    UNARCHIVE_WISH_LIST
-  )
+  const [archiveWishList, { loading: loadingArchive }] =
+    useMutation(ARCHIVE_WISH_LIST)
+  const [unarchiveWishList, { loading: loadingUnarchive }] =
+    useMutation(UNARCHIVE_WISH_LIST)
   const activeWishLists = wishListsData?.wishLists?.filter(
     (wishList) => !wishList.archivedAt
   )
@@ -130,13 +61,11 @@ export const OwnerLists = ({ wishLists, shares }) => {
       <Paper sx={{ padding: 2, display: 'flex', flexDirection: 'column' }}>
         <ListHeader headline='My Lists' />
         {loading && <CircularProgress sx={{ alignSelf: 'center' }} />}
-        {!loading &&
-          !Boolean(achivedWishLists?.length) &&
-          !Boolean(activeWishLists?.length) && (
-            <Typography sx={{ margin: 3 }}>
-              You have not created any wish lists yet. Get started!
-            </Typography>
-          )}
+        {!loading && !achivedWishLists?.length && !activeWishLists?.length && (
+          <Typography sx={{ margin: 3 }}>
+            You have not created any wish lists yet. Get started!
+          </Typography>
+        )}
         {Boolean(activeWishLists?.length) && (
           <List>
             {activeWishLists.map((wishList) => (

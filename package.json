@@ -2,6 +2,12 @@
   "name": "bestwishes",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "serve": "vite preview",
+    "build": "vite build",
+    "start": "vite",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx ."
+  },
   "dependencies": {
     "@apollo/client": "^3.8.3",
     "@emotion/react": "^11.7.0",
@@ -17,64 +23,23 @@
     "react-router-dom": "^6.15.0",
     "styled-components": "^5.2.1"
   },
-  "scripts": {
-    "serve": "vite preview",
-    "build": "vite build",
-    "start": "vite"
-  },
-  "eslintConfig": {
-    "extends": [
-      "prettier",
-      "plugin:react/jsx-runtime",
-      "plugin:react-hooks/recommended"
-    ],
-    "plugins": [
-      "eslint-plugin-prettier",
-      "react-refresh"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "endOfLine": "auto"
-        }
-      ],
-      "react-refresh/only-export-components": [
-        "warn",
-        {
-          "allowConstantExport": true
-        }
-      ]
-    },
-    "parserOptions": {
-      "ecmaVersion": "latest",
-      "sourceType": "module"
-    },
-    "settings": {
-      "react": {
-        "version": "18.2"
-      }
-    },
-    "ignorePatterns": [
-      "dist"
-    ]
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.4",
+    "cross-env": "^7.0.3",
+    "env-cmd": "^10.1.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "prettier": "^3.0.3",
+    "vite": "^4.4.9"
   },
   "prettier": {
     "trailingComma": "none",
     "semi": false,
     "singleQuote": true,
     "jsxSingleQuote": true
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.0.4",
-    "cross-env": "^7.0.3",
-    "env-cmd": "^10.1.0",
-    "eslint-config-prettier": "^8.0.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
-    "prettier": "2.2.1",
-    "vite": "^4.4.9"
   }
 }

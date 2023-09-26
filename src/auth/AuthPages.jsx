@@ -13,7 +13,7 @@ import { sleep } from '../tools/sleep'
 import { useMutation } from '@apollo/client'
 import { CREATE_USER } from './gql'
 
-const Page = styled('div')(({ theme }) => ({
+const Page = styled('div')(() => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -46,7 +46,7 @@ const signupError = (error) => {
   }
 }
 
-export const Signup = ({ history }) => {
+export const Signup = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [createUser] = useMutation(CREATE_USER)
@@ -101,7 +101,7 @@ const loginError = (error) => {
   }
 }
 
-export const Login = ({ history }) => {
+export const Login = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { handleSubmit, setError, ...formProps } = useForm()

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from '../../ui/components/Link'
 import { styled } from '@mui/system'
-import { Typography, TextField, Button } from '@mui/material'
+import { Button, TextField, Typography } from '@mui/material'
 import { materialUiFormRegister } from '../../tools/forms'
 
 const Form = styled('form')(({ theme }) => ({

@@ -59,8 +59,7 @@ const WishFormModal = ({
     formState: { errors },
     handleSubmit,
     setValue,
-    control,
-    ...hookFormProps
+    control
   }
 }) => {
   const [fetchingMetadata, setFetchingMetadata] = useState(false)
@@ -69,9 +68,8 @@ const WishFormModal = ({
   const [makeAWish, { loading: loadingMakeAWish }] = useMutation(MAKE_A_WISH, {
     refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
   })
-  const [changeAWish, { loading: loadingChangeAWish }] = useMutation(
-    CHANGE_A_WISH
-  )
+  const [changeAWish, { loading: loadingChangeAWish }] =
+    useMutation(CHANGE_A_WISH)
   useEffect(() => {
     if (isOpen === true && fetchedMetadata === true) setFetchedMetadata(false)
   }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps

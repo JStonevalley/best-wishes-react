@@ -32,13 +32,11 @@ export const OwnerShares = () => {
           Shared with me
         </Typography>
         {loading && <CircularProgress sx={{ alignSelf: 'center' }} />}
-        {!loading &&
-          !Boolean(achivedShares?.length) &&
-          !Boolean(activeShares?.length) && (
-            <Typography sx={{ margin: 3 }}>
-              Nothing has been shared with you yet.
-            </Typography>
-          )}
+        {!loading && !achivedShares?.length && !activeShares?.length && (
+          <Typography sx={{ margin: 3 }}>
+            Nothing has been shared with you yet.
+          </Typography>
+        )}
         {Boolean(activeShares?.length) && (
           <List>
             {activeShares.map(({ id: shareId, wishList }) => (

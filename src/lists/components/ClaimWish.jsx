@@ -10,6 +10,8 @@ import { CLAIM_WISH, REMOVE_WISH_CLAIM } from '../../share/gql'
 import { filter, join, mapObjIndexed, pipe, when } from 'ramda'
 import { QuantityIndicator } from '../../ui/components/QuantityIndicator'
 
+const FRefQuantityIndicator = React.forwardRef(QuantityIndicator)
+
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
     right: 12,
@@ -86,7 +88,7 @@ export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
         title={tooltipTitle}
         leaveTouchDelay={5000}
       >
-        <QuantityIndicator
+        <FRefQuantityIndicator
           amountClaimedByOthers={amountClaimedByOthers}
           amountClaimedByYou={claimedByEmail[share.invitedEmail] || 0}
           total={wishQuantity}

@@ -42,9 +42,8 @@ export const ShareFormDialog = ({ listId, shares }) => {
       refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
     }
   )
-  const [sendShareEmails, { loading: loadingSendShareEmails }] = useMutation(
-    SEND_SHARE_EMAILS
-  )
+  const [sendShareEmails, { loading: loadingSendShareEmails }] =
+    useMutation(SEND_SHARE_EMAILS)
   const { data: userData } = useQuery(GET_CURRENT_USER)
   const [isOpen, setIsOpen] = useState(false)
   const [confirmIsOpen, setConfirmIsOpen] = useState(false)
@@ -73,9 +72,10 @@ export const ShareFormDialog = ({ listId, shares }) => {
     name: 'shareEmails'
   })
   const [shareEmails] = watch(['shareEmails'])
-  const addShareRow = useCallback(() => append({ email: '', include: true }), [
-    append
-  ])
+  const addShareRow = useCallback(
+    () => append({ email: '', include: true }),
+    [append]
+  )
   const submit = handleSubmit(async ({ shareEmails }) => {
     const sharesToSendEmailsFor = await Promise.all(
       shareEmails.filter(prop('include')).map(async ({ email }) => {

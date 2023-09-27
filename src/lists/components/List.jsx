@@ -35,7 +35,7 @@ import { swap } from 'ramda'
 import { useParams } from 'react-router-dom'
 import { ChangeWishListFormModal } from './WishListForm'
 
-const ListHeader = ({ headline, listId, addWish, shares }) => {
+const ListHeader = ({ headline, archivedAt, wishListId, addWish, shares }) => {
   return (
     <Box
       sx={{
@@ -54,20 +54,20 @@ const ListHeader = ({ headline, listId, addWish, shares }) => {
         <Typography component='h1' variant='h4'>
           {headline}
         </Typography>
-        {addWish && <ChangeWishListFormModal headline={headline} wishListId={listId} />}
+        {addWish && !archivedAt && <ChangeWishListFormModal headline={headline} wishListId={wishListId} />}
       </Box>
       <Box
         style={{
           display: 'flex'
         }}
       >
-        {addWish && (
+        {addWish && !archivedAt && (
           <IconButton onClick={addWish} size='large'>
             <AddIcon />
           </IconButton>
         )}
-        {addWish && shares && (
-          <ShareFormDialog listId={listId} shares={shares} />
+        {addWish && shares && !archivedAt && (
+          <ShareFormDialog listId={wishListId} shares={shares} />
         )}
       </Box>
     </Box>
@@ -169,7 +169,8 @@ const ListPresentation = ({
     >
       <ListHeader
         headline={list.headline}
-        listId={list.id}
+        wishListId={list.id}
+        archivedAt={list.archivedAt}
         addWish={editWish ? () => editWish() : undefined}
         shares={list.shares}
       />
@@ -189,6 +190,7 @@ const ListPresentation = ({
                 updateWishOrderForWishList={updateWishOrderForWishList}
                 share={share}
                 shares={list.shares}
+                listArchivedAt={list.archivedAt}
                 first={index === 0}
                 last={index === list.wishes.length - 1}
               />
@@ -246,6 +248,7 @@ const WishListItem = ({
   updateWishOrderForWishList,
   share,
   shares,
+  listArchivedAt,
   first,
   last
 }) => {
@@ -313,7 +316,7 @@ const WishListItem = ({
                 )}
               </Typography>
               <Toolbar sx={{ alignItems: 'center' }}>
-                {!share && (
+                {!share && !listArchivedAt && (
                   <>
                     <IconButton
                       onClick={() => {

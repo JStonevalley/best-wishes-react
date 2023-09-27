@@ -15,7 +15,7 @@ import { ChangeWishListFormModal } from './WishListForm'
 
 export const WishListListItem = ({
   shareId,
-  wishList: { id, headline, wishes },
+  wishList: { id, headline, wishes, archivedAt },
   archiveWishList,
   unarchiveWishList,
   loading
@@ -27,7 +27,7 @@ export const WishListListItem = ({
       to={shareId || id}
       secondaryAction={
         <Toolbar onClick={(event) => event.preventDefault()}>
-          {!shareId && <ChangeWishListFormModal headline={headline} wishListId={id} />}
+          {!shareId && !archivedAt && <ChangeWishListFormModal headline={headline} wishListId={id} />}
           {(archiveWishList || unarchiveWishList) &&
           (archiveWishList ? (
             <IconButton

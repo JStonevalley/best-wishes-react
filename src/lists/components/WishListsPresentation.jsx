@@ -31,7 +31,7 @@ export const WishListListItem = ({
           {(archiveWishList || unarchiveWishList) &&
           (archiveWishList ? (
             <IconButton
-              onClick={(event) => {
+              onClick={() => {
                 archiveWishList({
                   variables: { id },
                   optimisticResponse: {
@@ -52,7 +52,7 @@ export const WishListListItem = ({
             </IconButton>
           ) : (
             <IconButton
-              onClick={(event) => {
+              onClick={() => {
                 unarchiveWishList({
                   variables: { id },
                   optimisticResponse: {

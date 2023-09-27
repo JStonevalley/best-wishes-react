@@ -33,6 +33,7 @@ import { GET_SHARE } from '../../share/gql'
 import { ClaimWish } from './ClaimWish'
 import { swap } from 'ramda'
 import { useParams } from 'react-router-dom'
+import { ChangeWishListFormModal } from './WishListForm'
 
 const ListHeader = ({ headline, listId, addWish, shares }) => {
   return (
@@ -45,9 +46,16 @@ const ListHeader = ({ headline, listId, addWish, shares }) => {
         marginRight: 3
       }}
     >
-      <Typography component='h1' variant='h4'>
-        {headline}
-      </Typography>
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        padding: '10px 12px 14px 12px'
+      }}>
+        <Typography component='h1' variant='h4'>
+          {headline}
+        </Typography>
+        {addWish && <ChangeWishListFormModal headline={headline} wishListId={listId} />}
+      </Box>
       <Box
         style={{
           display: 'flex'

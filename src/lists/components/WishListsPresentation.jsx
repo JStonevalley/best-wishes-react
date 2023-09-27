@@ -5,11 +5,13 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Avatar
+  Avatar,
+  Toolbar
 } from '@mui/material'
 import CakeIcon from '@mui/icons-material/Cake'
 import ArchiveIcon from '@mui/icons-material/Archive'
 import UnarchiveIcon from '@mui/icons-material/Unarchive'
+import { ChangeWishListFormModal } from './WishListForm'
 
 export const WishListListItem = ({
   shareId,
@@ -24,52 +26,53 @@ export const WishListListItem = ({
       component={Link}
       to={shareId || id}
       secondaryAction={
-        (archiveWishList || unarchiveWishList) &&
-        (archiveWishList ? (
-          <IconButton
-            onClick={(event) => {
-              archiveWishList({
-                variables: { id },
-                optimisticResponse: {
-                  wishList: {
-                    id,
-                    __typename: 'WishList',
-                    archivedAt: new Date()
+        <Toolbar onClick={(event) => event.preventDefault()}>
+          {!shareId && <ChangeWishListFormModal headline={headline} wishListId={id} />}
+          {(archiveWishList || unarchiveWishList) &&
+          (archiveWishList ? (
+            <IconButton
+              onClick={(event) => {
+                archiveWishList({
+                  variables: { id },
+                  optimisticResponse: {
+                    wishList: {
+                      id,
+                      __typename: 'WishList',
+                      archivedAt: new Date()
+                    }
                   }
-                }
-              })
-              event.preventDefault()
-            }}
-            edge='end'
-            aria-label='archive-wish-list'
-            size='large'
-            disabled={loading}
-          >
-            <ArchiveIcon />
-          </IconButton>
-        ) : (
-          <IconButton
-            onClick={(event) => {
-              unarchiveWishList({
-                variables: { id },
-                optimisticResponse: {
-                  wishList: {
-                    id,
-                    __typename: 'WishList',
-                    archivedAt: null
+                })
+              }}
+              edge='end'
+              aria-label='archive-wish-list'
+              size='large'
+              disabled={loading}
+            >
+              <ArchiveIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              onClick={(event) => {
+                unarchiveWishList({
+                  variables: { id },
+                  optimisticResponse: {
+                    wishList: {
+                      id,
+                      __typename: 'WishList',
+                      archivedAt: null
+                    }
                   }
-                }
-              })
-              event.preventDefault()
-            }}
-            edge='end'
-            aria-label='unarchive-wish-list'
-            size='large'
-            disabled={loading}
-          >
-            <UnarchiveIcon />
-          </IconButton>
-        ))
+                })
+              }}
+              edge='end'
+              aria-label='unarchive-wish-list'
+              size='large'
+              disabled={loading}
+            >
+              <UnarchiveIcon />
+            </IconButton>
+          ))}
+        </Toolbar>
       }
     >
       <ListItemAvatar>

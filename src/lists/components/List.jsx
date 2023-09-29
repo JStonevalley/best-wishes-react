@@ -34,6 +34,7 @@ import { ClaimWish } from './ClaimWish'
 import { swap } from 'ramda'
 import { useParams } from 'react-router-dom'
 import { ChangeWishListFormModal } from './WishListForm'
+import { ButtonWithConfirmation } from '../../ui/components/ButtonWithConfirmation'
 
 const ListHeader = ({ headline, archivedAt, wishListId, addWish, shares }) => {
   return (
@@ -260,7 +261,7 @@ const WishListItem = ({
     />
   )
 
-  const claimedByEmail = (shares || []).reduce((quantityByShare, share) => {
+  const claimedByEmail = shares.reduce((quantityByShare, share) => {
     quantityByShare[share.invitedEmail] =
       (quantityByShare[share.invitedEmail] || 0) +
       share.claimedWishIds.filter((claimedWishId) => claimedWishId === wish.id)
@@ -379,17 +380,19 @@ const WishListItem = ({
                     >
                       <EditIcon />
                     </IconButton>
-                    <IconButton
-                      onClick={() =>
-                        removeAWish({ variables: { id: wish.id } })
-                      }
-                      edge='end'
-                      aria-label='delete'
-                      size='small'
-                      color='error'
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    <ButtonWithConfirmation
+                      actionToConfirm={() => removeAWish({ variables: { id: wish.id } })}
+                      confirmationDialogTitle='Are you sure you want to delete this wish?'
+                      confirmationDialogContent={shares > 0 ? 'The wish list has already been shared and some kind gift giver may already have aquired this gift for you.' : null}
+                      button={<IconButton
+                        edge='end'
+                        aria-label='delete'
+                        size='small'
+                        color='error'
+                      >
+                        <DeleteIcon />
+                      </IconButton>}
+                    />
                   </>
                 )}
                 {share && (

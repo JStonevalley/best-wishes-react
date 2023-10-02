@@ -41,6 +41,7 @@ const ListHeader = ({ headline, archivedAt, wishListId, addWish, shares }) => {
     <Box
       sx={{
         display: 'flex',
+        flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 3,
         marginLeft: 3,
@@ -50,9 +51,13 @@ const ListHeader = ({ headline, archivedAt, wishListId, addWish, shares }) => {
       <Box sx={{
         display: 'flex',
         flexDirection: 'row',
-        padding: '10px 12px 14px 12px'
+        alignItems: 'center',
       }}>
-        <Typography component='h1' variant='h4'>
+        <Typography
+          component='h1'
+          variant={headline.length > 12 ? 'h6' : 'h4'}
+          style={{ maxWidth: '50vw'}}
+        >
           {headline}
         </Typography>
         {addWish && !archivedAt && <ChangeWishListFormModal headline={headline} wishListId={wishListId} />}

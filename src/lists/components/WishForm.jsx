@@ -252,11 +252,11 @@ const WishFormModal = ({
         </GridForm>
       </DialogContent>
       <DialogActions>
-        <Button onClick={close} disabled={loading}>
+        <Button onClick={close} disabled={loading} color='inherit'>
           Cancel
         </Button>
         {(wishId || fetchedMetadata) && (
-          <Button onClick={submit} disabled={loading} color='primary'>
+          <Button onClick={submit} disabled={loading} color='success'>
             {!wishId ? 'Make my wish' : 'Change my wish'}
           </Button>
         )}

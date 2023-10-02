@@ -199,9 +199,11 @@ export const ShareFormDialog = ({ listId, shares }) => {
           >
             <AddIcon />
           </IconButton>
+          {shareEmails.filter(prop('include')).length === 0 && <Typography sx={{ color: 'error.main', alignSelf: 'center' }}>Select at least one email</Typography>}
         </DialogContent>
         <DialogActions>
           <Button
+            color='inherit'
             onClick={() => setIsOpen(false)}
             disabled={loadingRemoveShare}
           >
@@ -209,8 +211,8 @@ export const ShareFormDialog = ({ listId, shares }) => {
           </Button>
           <Button
             onClick={() => setConfirmIsOpen(true)}
-            color='primary'
-            disabled={loadingRemoveShare}
+            color='success'
+            disabled={loadingRemoveShare || shareEmails.filter(prop('include')).length === 0}
           >
             Send email invites
           </Button>

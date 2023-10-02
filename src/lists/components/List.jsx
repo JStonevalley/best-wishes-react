@@ -59,7 +59,8 @@ const ListHeader = ({ headline, archivedAt, wishListId, addWish, shares }) => {
       </Box>
       <Box
         style={{
-          display: 'flex'
+          display: 'flex',
+          alignItems: 'center'
         }}
       >
         {addWish && !archivedAt && (

@@ -34,10 +34,6 @@ const FormModal = ({ onSubmit, headline }) => {
         <DialogContent>
           <form
             style={{ display: 'flex', flexDirection: 'column' }}
-            onSubmit={handleSubmit(async (...args) => {
-              await onSubmit(...args)
-              setCreateWishListFormOpen(false)
-            })}
           >
             <TextField
               label='Headline'
@@ -53,10 +49,14 @@ const FormModal = ({ onSubmit, headline }) => {
               sx={{ marginTop: 2 }}
             />
             <Button
+              onClick={handleSubmit(async (...args) => { // Needs to be explicitly called on on click since the component lives within a toolbar that calls event.PreventDefault()
+                await onSubmit(...args)
+                setCreateWishListFormOpen(false)
+              })}
               color='success'
               sx={{ marginTop: 2 }}
               variant='outlined'
-              type='submit'
+              type='button'
               disabled={isSubmitting}
             >
               {headline ? 'Rename' : 'Create'}

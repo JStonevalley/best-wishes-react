@@ -1,12 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link as ReactRouterLink } from 'react-router-dom'
 import {
   IconButton,
   ListItem,
   ListItemText,
   ListItemAvatar,
   Avatar,
-  Toolbar
+  Toolbar,
+  Link
 } from '@mui/material'
 import CakeIcon from '@mui/icons-material/Cake'
 import ArchiveIcon from '@mui/icons-material/Archive'
@@ -23,10 +24,8 @@ export const WishListListItem = ({
   const image = wishes.map((wish) => wish.image).filter(Boolean)[0]
   return (
     <ListItem
-      component={Link}
-      to={shareId || id}
       secondaryAction={
-        <Toolbar onClick={(event) => event.preventDefault()}>
+        <Toolbar>
           {!shareId && !archivedAt && <ChangeWishListFormModal headline={headline} wishListId={id} />}
           {(archiveWishList || unarchiveWishList) &&
           (archiveWishList ? (
@@ -76,21 +75,25 @@ export const WishListListItem = ({
       }
     >
       <ListItemAvatar>
-        <Avatar>
-          {image ? (
-            <Avatar alt='Gift' src={image} />
-          ) : (
-            <Avatar>
-              <CakeIcon />
-            </Avatar>
-          )}
-        </Avatar>
+        <Link component={ReactRouterLink} to={shareId || id} underline='none' color='inherit'>
+          <Avatar>
+            {image ? (
+              <Avatar alt='Gift' src={image} />
+            ) : (
+              <Avatar>
+                <CakeIcon />
+              </Avatar>
+            )}
+          </Avatar>
+        </Link>
       </ListItemAvatar>
-      <ListItemText
-        sx={{ color: 'text.primary' }}
-        primary={headline}
-        primaryTypographyProps={{ variant: 'h6' }}
-      />
+      <Link component={ReactRouterLink} to={shareId || id} underline='none' color='inherit' style={{ flex: '1 1 auto' }}>
+        <ListItemText
+          sx={{ color: 'text.primary' }}
+          primary={headline}
+          primaryTypographyProps={{ variant: 'h6' }}
+        />
+      </Link>
     </ListItem>
   )
 }

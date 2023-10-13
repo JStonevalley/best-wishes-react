@@ -19,7 +19,7 @@ import {
   useUser
 } from './apollo/components/AuthenticatedApolloProvider'
 import { OwnerShares } from './share/Shares'
-import { OwnerList, SharedList } from './lists/components/List'
+import { OwnerList, SharedList } from './lists/components/WishList'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

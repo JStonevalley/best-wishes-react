@@ -34,7 +34,8 @@ import { swap } from 'ramda'
 import { useParams } from 'react-router-dom'
 import { ChangeWishListFormModal } from './WishListForm'
 import { ButtonWithConfirmation } from '../../ui/components/ButtonWithConfirmation'
-import { ToggleListView, VIEWS, useListViewController } from './ToggleListView'
+import { ToggleListView } from './ToggleListView'
+import { VIEWS, useListViewController } from './ToggleListViewController'
 
 const ListHeaderContainer = styled('div')(({ theme }) => ({
   display: 'flex',

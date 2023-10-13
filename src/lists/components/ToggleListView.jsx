@@ -1,13 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import ImageIcon from '@mui/icons-material/Image'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-
-export const VIEWS = {
-  DENSE: 'dense',
-  SPACIOUS: 'spacious'
-}
+import { VIEWS } from './ToggleListViewController'
 
 export const ToggleListView = ({ view, setView }) => {
   return <ToggleButtonGroup
@@ -24,13 +20,4 @@ export const ToggleListView = ({ view, setView }) => {
       <ImageIcon />
     </ToggleButton>
   </ToggleButtonGroup>
-}
-
-export const useListViewController = () => {
-  const [ view, setViewState ] = useState(localStorage.getItem('wishListView') || VIEWS.DENSE)
-  const setView = (view) => {
-    localStorage.setItem('wishListView', view);
-    setViewState(view)
-  }
-  return { view, setView }
 }

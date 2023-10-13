@@ -1,12 +1,6 @@
 import React from 'react'
 import { initializeApp } from 'firebase/app'
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation
-} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { Signup, Login } from './auth/AuthPages'
 import { OwnerLists } from './lists/components/OwnerLists'
@@ -14,12 +8,10 @@ import ContentGrid from './ui/components/ContentGrid'
 import BottomNav from './ui/components/BottomNav'
 import theme from './theme'
 import AppBar from './ui/components/AppBar'
-import {
-  AuthenticatedApolloProvider,
-  useUser
-} from './apollo/components/AuthenticatedApolloProvider'
+import { AuthenticatedApolloProvider } from './apollo/components/AuthenticatedApolloProvider'
 import { OwnerShares } from './share/Shares'
 import { OwnerList, SharedList } from './lists/components/WishList'
+import { useUser } from './apollo/UserContext'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

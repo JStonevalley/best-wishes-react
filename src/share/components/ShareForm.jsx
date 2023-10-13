@@ -30,21 +30,13 @@ const StyledForm = styled('form')(({ theme }) => ({
 }))
 
 export const ShareFormDialog = ({ listId, shares }) => {
-  const [createShare, { loading: loadingCreateShare }] = useMutation(
-    CREATE_SHARE,
-    {
-      refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
-    }
-  )
-  const [removeShare, { loading: loadingRemoveShare }] = useMutation(
-    REMOVE_SHARE,
-    {
-      refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
-    }
-  )
-  const [sendShareEmails, { loading: loadingSendShareEmails }] = useMutation(
-    SEND_SHARE_EMAILS
-  )
+  const [createShare, { loading: loadingCreateShare }] = useMutation(CREATE_SHARE, {
+    refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
+  })
+  const [removeShare, { loading: loadingRemoveShare }] = useMutation(REMOVE_SHARE, {
+    refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
+  })
+  const [sendShareEmails, { loading: loadingSendShareEmails }] = useMutation(SEND_SHARE_EMAILS)
   const { data: userData } = useQuery(GET_CURRENT_USER)
   const [isOpen, setIsOpen] = useState(false)
   const [confirmIsOpen, setConfirmIsOpen] = useState(false)
@@ -73,9 +65,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
     name: 'shareEmails'
   })
   const [shareEmails] = watch(['shareEmails'])
-  const addShareRow = useCallback(() => append({ email: '', include: true }), [
-    append
-  ])
+  const addShareRow = useCallback(() => append({ email: '', include: true }), [append])
   const submit = handleSubmit(async ({ shareEmails }) => {
     const sharesToSendEmailsFor = await Promise.all(
       shareEmails.filter(prop('include')).map(async ({ email }) => {
@@ -96,11 +86,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
   if (!userData) return null
   return (
     <>
-      <IconButton
-        onClick={() => setIsOpen(true)}
-        aria-label='share'
-        size='large'
-      >
+      <IconButton onClick={() => setIsOpen(true)} aria-label='share' size='large'>
         <ShareIcon />
       </IconButton>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
@@ -113,10 +99,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
           }}
         >
           <StyledForm onSubmit={submit}>
-            <DialogContentText>
-              Enter the emails addresses of friends and family who want to make
-              your wishes come true.
-            </DialogContentText>
+            <DialogContentText>Enter the emails addresses of friends and family who want to make your wishes come true.</DialogContentText>
             {fields.map((fieldSpec, index) => {
               return (
                 <div
@@ -128,11 +111,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                 >
                   <Controller
                     render={({ field: { value, ...field } }) => (
-                      <Checkbox
-                        sx={{ marginTop: '0.35rem' }}
-                        checked={value != null ? value : fieldSpec.include}
-                        {...field}
-                      />
+                      <Checkbox sx={{ marginTop: '0.35rem' }} checked={value != null ? value : fieldSpec.include} {...field} />
                     )}
                     name={`shareEmails.${index}.include`}
                     control={control}
@@ -145,9 +124,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                           variant='outlined'
                           type='email'
                           error={Boolean(errors.shareEmails?.[index]?.email)}
-                          helperText={
-                            errors.shareEmails?.[index]?.email?.message
-                          }
+                          helperText={errors.shareEmails?.[index]?.email?.message}
                           disabled={index < shares.length}
                           sx={{ flexGrow: 1 }}
                           {...field}
@@ -171,9 +148,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                   <IconButton
                     sx={{ marginTop: '0.25rem' }}
                     onClick={async () => {
-                      const existingListShare = shares.find(
-                        (share) => share.invitedEmail === fieldSpec.email
-                      )
+                      const existingListShare = shares.find((share) => share.invitedEmail === fieldSpec.email)
                       if (existingListShare)
                         await removeShare({
                           variables: { id: existingListShare.id }
@@ -199,14 +174,12 @@ export const ShareFormDialog = ({ listId, shares }) => {
           >
             <AddIcon />
           </IconButton>
-          {shareEmails.filter(prop('include')).length === 0 && <Typography sx={{ color: 'error.main', alignSelf: 'center' }}>Select at least one email</Typography>}
+          {shareEmails.filter(prop('include')).length === 0 && (
+            <Typography sx={{ color: 'error.main', alignSelf: 'center' }}>Select at least one email</Typography>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button
-            color='inherit'
-            onClick={() => setIsOpen(false)}
-            disabled={loadingRemoveShare}
-          >
+          <Button color='inherit' onClick={() => setIsOpen(false)} disabled={loadingRemoveShare}>
             Cancel
           </Button>
           <Button
@@ -228,19 +201,13 @@ export const ShareFormDialog = ({ listId, shares }) => {
           >
             {shareEmails.filter(prop('include')).map(({ email }) => (
               <Typography key={`confirmNewShares-${email}`}>
-                {shares.find((share) => share.invitedEmail === email)
-                  ? `${email} (resend)`
-                  : email}
+                {shares.find((share) => share.invitedEmail === email) ? `${email} (resend)` : email}
               </Typography>
             ))}
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setConfirmIsOpen(false)}>No</Button>
-            <Button
-              onClick={submit}
-              color='primary'
-              disabled={loadingCreateShare || loadingSendShareEmails}
-            >
+            <Button onClick={submit} color='primary' disabled={loadingCreateShare || loadingSendShareEmails}>
               Yes
             </Button>
           </DialogActions>

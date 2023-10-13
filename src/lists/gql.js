@@ -1,8 +1,5 @@
 import { gql } from '@apollo/client'
-import {
-  DEFAULT_WISH_PROPERITES,
-  MINIMUM_WISHLIST_PROPERITES
-} from './fragments'
+import { DEFAULT_WISH_PROPERITES, MINIMUM_WISHLIST_PROPERITES } from './fragments'
 import { DEFAULT_SHARE_PROPERITES } from '../share/fragments'
 
 export const GET_OWN_WISH_LISTS = gql`
@@ -115,15 +112,7 @@ export const CHANGE_A_WISH = gql`
     $quantity: Int
     $price: ValueObjectInput
   ) {
-    wish: changeWish(
-      id: $id
-      link: $link
-      title: $title
-      description: $description
-      image: $image
-      quantity: $quantity
-      price: $price
-    ) {
+    wish: changeWish(id: $id, link: $link, title: $title, description: $description, image: $image, quantity: $quantity, price: $price) {
       ...DefaultWishProperties
     }
   }

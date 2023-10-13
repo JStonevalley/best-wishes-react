@@ -2,7 +2,7 @@ import React from 'react'
 import { getAuth, signOut } from 'firebase/auth'
 import { AppBar, Toolbar, Typography, Button } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
-import { useUser } from '../../apollo/components/AuthenticatedApolloProvider'
+import { useUser } from '../../apollo/UserContext'
 
 export default function ButtonAppBar() {
   const { googleUser } = useUser()
@@ -15,16 +15,10 @@ export default function ButtonAppBar() {
         </Typography>
         {googleUser === undefined ? null : googleUser === null ? (
           <>
-            <Link
-              to='/login'
-              style={{ color: 'inherit', textDecoration: 'inherit' }}
-            >
+            <Link to='/login' style={{ color: 'inherit', textDecoration: 'inherit' }}>
               <Button color='inherit'>Login</Button>
             </Link>
-            <Link
-              to='/signup'
-              style={{ color: 'inherit', textDecoration: 'inherit' }}
-            >
+            <Link to='/signup' style={{ color: 'inherit', textDecoration: 'inherit' }}>
               <Button color='inherit'>Signup</Button>
             </Link>
           </>

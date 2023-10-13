@@ -3,14 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { materialUiFormRegister } from '../../tools/forms'
 import { CREATE_WISH_LIST, CHANGE_WISH_LIST, GET_OWN_WISH_LISTS } from '../gql'
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  TextField
-} from '@mui/material'
+import { Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 
@@ -26,15 +19,10 @@ const FormModal = ({ onSubmit, headline }) => {
       <IconButton onClick={() => setCreateWishListFormOpen(true)} size='large'>
         {headline ? <EditIcon /> : <AddIcon />}
       </IconButton>
-      <Dialog
-        open={createWishListFormOpen}
-        onClose={() => setCreateWishListFormOpen(false)}
-      >
+      <Dialog open={createWishListFormOpen} onClose={() => setCreateWishListFormOpen(false)}>
         <DialogTitle>{headline ? 'Rename' : 'Create a'} wish list</DialogTitle>
         <DialogContent>
-          <form
-            style={{ display: 'flex', flexDirection: 'column' }}
-          >
+          <form style={{ display: 'flex', flexDirection: 'column' }}>
             <TextField
               label='Headline'
               variant='outlined'
@@ -49,7 +37,8 @@ const FormModal = ({ onSubmit, headline }) => {
               sx={{ marginTop: 2 }}
             />
             <Button
-              onClick={handleSubmit(async (...args) => { // Needs to be explicitly called on on click since the component lives within a toolbar that calls event.PreventDefault()
+              onClick={handleSubmit(async (...args) => {
+                // Needs to be explicitly called on on click since the component lives within a toolbar that calls event.PreventDefault()
                 await onSubmit(...args)
                 setCreateWishListFormOpen(false)
               })}

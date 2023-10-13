@@ -2,25 +2,13 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import { blue } from '@mui/material/colors'
 
-export const QuantityIndicator = (
-  { amountClaimedByOthers, amountClaimedByYou, total, sx, ...props },
-  ref
-) => {
+export const QuantityIndicator = ({ amountClaimedByOthers, amountClaimedByYou, total, sx, ...props }, ref) => {
   const indicators = Array.from({ length: total }, (_, index) => ({
-    color:
-      index < amountClaimedByOthers
-        ? `error.main`
-        : index >= total - amountClaimedByYou
-        ? 'success.main'
-        : `${blue[500]}`,
+    color: index < amountClaimedByOthers ? `error.main` : index >= total - amountClaimedByYou ? 'success.main' : `${blue[500]}`,
     opacity: index < amountClaimedByOthers ? 1 : 0.5
   }))
   return (
-    <Box
-      ref={ref}
-      sx={{ height: '6px', display: 'flex', flexDirection: 'row', ...sx }}
-      {...props}
-    >
+    <Box ref={ref} sx={{ height: '6px', display: 'flex', flexDirection: 'row', ...sx }} {...props}>
       {indicators.map(({ color, opacity }, index) => (
         <Box
           key={index}

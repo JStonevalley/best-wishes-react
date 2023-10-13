@@ -23,11 +23,7 @@ import { Lightbox } from '../../ui/components/Lightbox.jsx'
 import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
 import { GET_CURRENT_USER } from '../../auth/gql'
 import { useMutation, useQuery } from '@apollo/client'
-import {
-  GET_OWN_WISH_LIST,
-  REMOVE_A_WISH,
-  UPDATE_WISH_ORDER_FOR_WISH_LIST
-} from '../gql'
+import { GET_OWN_WISH_LIST, REMOVE_A_WISH, UPDATE_WISH_ORDER_FOR_WISH_LIST } from '../gql'
 import { GET_SHARE } from '../../share/gql'
 import { ClaimWish } from './ClaimWish'
 import { swap } from 'ramda'
@@ -49,21 +45,20 @@ const ListHeaderToolbar = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  marginTop: theme.spacing(3),
+  marginTop: theme.spacing(3)
 }))
 
 const ListHeader = ({ headline, archivedAt, wishListId, addWish, shares, listViewControls: { view, setView } }) => {
   return (
     <ListHeaderContainer>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-        <Typography
-          component='h1'
-          variant={headline.length > 12 ? 'h6' : 'h4'}
-        >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}
+      >
+        <Typography component='h1' variant={headline.length > 12 ? 'h6' : 'h4'}>
           {headline}
         </Typography>
         {addWish && !archivedAt && <ChangeWishListFormModal headline={headline} wishListId={wishListId} />}
@@ -81,9 +76,7 @@ const ListHeader = ({ headline, archivedAt, wishListId, addWish, shares, listVie
               <AddIcon />
             </IconButton>
           )}
-          {addWish && shares && !archivedAt && (
-            <ShareFormDialog listId={wishListId} shares={shares} />
-          )}
+          {addWish && shares && !archivedAt && <ShareFormDialog listId={wishListId} shares={shares} />}
         </div>
       </ListHeaderToolbar>
     </ListHeaderContainer>
@@ -98,9 +91,7 @@ export const OwnerList = () => {
   const [removeAWish] = useMutation(REMOVE_A_WISH, {
     refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
   })
-  const [updateWishOrderForWishList] = useMutation(
-    UPDATE_WISH_ORDER_FOR_WISH_LIST
-  )
+  const [updateWishOrderForWishList] = useMutation(UPDATE_WISH_ORDER_FOR_WISH_LIST)
   const hookFormProps = useForm()
   const editWish = (id, wish) => {
     setFormWishId(id)
@@ -164,15 +155,7 @@ const ListPresentation = ({
   list,
   share,
   loading,
-  ownerProps: {
-    editWish,
-    removeAWish,
-    updateWishOrderForWishList,
-    hookFormProps,
-    formWishId,
-    wishFormIsOpen,
-    setWishFormIsOpen
-  } = {}
+  ownerProps: { editWish, removeAWish, updateWishOrderForWishList, hookFormProps, formWishId, wishFormIsOpen, setWishFormIsOpen } = {}
 }) => {
   const { view, setView } = useListViewController()
   list = list || share.wishList
@@ -245,131 +228,133 @@ const StyledListAvatarBadge = styled(Badge)(({ theme }) => ({
 }))
 
 const WishListList = ({ list, editWish, removeAWish, updateWishOrderForWishList, share }) => {
-  return (<MaterialList>
-    {list.wishOrder
-      .map((wishId) => list.wishes.find((wish) => wish.id === wishId))
-      .filter(Boolean)
-      .map((wish, index) => {
-        return (
-          <WishListItem
-            key={`wishListItem-${wish.id}`}
-            wishList={list}
-            wish={wish}
-            editWish={editWish}
-            removeAWish={removeAWish}
-            updateWishOrderForWishList={updateWishOrderForWishList}
-            share={share}
-            shares={list.shares}
-            listArchivedAt={list.archivedAt}
-            first={index === 0}
-            last={index === list.wishes.length - 1}
-            index={index}
-          />
-        )
-      })}
-  </MaterialList>)
+  return (
+    <MaterialList>
+      {list.wishOrder
+        .map((wishId) => list.wishes.find((wish) => wish.id === wishId))
+        .filter(Boolean)
+        .map((wish, index) => {
+          return (
+            <WishListItem
+              key={`wishListItem-${wish.id}`}
+              wishList={list}
+              wish={wish}
+              editWish={editWish}
+              removeAWish={removeAWish}
+              updateWishOrderForWishList={updateWishOrderForWishList}
+              share={share}
+              shares={list.shares}
+              listArchivedAt={list.archivedAt}
+              first={index === 0}
+              last={index === list.wishes.length - 1}
+              index={index}
+            />
+          )
+        })}
+    </MaterialList>
+  )
 }
 
-const ItemToolbar = ({ wish, wishList, share, shares, claimedByEmail, listArchivedAt, updateWishOrderForWishList, editWish, removeAWish, first, last, style }) => {
-  return <Toolbar sx={{ alignItems: 'center' }} style={style} >
-    {!share && !listArchivedAt && (
-      <>
-        <IconButton
-          onClick={() => {
-            const indexOfWish = wishList.wishOrder.indexOf(wish.id)
-            const newWishOrder = swap(
-              indexOfWish,
-              indexOfWish - 1
-            )(wishList.wishOrder)
-            updateWishOrderForWishList({
-              variables: {
-                id: wishList.id,
-                wishOrder: newWishOrder
-              },
-              optimisticResponse: {
-                wishList: {
+const ItemToolbar = ({
+  wish,
+  wishList,
+  share,
+  shares,
+  claimedByEmail,
+  listArchivedAt,
+  updateWishOrderForWishList,
+  editWish,
+  removeAWish,
+  first,
+  last,
+  style
+}) => {
+  return (
+    <Toolbar sx={{ alignItems: 'center' }} style={style}>
+      {!share && !listArchivedAt && (
+        <>
+          <IconButton
+            onClick={() => {
+              const indexOfWish = wishList.wishOrder.indexOf(wish.id)
+              const newWishOrder = swap(indexOfWish, indexOfWish - 1)(wishList.wishOrder)
+              updateWishOrderForWishList({
+                variables: {
                   id: wishList.id,
-                  __typename: 'WishList',
                   wishOrder: newWishOrder
+                },
+                optimisticResponse: {
+                  wishList: {
+                    id: wishList.id,
+                    __typename: 'WishList',
+                    wishOrder: newWishOrder
+                  }
                 }
-              }
-            })
-          }}
-          aria-label='move-up'
-          size='small'
-          disabled={first}
-        >
-          <ArrowUpwardIcon />
-        </IconButton>
-        <IconButton
-          onClick={() => {
-            const indexOfWish = wishList.wishOrder.indexOf(wish.id)
-            const newWishOrder = swap(
-              indexOfWish,
-              indexOfWish + 1
-            )(wishList.wishOrder)
-            updateWishOrderForWishList({
-              variables: {
-                id: wishList.id,
-                wishOrder: newWishOrder
-              },
-              optimisticResponse: {
-                wishList: {
-                  id: wishList.id,
-                  __typename: 'WishList',
-                  wishOrder: newWishOrder
-                }
-              }
-            })
-          }}
-          aria-label='move-down'
-          size='small'
-          disabled={last}
-        >
-          <ArrowDownwardIcon />
-        </IconButton>
-        <IconButton
-          onClick={() => editWish(wish.id, wish)}
-          aria-label='edit'
-          size='small'
-        >
-          <EditIcon />
-        </IconButton>
-        <ButtonWithConfirmation
-          actionToConfirm={() => removeAWish({ variables: { id: wish.id } })}
-          confirmationDialogTitle='Are you sure you want to delete this wish?'
-          confirmationDialogContent={shares > 0 ? 'The wish list has already been shared and some kind gift giver may already have aquired this gift for you.' : null}
-          button={<IconButton
-            edge='end'
-            aria-label='delete'
+              })
+            }}
+            aria-label='move-up'
             size='small'
-            color='error'
+            disabled={first}
           >
-            <DeleteIcon />
-          </IconButton>}
-        />
-      </>
-    )}
-    {share && (
-      <>
-        <ClaimWish
-          share={share}
-          wishId={wish.id}
-          wishQuantity={wish.quantity}
-          claimedByEmail={claimedByEmail}
-        />
-      </>
-    )}
-  </Toolbar>
+            <ArrowUpwardIcon />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              const indexOfWish = wishList.wishOrder.indexOf(wish.id)
+              const newWishOrder = swap(indexOfWish, indexOfWish + 1)(wishList.wishOrder)
+              updateWishOrderForWishList({
+                variables: {
+                  id: wishList.id,
+                  wishOrder: newWishOrder
+                },
+                optimisticResponse: {
+                  wishList: {
+                    id: wishList.id,
+                    __typename: 'WishList',
+                    wishOrder: newWishOrder
+                  }
+                }
+              })
+            }}
+            aria-label='move-down'
+            size='small'
+            disabled={last}
+          >
+            <ArrowDownwardIcon />
+          </IconButton>
+          <IconButton onClick={() => editWish(wish.id, wish)} aria-label='edit' size='small'>
+            <EditIcon />
+          </IconButton>
+          <ButtonWithConfirmation
+            actionToConfirm={() => removeAWish({ variables: { id: wish.id } })}
+            confirmationDialogTitle='Are you sure you want to delete this wish?'
+            confirmationDialogContent={
+              shares > 0
+                ? 'The wish list has already been shared and some kind gift giver may already have aquired this gift for you.'
+                : null
+            }
+            button={
+              <IconButton edge='end' aria-label='delete' size='small' color='error'>
+                <DeleteIcon />
+              </IconButton>
+            }
+          />
+        </>
+      )}
+      {share && (
+        <>
+          <ClaimWish share={share} wishId={wish.id} wishQuantity={wish.quantity} claimedByEmail={claimedByEmail} />
+        </>
+      )}
+    </Toolbar>
+  )
 }
 
-const createClaimedByEmail = ({wish, shares}) => shares.reduce((quantityByShare, share) => {
-  quantityByShare[share.invitedEmail] =
-    (quantityByShare[share.invitedEmail] || 0) +
-    share.claimedWishIds.filter((claimedWishId) => claimedWishId === wish.id)
-      .length
-  return quantityByShare
-}, {})
+const createClaimedByEmail = ({ wish, shares }) =>
+  shares.reduce((quantityByShare, share) => {
+    quantityByShare[share.invitedEmail] =
+      (quantityByShare[share.invitedEmail] || 0) + share.claimedWishIds.filter((claimedWishId) => claimedWishId === wish.id).length
+    return quantityByShare
+  }, {})
 
 const WishListItem = ({
   wish,
@@ -384,13 +369,7 @@ const WishListItem = ({
   last,
   index
 }) => {
-  const avatar = (
-    <ZoomingAvatar
-      variant='rounded'
-      alt={wish.title}
-      src={wish.image || `/christmas_gift_placeholder_${index % 5}.jpg`}
-    />
-  )
+  const avatar = <ZoomingAvatar variant='rounded' alt={wish.title} src={wish.image || `/christmas_gift_placeholder_${index % 5}.jpg`} />
 
   const claimedByEmail = createClaimedByEmail({ wish, shares })
   return (
@@ -403,17 +382,7 @@ const WishListItem = ({
           horizontal: 'left'
         }}
       >
-        <ListItemAvatar>
-          {wish.image ? (
-            <Lightbox
-              src={wish.image}
-              alt={wish.title}
-              activationElement={avatar}
-            />
-          ) : (
-            avatar
-          )}
-        </ListItemAvatar>
+        <ListItemAvatar>{wish.image ? <Lightbox src={wish.image} alt={wish.title} activationElement={avatar} /> : avatar}</ListItemAvatar>
       </StyledListAvatarBadge>
       <ListItemText
         disableTypography
@@ -434,8 +403,7 @@ const WishListItem = ({
               <Typography variant='body1'>
                 {wish.price ? (
                   <span>
-                    {wish.price.amount / 100}{' '}
-                    <strong>{wish.price.currency}</strong>
+                    {wish.price.amount / 100} <strong>{wish.price.currency}</strong>
                   </span>
                 ) : (
                   ''
@@ -468,29 +436,31 @@ const TileItemList = styled('ul')(({ theme }) => ({
 }))
 
 const WishListTiled = ({ list, editWish, removeAWish, updateWishOrderForWishList, share }) => {
-  return (<TileItemList>
-    {list.wishOrder
-      .map((wishId) => list.wishes.find((wish) => wish.id === wishId))
-      .filter(Boolean)
-      .map((wish, index) => {
-        return (
-          <WishTileItem
-            key={`wishTileItem-${wish.id}`}
-            wishList={list}
-            wish={wish}
-            editWish={editWish}
-            removeAWish={removeAWish}
-            updateWishOrderForWishList={updateWishOrderForWishList}
-            share={share}
-            shares={list.shares}
-            listArchivedAt={list.archivedAt}
-            first={index === 0}
-            last={index === list.wishes.length - 1}
-            index={index}
-          />
-        )
-      })}
-  </TileItemList>)
+  return (
+    <TileItemList>
+      {list.wishOrder
+        .map((wishId) => list.wishes.find((wish) => wish.id === wishId))
+        .filter(Boolean)
+        .map((wish, index) => {
+          return (
+            <WishTileItem
+              key={`wishTileItem-${wish.id}`}
+              wishList={list}
+              wish={wish}
+              editWish={editWish}
+              removeAWish={removeAWish}
+              updateWishOrderForWishList={updateWishOrderForWishList}
+              share={share}
+              shares={list.shares}
+              listArchivedAt={list.archivedAt}
+              first={index === 0}
+              last={index === list.wishes.length - 1}
+              index={index}
+            />
+          )
+        })}
+    </TileItemList>
+  )
 }
 
 const TileListItem = styled('li')(({ theme }) => ({
@@ -518,22 +488,24 @@ const TileImageContainer = styled('div')(({ theme }) => ({
   position: 'relative',
   alignSelf: 'flex-start',
   marginRight: theme.spacing(2),
-  flex: '1 0 250px',
+  flex: '1 0 250px'
 }))
 
-const TileImage = ({ imageUrl, quantity }) => <TileImageContainer>
-  <StyledTileImageBadge>{quantity}</StyledTileImageBadge>
-  <img
-    src={imageUrl}
-    style={{
-      width: '100%',
-      aspectRatio: '1/1',
-      objectFit: 'contain',
-      borderRadius: '8px'
-    }}
-    alt='wish'
-  />
-</TileImageContainer>
+const TileImage = ({ imageUrl, quantity }) => (
+  <TileImageContainer>
+    <StyledTileImageBadge>{quantity}</StyledTileImageBadge>
+    <img
+      src={imageUrl}
+      style={{
+        width: '100%',
+        aspectRatio: '1/1',
+        objectFit: 'contain',
+        borderRadius: '8px'
+      }}
+      alt='wish'
+    />
+  </TileImageContainer>
+)
 
 const WishTileItem = ({
   wish,
@@ -548,41 +520,44 @@ const WishTileItem = ({
   last,
   index
 }) => {
-  return <TileListItem>
-    <TileImage imageUrl={wish.image || `/christmas_gift_placeholder_${index % 5}.jpg`} quantity={wish.quantity} />
-    <div style={{ flex: '1 0 250px', display: 'flex', flexDirection: 'column' }}>
-      <Typography paragraph variant='h5' component='h2'>
-        {wish.title}
-      </Typography>
-      {wish.description && <Typography paragraph variant='body1'>
-        {wish.description}
-      </Typography>}
-      <div style={{ flexGrow: 1 }} />
-      <InfoBar>
-        <Typography variant='body1'>
-          {wish.price ? (
-            <span>
-              {wish.price.amount / 100}{' '}
-              <strong>{wish.price.currency}</strong>
-            </span>
-          ) : (
-            ''
-          )}
+  return (
+    <TileListItem>
+      <TileImage imageUrl={wish.image || `/christmas_gift_placeholder_${index % 5}.jpg`} quantity={wish.quantity} />
+      <div style={{ flex: '1 0 250px', display: 'flex', flexDirection: 'column' }}>
+        <Typography paragraph variant='h5' component='h2'>
+          {wish.title}
         </Typography>
-        <ItemToolbar
-          wish={wish}
-          wishList={wishList}
-          share={share}
-          shares={shares}
-          claimedByEmail={createClaimedByEmail({ wish, shares })}
-          listArchivedAt={listArchivedAt}
-          updateWishOrderForWishList={updateWishOrderForWishList}
-          editWish={editWish}
-          removeAWish={removeAWish}
-          first={first}
-          last={last}
-        />
-      </InfoBar>
-    </div>
-  </TileListItem>
+        {wish.description && (
+          <Typography paragraph variant='body1'>
+            {wish.description}
+          </Typography>
+        )}
+        <div style={{ flexGrow: 1 }} />
+        <InfoBar>
+          <Typography variant='body1'>
+            {wish.price ? (
+              <span>
+                {wish.price.amount / 100} <strong>{wish.price.currency}</strong>
+              </span>
+            ) : (
+              ''
+            )}
+          </Typography>
+          <ItemToolbar
+            wish={wish}
+            wishList={wishList}
+            share={share}
+            shares={shares}
+            claimedByEmail={createClaimedByEmail({ wish, shares })}
+            listArchivedAt={listArchivedAt}
+            updateWishOrderForWishList={updateWishOrderForWishList}
+            editWish={editWish}
+            removeAWish={removeAWish}
+            first={first}
+            last={last}
+          />
+        </InfoBar>
+      </div>
+    </TileListItem>
+  )
 }

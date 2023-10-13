@@ -30,12 +30,7 @@ const ErrorTypography = styled(Typography)(({ theme }) => ({
   }
 }))
 
-const AuthDetailsForm = ({
-  variant,
-  onSubmit,
-  register,
-  formState: { errors }
-}) => {
+const AuthDetailsForm = ({ variant, onSubmit, register, formState: { errors } }) => {
   return (
     <Form onSubmit={onSubmit}>
       <TextField
@@ -66,20 +61,12 @@ const AuthDetailsForm = ({
         helperText={errors.password?.message}
         sx={{ gridColumn: 'span 2' }}
       />
-      {errors.general && (
-        <ErrorTypography>{errors.general.message}</ErrorTypography>
-      )}
-      <Button
-        sx={{ gridColumn: '1 / span 2' }}
-        variant='outlined'
-        type='submit'
-      >
+      {errors.general && <ErrorTypography>{errors.general.message}</ErrorTypography>}
+      <Button sx={{ gridColumn: '1 / span 2' }} variant='outlined' type='submit'>
         {variant === 'login' ? 'Log in' : 'Sign up'}
       </Button>
       <StyledLink to={variant === 'login' ? '/signup' : '/login'}>
-        {variant === 'login'
-          ? 'Wish to create an account?'
-          : 'Already have an account?'}
+        {variant === 'login' ? 'Wish to create an account?' : 'Already have an account?'}
       </StyledLink>
     </Form>
   )

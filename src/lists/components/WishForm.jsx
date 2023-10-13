@@ -75,33 +75,26 @@ const WishFormModal = ({
   const loading = loadingMakeAWish || loadingChangeAWish
   const submit = handleSubmit(async (data) => {
     if (data.price?.amount != null) data.price.amount = data.price.amount * 100
-    if (data.price?.amount == null || data.price?.currency == null)
-      delete data.price
+    if (data.price?.amount == null || data.price?.currency == null) delete data.price
     try {
-      await (wishId
-        ? changeAWish({ variables: { id: wishId, ...data } })
-        : makeAWish({ variables: { wishListId: listId, ...data } }))
+      await (wishId ? changeAWish({ variables: { id: wishId, ...data } }) : makeAWish({ variables: { wishListId: listId, ...data } }))
       close()
     } catch (error) {
       console.error(error)
     }
   })
-  const hideOrDisplayInputFields =
-    !wishId && !fetchedMetadata ? { display: 'none' } : {}
+  const hideOrDisplayInputFields = !wishId && !fetchedMetadata ? { display: 'none' } : {}
 
   const fetchMetaData = async () => {
     setFetchingMetadata(true)
     try {
-      const pageMetadata = await fetch(
-        import.meta.env.VITE_FETCH_PAGE_METADATA_URL,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ url: link })
-        }
-      ).then((res) => res.json())
+      const pageMetadata = await fetch(import.meta.env.VITE_FETCH_PAGE_METADATA_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: link })
+      }).then((res) => res.json())
       setFetchedMetadata(true)
       if (pageMetadata?.title) {
         setValue('title', pageMetadata?.title, {
@@ -139,45 +132,19 @@ const WishFormModal = ({
       <DialogContent>
         <GridForm onSubmit={submit}>
           <DialogContentText sx={{ gridArea: 'introText' }}>
-            To make wishing easier, paste a link in the field below and as much
-            information as possible will be fetched for you.
+            To make wishing easier, paste a link in the field below and as much information as possible will be fetched for you.
           </DialogContentText>
-          <TextField
-            autoFocus
-            label='Link'
-            variant='outlined'
-            style={{ gridArea: 'link' }}
-            {...materialUiFormRegister(register)('link')}
-          />
-          <IconButton
-            style={{ gridArea: 'rfb' }}
-            disabled={fetchingMetadata}
-            onClick={fetchMetaData}
-            size='large'
-          >
-            <RefreshIcon
-              style={
-                fetchingMetadata ? { animation: 'roll infinite 2s' } : undefined
-              }
-              className='Roll'
-            />
+          <TextField autoFocus label='Link' variant='outlined' style={{ gridArea: 'link' }} {...materialUiFormRegister(register)('link')} />
+          <IconButton style={{ gridArea: 'rfb' }} disabled={fetchingMetadata} onClick={fetchMetaData} size='large'>
+            <RefreshIcon style={fetchingMetadata ? { animation: 'roll infinite 2s' } : undefined} className='Roll' />
           </IconButton>
           {!wishId && !fetchedMetadata && (
-            <Button
-              onClick={fetchMetaData}
-              disabled={loading}
-              color='success'
-              style={{ gridArea: 'fetchBtn' }}
-            >
+            <Button onClick={fetchMetaData} disabled={loading} color='success' style={{ gridArea: 'fetchBtn' }}>
               Fetch info
             </Button>
           )}
           {!wishId && !fetchedMetadata && (
-            <Button
-              onClick={() => setFetchedMetadata(true)}
-              disabled={loading}
-              style={{ gridArea: 'noFetchBtn' }}
-            >
+            <Button onClick={() => setFetchedMetadata(true)} disabled={loading} style={{ gridArea: 'noFetchBtn' }}>
               Continue without fetching info
             </Button>
           )}
@@ -208,20 +175,13 @@ const WishFormModal = ({
               valueAsNumber: true
             })}
           />
-          <FormControl
-            style={{ gridArea: 'price_currency', ...hideOrDisplayInputFields }}
-          >
+          <FormControl style={{ gridArea: 'price_currency', ...hideOrDisplayInputFields }}>
             <InputLabel id='price_currency_select_label'>Currency</InputLabel>
             <Controller
               control={control}
               name='price.currency'
               render={({ field }) => (
-                <Select
-                  {...field}
-                  id='price_currency_select'
-                  label='Currency'
-                  labelId='price_currency_select_label'
-                >
+                <Select {...field} id='price_currency_select' label='Currency' labelId='price_currency_select_label'>
                   <MenuItem value='SEK'>SEK</MenuItem>
                   <MenuItem value='EUR'>EUR</MenuItem>
                   <MenuItem value='USD'>USD</MenuItem>

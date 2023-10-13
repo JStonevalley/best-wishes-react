@@ -1,18 +1,9 @@
-import React, { useEffect, useState, createContext } from 'react'
-import {
-  ApolloClient,
-  ApolloProvider,
-  createHttpLink,
-  fromPromise,
-  InMemoryCache,
-  from
-} from '@apollo/client'
+import React, { useEffect, useState } from 'react'
+import { ApolloClient, ApolloProvider, createHttpLink, fromPromise, InMemoryCache, from } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-
-const UserContext = createContext({})
-export const useUser = () => React.useContext(UserContext)
+import { UserContext } from '../UserContext'
 
 const httpLink = createHttpLink({
   uri: `${import.meta.env.VITE_GQL_API_BASE}/graphql`
@@ -22,9 +13,7 @@ let googleFirebaseIdTokenPromise = null
 let googleFirebaseIdTokenFethedAt = null
 
 const authLink = setContext((_, { headers }) => {
-  const googleFirebaseUserIdToken = localStorage.getItem(
-    'googleFirebaseUserIdToken'
-  )
+  const googleFirebaseUserIdToken = localStorage.getItem('googleFirebaseUserIdToken')
   if (googleFirebaseUserIdToken) {
     return {
       headers: {
@@ -41,13 +30,11 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
   if (graphQLErrors) {
     const authenticationError = graphQLErrors.find(
       (graphQLError) =>
-        graphQLError.extensions.code === 'INVALID_ID_TOKEN' &&
-        graphQLError.extensions.firebaseCode === 'auth/id-token-expired'
+        graphQLError.extensions.code === 'INVALID_ID_TOKEN' && graphQLError.extensions.firebaseCode === 'auth/id-token-expired'
     )
     if (authenticationError && getAuth().currentUser) {
       googleFirebaseIdTokenPromise =
-        googleFirebaseIdTokenFethedAt &&
-        Date.now() - googleFirebaseIdTokenFethedAt < 10000
+        googleFirebaseIdTokenFethedAt && Date.now() - googleFirebaseIdTokenFethedAt < 10000
           ? googleFirebaseIdTokenPromise
           : getAuth()
               .currentUser.getIdToken()
@@ -56,9 +43,7 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
                 return null
               })
               .then((newGoogleFirebaseIdToken) => {
-                console.log(
-                  'Refetched google firebase id token for user. Applying to headers and retrying request.'
-                )
+                console.log('Refetched google firebase id token for user. Applying to headers and retrying request.')
                 return newGoogleFirebaseIdToken
               })
       googleFirebaseIdTokenFethedAt = Date.now()

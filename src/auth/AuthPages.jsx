@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
-} from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { styled } from '@mui/system'
 import { Typography, Paper } from '@mui/material'
 import { useForm } from 'react-hook-form'
@@ -39,10 +35,7 @@ const signupError = (error) => {
         }
       ]
     default:
-      return [
-        'general',
-        { type: 'manual', code: error.code, message: error.message }
-      ]
+      return ['general', { type: 'manual', code: error.code, message: error.message }]
   }
 }
 
@@ -81,8 +74,7 @@ const loginError = (error) => {
         'general',
         {
           type: 'manual',
-          message:
-            'Too many login attempts. Account temporarily blocked. Reset your password to login.'
+          message: 'Too many login attempts. Account temporarily blocked. Reset your password to login.'
         }
       ]
     case 'auth/wrong-password':
@@ -94,10 +86,7 @@ const loginError = (error) => {
         }
       ]
     default:
-      return [
-        'general',
-        { type: 'manual', code: error.code, message: error.message }
-      ]
+      return ['general', { type: 'manual', code: error.code, message: error.message }]
   }
 }
 
@@ -122,10 +111,8 @@ export const Login = () => {
           Wishing you welcome back!
         </Typography>
         <Typography variant='subtitle1' component='h2' paragraph>
-          This is the brand new best wishes! List sorting and quantity are the
-          main features of the new version. A new login system has also been
-          implemented which means that you need to recreate your account. Data
-          will be migrated over the coming weeks.
+          This is the brand new best wishes! List sorting and quantity are the main features of the new version. A new login system has also
+          been implemented which means that you need to recreate your account. Data will be migrated over the coming weeks.
         </Typography>
         <AuthDetailsForm variant='login' onSubmit={onSubmit} {...formProps} />
       </Paper>

@@ -24,12 +24,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
   const [claimWish] = useMutation(CLAIM_WISH)
   const [removeWishClaim] = useMutation(REMOVE_WISH_CLAIM)
-  const totalClaimedQuantity = Object.values(claimedByEmail).reduce(
-    (total, quantity) => total + quantity,
-    0
-  )
-  const amountClaimedByOthers =
-    totalClaimedQuantity - claimedByEmail[share.invitedEmail] || 0
+  const totalClaimedQuantity = Object.values(claimedByEmail).reduce((total, quantity) => total + quantity, 0)
+  const amountClaimedByOthers = totalClaimedQuantity - claimedByEmail[share.invitedEmail] || 0
   const amountClaimedByYou = claimedByEmail[share.invitedEmail] || 0
   const tooltipTitle = pipe(
     filter((amountClaimed) => amountClaimed > 0),
@@ -37,33 +33,21 @@ export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
     Object.values,
     when(
       () => totalClaimedQuantity < wishQuantity,
-      (titleComponents) => [
-        ...titleComponents,
-        `Available: ${wishQuantity - totalClaimedQuantity}`
-      ]
+      (titleComponents) => [...titleComponents, `Available: ${wishQuantity - totalClaimedQuantity}`]
     ),
     join(', ')
   )(claimedByEmail)
   return (
-    <Box
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-    >
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
         <IconButton
-          onClick={() =>
-            removeWishClaim({ variables: { id: share.id, wishId } })
-          }
+          onClick={() => removeWishClaim({ variables: { id: share.id, wishId } })}
           disabled={amountClaimedByYou === 0}
           size='large'
         >
           <RemoveIcon />
         </IconButton>
-        <Tooltip
-          disableFocusListener
-          enterTouchDelay={0}
-          title={tooltipTitle}
-          leaveTouchDelay={5000}
-        >
+        <Tooltip disableFocusListener enterTouchDelay={0} title={tooltipTitle} leaveTouchDelay={5000}>
           <StyledBadge badgeContent={amountClaimedByYou} color='success'>
             <IconButton size='large'>
               <RedeemIcon />
@@ -71,23 +55,14 @@ export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
           </StyledBadge>
         </Tooltip>
         <IconButton
-          onClick={() =>
-            claimWish({ variables: { id: share.id, wishId } }).catch(
-              console.error
-            )
-          }
+          onClick={() => claimWish({ variables: { id: share.id, wishId } }).catch(console.error)}
           disabled={wishQuantity <= amountClaimedByOthers + amountClaimedByYou}
           size='large'
         >
           <AddIcon />
         </IconButton>
       </Box>
-      <Tooltip
-        disableFocusListener
-        enterTouchDelay={0}
-        title={tooltipTitle}
-        leaveTouchDelay={5000}
-      >
+      <Tooltip disableFocusListener enterTouchDelay={0} title={tooltipTitle} leaveTouchDelay={5000}>
         <FRefQuantityIndicator
           amountClaimedByOthers={amountClaimedByOthers}
           amountClaimedByYou={claimedByEmail[share.invitedEmail] || 0}

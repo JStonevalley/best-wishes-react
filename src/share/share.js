@@ -1,15 +1,5 @@
 import { useMemo } from 'react'
-import {
-  doc,
-  getDoc,
-  addDoc,
-  collection,
-  deleteDoc,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-  getFirestore
-} from 'firebase/firestore'
+import { doc, getDoc, addDoc, collection, deleteDoc, updateDoc, arrayUnion, arrayRemove, getFirestore } from 'firebase/firestore'
 
 export const useWishListSharing = () => {
   const db = useMemo(getFirestore, [])

@@ -9,7 +9,8 @@ import {
   DialogTitle,
   IconButton,
   Typography,
-  Checkbox
+  Checkbox,
+  CircularProgress
 } from '@mui/material'
 import { styled } from '@mui/system'
 import ShareIcon from '@mui/icons-material/Share'
@@ -71,12 +72,15 @@ export const ShareFormDialog = ({ listId, shares }) => {
       shareEmails.filter(prop('include')).map(async ({ email }) => {
         return (
           shares.find((share) => share.invitedEmail === email) ||
-          (await createShare({
-            variables: { invitedEmail: email, wishListId: listId }
-          }))
+          (
+            await createShare({
+              variables: { invitedEmail: email, wishListId: listId }
+            })
+          ).data.share
         )
       })
     )
+    console.log(sharesToSendEmailsFor)
     await sendShareEmails({
       variables: { shareIds: sharesToSendEmailsFor.map(prop('id')) }
     })
@@ -125,7 +129,6 @@ export const ShareFormDialog = ({ listId, shares }) => {
                           type='email'
                           error={Boolean(errors.shareEmails?.[index]?.email)}
                           helperText={errors.shareEmails?.[index]?.email?.message}
-                          disabled={index < shares.length}
                           sx={{ flexGrow: 1 }}
                           {...field}
                         />
@@ -134,6 +137,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
                     name={`shareEmails.${index}.email`}
                     control={control}
                     defaultValue={fieldSpec.email}
+                    disabled={index < shares.length}
                     rules={{
                       required: {
                         value: true,
@@ -199,11 +203,17 @@ export const ShareFormDialog = ({ listId, shares }) => {
               rowGap: 1
             }}
           >
-            {shareEmails.filter(prop('include')).map(({ email }) => (
-              <Typography key={`confirmNewShares-${email}`}>
-                {shares.find((share) => share.invitedEmail === email) ? `${email} (resend)` : email}
-              </Typography>
-            ))}
+            {loadingSendShareEmails ? (
+              <CircularProgress />
+            ) : (
+              shareEmails
+                .filter(prop('include'))
+                .map(({ email }) => (
+                  <Typography key={`confirmNewShares-${email}`}>
+                    {shares.find((share) => share.invitedEmail === email) ? `${email} (resend)` : email}
+                  </Typography>
+                ))
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setConfirmIsOpen(false)}>No</Button>

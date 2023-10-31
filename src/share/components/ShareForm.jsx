@@ -60,7 +60,7 @@ export const ShareFormDialog = ({ listId, shares }) => {
           }}
         >
           <ShareContainer>
-            <DialogContentText>Enter the emails addresses of friends and family who want to make your wishes come true.</DialogContentText>
+            <DialogContentText>Enter the email addresses of friends and family who want to make your wishes come true.</DialogContentText>
             {shares.map((share) => {
               return (
                 <div

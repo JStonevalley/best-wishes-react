@@ -10,11 +10,14 @@ import {
   Paper,
   IconButton,
   Badge,
-  CircularProgress
+  CircularProgress,
+  Link
 } from '@mui/material'
+import { blue } from '@mui/material/colors'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import AddIcon from '@mui/icons-material/Add'
+import LinkIcon from '@mui/icons-material/Link'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import WishFormModal from './WishForm'
@@ -342,6 +345,9 @@ const ItemToolbar = ({
       )}
       {share && (
         <>
+          <Link href={wish.link} component={IconButton} target='_blank' rel='noopener' color={blue[500]}>
+            <LinkIcon />
+          </Link>
           <ClaimWish share={share} wishId={wish.id} wishQuantity={wish.quantity} claimedByEmail={claimedByEmail} />
         </>
       )}
@@ -387,9 +393,9 @@ const WishListItem = ({
       <ListItemText
         disableTypography
         primary={
-          <Typography component='h2' variant='h6'>
+          <Link href={wish.link} variant='h6' underline='none' target='_blank' rel='noopener' color='inherit'>
             {wish.title}
-          </Typography>
+          </Link>
         }
         secondary={
           <div
@@ -524,9 +530,9 @@ const WishTileItem = ({
     <TileListItem>
       <TileImage imageUrl={wish.image || `/christmas_gift_placeholder_${index % 5}.jpg`} quantity={wish.quantity} />
       <div style={{ flex: '1 0 250px', display: 'flex', flexDirection: 'column' }}>
-        <Typography paragraph variant='h5' component='h2'>
+        <Link href={wish.link} variant='h6' paragraph underline='none' target='_blank' rel='noopener' color='inherit'>
           {wish.title}
-        </Typography>
+        </Link>
         {wish.description && (
           <Typography paragraph variant='body1'>
             {wish.description}

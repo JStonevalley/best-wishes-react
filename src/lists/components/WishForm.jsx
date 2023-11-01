@@ -74,8 +74,8 @@ const WishFormModal = ({
   }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps
   const loading = loadingMakeAWish || loadingChangeAWish
   const submit = handleSubmit(async (data) => {
+    if (data.price?.amount == null || isNaN(data.price?.amount) || data.price?.currency == null) delete data.price
     if (data.price?.amount != null) data.price.amount = data.price.amount * 100
-    if (data.price?.amount == null || data.price?.currency == null) delete data.price
     try {
       await (wishId ? changeAWish({ variables: { id: wishId, ...data } }) : makeAWish({ variables: { wishListId: listId, ...data } }))
       close()

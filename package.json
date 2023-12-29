@@ -8,6 +8,10 @@
     "start": "vite",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ."
   },
+  "engines": {
+    "node": "20",
+    "npm": "10"
+  },
   "dependencies": {
     "@apollo/client": "^3.8.3",
     "@emotion/react": "^11.7.0",

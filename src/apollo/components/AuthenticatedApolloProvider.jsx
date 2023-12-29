@@ -12,8 +12,7 @@ const httpLink = createHttpLink({
 let googleFirebaseIdTokenPromise = null
 let googleFirebaseIdTokenFethedAt = null
 
-const authLink = setContext((_, { headers }) => {
-  const googleFirebaseUserIdToken = localStorage.getItem('googleFirebaseUserIdToken')
+const authLink = setContext((_, { headers, googleFirebaseUserIdToken }) => {
   if (googleFirebaseUserIdToken) {
     return {
       headers: {
@@ -79,7 +78,7 @@ export const AuthenticatedApolloProvider = ({ children }) => {
     onAuthStateChanged(getAuth(), async (newGoogleUser) => {
       if (newGoogleUser) {
         const newGoogleUserIdToken = await newGoogleUser.getIdToken()
-        localStorage.setItem('googleFirebaseUserIdToken', newGoogleUserIdToken)
+        apolloClient.defaultContext.googleFirebaseUserIdToken = newGoogleUserIdToken
         setGoogleUser(newGoogleUser)
       } else {
         apolloClient.resetStore()
@@ -87,7 +86,7 @@ export const AuthenticatedApolloProvider = ({ children }) => {
         localStorage.removeItem('googleFirebaseUserIdToken')
       }
     })
-  })
+  }, [setGoogleUser])
   return (
     <UserContext.Provider value={{ googleUser }}>
       <ApolloProvider client={apolloClient}>{children}</ApolloProvider>

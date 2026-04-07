@@ -1,12 +1,21 @@
 import { useMutation } from '@apollo/client/react'
 import { Paper, Typography } from '@mui/material'
 import { styled } from '@mui/system'
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
 import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { sleep } from '../tools/sleep'
 import AuthDetailsForm from './components/AuthForm'
 import { CREATE_USER } from './gql'
+
+const waitForLoggedInAuthState = () =>
+  new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+      if (user) {
+        unsubscribe()
+        resolve()
+      }
+    })
+  })
 
 const Page = styled('div')(() => ({
   display: 'flex',
@@ -45,9 +54,9 @@ export const Signup = () => {
   const { handleSubmit, setError, ...formProps } = useForm()
   const onSubmit = handleSubmit(async ({ email, password }) => {
     try {
-      await createUserWithEmailAndPassword(getAuth(), email, password)
-      await sleep(0) // Put on event loop to make sure auth state is updated otherwise our create user request will lack auth details.
-      await createUser({ variables: { email } })
+      const userCredential = await createUserWithEmailAndPassword(getAuth(), email, password)
+      const token = await userCredential.user.getIdToken()
+      await createUser({ variables: { email }, context: { googleFirebaseUserIdToken: token } })
       navigate(location.state?.from || '/list')
     } catch (error) {
       console.error(error)
@@ -100,7 +109,7 @@ export const Login = () => {
   const onSubmit = handleSubmit(async ({ email, password }) => {
     try {
       await signInWithEmailAndPassword(getAuth(), email, password)
-      await sleep(0) // Put on event loop to make sure auth state is updated otherwise we will instantly be redirected to login again.
+      await waitForLoggedInAuthState()
       navigate(location.state?.from || '/list')
     } catch (error) {
       console.error(error)

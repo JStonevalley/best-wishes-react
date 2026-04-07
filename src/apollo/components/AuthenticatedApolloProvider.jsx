@@ -64,7 +64,7 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
 const apolloClient = new ApolloClient({
   link: from([authLink, errorLink, httpLink]),
   cache: new InMemoryCache(),
-  connectToDevTools: true,
+  devtools: { enabled: true },
   defaultOptions: {
     watchQuery: {
       errorPolicy: 'all'

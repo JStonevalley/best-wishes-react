@@ -1,18 +1,21 @@
-import { ApolloClient, ApolloProvider, createHttpLink, from, fromPromise, InMemoryCache } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
-import { onError } from '@apollo/client/link/error'
+import { ApolloClient, ApolloLink, CombinedGraphQLErrors, InMemoryCache } from '@apollo/client'
+import { ApolloProvider } from '@apollo/client/react'
+import { SetContextLink } from '@apollo/client/link/context'
+import { ErrorLink } from '@apollo/client/link/error'
+import { HttpLink } from '@apollo/client/link/http'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useEffect, useState } from 'react'
+import { filter, from, switchMap } from 'rxjs'
 import { UserContext } from '../UserContext'
 
-const httpLink = createHttpLink({
+const httpLink = new HttpLink({
   uri: `${import.meta.env.VITE_GQL_API_BASE}/graphql`
 })
 
 let googleFirebaseIdTokenPromise = null
 let googleFirebaseIdTokenFethedAt = null
 
-const authLink = setContext((_, { headers, googleFirebaseUserIdToken }) => {
+const authLink = new SetContextLink(({ headers, googleFirebaseUserIdToken }) => {
   if (googleFirebaseUserIdToken) {
     return {
       headers: {
@@ -25,9 +28,9 @@ const authLink = setContext((_, { headers, googleFirebaseUserIdToken }) => {
   }
 })
 
-const errorLink = onError(({ graphQLErrors, operation, forward }) => {
-  if (graphQLErrors) {
-    const authenticationError = graphQLErrors.find(
+const errorLink = new ErrorLink(({ error, operation, forward }) => {
+  if (CombinedGraphQLErrors.is(error)) {
+    const authenticationError = error.errors.find(
       (graphQLError) =>
         graphQLError.extensions.code === 'INVALID_ID_TOKEN' && graphQLError.extensions.firebaseCode === 'auth/id-token-expired'
     )
@@ -46,9 +49,9 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
                 return newGoogleFirebaseIdToken
               })
       googleFirebaseIdTokenFethedAt = Date.now()
-      return fromPromise(googleFirebaseIdTokenPromise)
-        .filter(Boolean)
-        .flatMap((googleIdToken) => {
+      return from(googleFirebaseIdTokenPromise).pipe(
+        filter(Boolean),
+        switchMap((googleIdToken) => {
           operation.setContext({
             headers: {
               ...operation.getContext().headers,
@@ -57,14 +60,15 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
           })
           return forward(operation)
         })
+      )
     }
   }
 })
 
 const apolloClient = new ApolloClient({
-  link: from([authLink, errorLink, httpLink]),
+  link: ApolloLink.from([authLink, errorLink, httpLink]),
   cache: new InMemoryCache(),
-  connectToDevTools: true,
+  devtools: { enabled: true },
   defaultOptions: {
     watchQuery: {
       errorPolicy: 'all'

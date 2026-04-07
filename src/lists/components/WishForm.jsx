@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client/react'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import {
   Button,

@@ -6,11 +6,8 @@ import { Badge, IconButton, Tooltip } from '@mui/material'
 import Box from '@mui/material/Box'
 import { styled } from '@mui/system'
 import { filter, join, mapObjIndexed, pipe, when } from 'ramda'
-import React from 'react'
 import { CLAIM_WISH, REMOVE_WISH_CLAIM } from '../../share/gql'
 import { QuantityIndicator } from '../../ui/components/QuantityIndicator'
-
-const FRefQuantityIndicator = React.forwardRef(QuantityIndicator)
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -63,7 +60,7 @@ export const ClaimWish = ({ share, wishId, wishQuantity, claimedByEmail }) => {
         </IconButton>
       </Box>
       <Tooltip disableFocusListener enterTouchDelay={0} title={tooltipTitle} leaveTouchDelay={5000}>
-        <FRefQuantityIndicator
+        <QuantityIndicator
           amountClaimedByOthers={amountClaimedByOthers}
           amountClaimedByYou={claimedByEmail[share.invitedEmail] || 0}
           total={wishQuantity}

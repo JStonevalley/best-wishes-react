@@ -57,7 +57,7 @@ export const Signup = () => {
   return (
     <Page>
       <Paper sx={{ padding: 2 }} elevation={0}>
-        <Typography variant='h6' component='h1' paragraph>
+        <Typography variant='h6' component='h1' sx={{ marginBottom: '16px' }}>
           Welcome, wish to create account?
         </Typography>
         <AuthDetailsForm variant='signin' onSubmit={onSubmit} {...formProps} />
@@ -106,10 +106,10 @@ export const Login = () => {
   return (
     <Page>
       <Paper sx={{ padding: 2 }} elevation={0}>
-        <Typography variant='h6' component='h1' paragraph>
+        <Typography variant='h6' component='h1' sx={{ marginBottom: '16px' }}>
           Wishing you welcome back!
         </Typography>
-        <Typography variant='subtitle1' component='h2' paragraph>
+        <Typography variant='subtitle1' component='h2' sx={{ marginBottom: '16px' }}>
           This is the brand new best wishes! List sorting and quantity are the main features of the new version. A new login system has also
           been implemented which means that you need to recreate your account. Data will be migrated over the coming weeks.
         </Typography>

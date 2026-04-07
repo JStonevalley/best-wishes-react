@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
 import { Dialog } from '@mui/material'
+import { useState } from 'react'
 
 export const Lightbox = ({ src, alt, activationElement = <img alt={alt} /> }) => {
   const [isOpen, setIsOpen] = useState(false)

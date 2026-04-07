@@ -1,6 +1,5 @@
-import React from 'react'
-import ImageIcon from '@mui/icons-material/Image'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
+import ImageIcon from '@mui/icons-material/Image'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import { VIEWS } from './ToggleListViewController'

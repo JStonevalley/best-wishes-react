@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { ApolloClient, ApolloProvider, createHttpLink, fromPromise, InMemoryCache, from } from '@apollo/client'
+import { ApolloClient, ApolloProvider, createHttpLink, from, fromPromise, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { useEffect, useState } from 'react'
 import { UserContext } from '../UserContext'
 
 const httpLink = createHttpLink({
@@ -86,7 +86,7 @@ export const AuthenticatedApolloProvider = ({ children }) => {
         localStorage.removeItem('googleFirebaseUserIdToken')
       }
     })
-  }, [setGoogleUser])
+  }, [])
   return (
     <UserContext.Provider value={{ googleUser }}>
       <ApolloProvider client={apolloClient}>{children}</ApolloProvider>

@@ -1,12 +1,11 @@
-import React from 'react'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { useMutation } from '@apollo/client'
+import { Paper, Typography } from '@mui/material'
 import { styled } from '@mui/system'
-import { Typography, Paper } from '@mui/material'
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { useForm } from 'react-hook-form'
-import AuthDetailsForm from './components/AuthForm'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { sleep } from '../tools/sleep'
-import { useMutation } from '@apollo/client'
+import AuthDetailsForm from './components/AuthForm'
 import { CREATE_USER } from './gql'
 
 const Page = styled('div')(() => ({

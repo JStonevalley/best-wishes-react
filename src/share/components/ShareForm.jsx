@@ -80,7 +80,6 @@ export const ShareFormDialog = ({ listId, shares }) => {
                         variables: { shareIds: [share.id] }
                       })
                     }}
-                    variant='outlined'
                     disabled={loadingSendShareEmails}
                   >
                     <SendIcon />

@@ -79,7 +79,7 @@ export const WishListListItem = ({
         </Link>
       </ListItemAvatar>
       <Link component={ReactRouterLink} to={shareId || id} underline='none' color='inherit' style={{ flex: '1 1 auto' }}>
-        <ListItemText sx={{ color: 'text.primary' }} primary={headline} primaryTypographyProps={{ variant: 'h6' }} />
+        <ListItemText sx={{ color: 'text.primary' }} primary={headline} slotProps={{ primary: { variant: 'h6' } }} />
       </Link>
     </ListItem>
   )

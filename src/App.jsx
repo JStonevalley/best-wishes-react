@@ -1,4 +1,5 @@
-import { CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material'
+import { CssBaseline, ThemeProvider } from '@mui/material'
+import { StyledEngineProvider } from '@mui/material/styles'
 import { initializeApp } from 'firebase/app'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AuthenticatedApolloProvider } from './apollo/components/AuthenticatedApolloProvider'

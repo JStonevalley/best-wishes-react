@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client/react'
 import AddIcon from '@mui/icons-material/Add'
 import RedeemIcon from '@mui/icons-material/Redeem'
 import RemoveIcon from '@mui/icons-material/Remove'

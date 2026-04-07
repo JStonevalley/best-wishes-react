@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client/react'
 import { Paper, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth'

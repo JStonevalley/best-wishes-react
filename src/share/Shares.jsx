@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client/react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, CircularProgress, List, Paper, Typography } from '@mui/material'
 import { WishListListItem } from '../lists/components/WishListsPresentation'

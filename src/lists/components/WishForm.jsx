@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import { styled } from '@mui/system'
+import { useMutation } from '@apollo/client'
+import RefreshIcon from '@mui/icons-material/Refresh'
 import {
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
   IconButton,
-  Select,
   InputLabel,
   MenuItem,
-  FormControl
+  Select,
+  TextField
 } from '@mui/material'
-import RefreshIcon from '@mui/icons-material/Refresh'
+import { styled } from '@mui/system'
+import { useEffect, useState } from 'react'
+import { Controller } from 'react-hook-form'
 import { materialUiFormRegister } from '../../tools/forms'
 import { CHANGE_A_WISH, GET_OWN_WISH_LIST, MAKE_A_WISH } from '../gql'
-import { useMutation } from '@apollo/client'
-import { Controller } from 'react-hook-form'
 
 const GridForm = styled('form')(({ theme }) => ({
   display: 'grid',
@@ -71,10 +71,10 @@ const WishFormModal = ({
   const [changeAWish, { loading: loadingChangeAWish }] = useMutation(CHANGE_A_WISH)
   useEffect(() => {
     if (isOpen === true && fetchedMetadata === true) setFetchedMetadata(false)
-  }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isOpen, fetchedMetadata]) // eslint-disable-line react-hooks/exhaustive-deps
   const loading = loadingMakeAWish || loadingChangeAWish
   const submit = handleSubmit(async (data) => {
-    if (data.price?.amount == null || isNaN(data.price?.amount) || data.price?.currency == null) delete data.price
+    if (data.price?.amount == null || Number.isNaN(data.price?.amount) || data.price?.currency == null) delete data.price
     if (data.price?.amount != null) data.price.amount = data.price.amount * 100
     try {
       await (wishId ? changeAWish({ variables: { id: wishId, ...data } }) : makeAWish({ variables: { wishListId: listId, ...data } }))

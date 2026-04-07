@@ -1,4 +1,4 @@
-import { doc, setDoc, addDoc, updateDoc, collection, arrayUnion, arrayRemove, getFirestore } from 'firebase/firestore'
+import { addDoc, arrayRemove, arrayUnion, collection, doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore'
 
 export const useWishMaking = () => {
   const db = getFirestore()

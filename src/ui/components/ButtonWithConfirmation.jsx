@@ -1,5 +1,5 @@
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useState } from 'react'
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material'
 
 const defaultConfirmationButton = () => <Button color='primary'>Confirm</Button>
 const defaultCancelButton = () => <Button color='inherit'>Cancel</Button>

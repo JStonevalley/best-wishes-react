@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import { TextField, Dialog, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from '@mui/material'
-import { styled } from '@mui/system'
-import ShareIcon from '@mui/icons-material/Share'
-import SendIcon from '@mui/icons-material/Send'
+import { useMutation, useQuery } from '@apollo/client'
 import DeleteIcon from '@mui/icons-material/Delete'
+import SendIcon from '@mui/icons-material/Send'
+import ShareIcon from '@mui/icons-material/Share'
+import { Dialog, DialogContent, DialogContentText, DialogTitle, IconButton, TextField, Typography } from '@mui/material'
+import { styled } from '@mui/system'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { GET_CURRENT_USER } from '../../auth/gql'
-import { useMutation, useQuery } from '@apollo/client'
-import { CREATE_SHARE, REMOVE_SHARE, SEND_SHARE_EMAILS } from '../gql'
 import { GET_OWN_WISH_LIST } from '../../lists/gql'
 import { materialUiFormRegister } from '../../tools/forms'
+import { CREATE_SHARE, REMOVE_SHARE, SEND_SHARE_EMAILS } from '../gql'
 
 const ShareContainer = styled('div')(({ theme }) => ({
   display: 'flex',

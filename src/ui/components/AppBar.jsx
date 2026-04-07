@@ -1,6 +1,5 @@
-import React from 'react'
+import { AppBar, Button, Toolbar, Typography } from '@mui/material'
 import { getAuth, signOut } from 'firebase/auth'
-import { AppBar, Toolbar, Typography, Button } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../../apollo/UserContext'
 

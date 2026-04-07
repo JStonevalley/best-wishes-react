@@ -1,40 +1,40 @@
-import React, { useState } from 'react'
-import { styled } from '@mui/system'
-import {
-  List as MaterialList,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Typography,
-  Paper,
-  IconButton,
-  Badge,
-  CircularProgress,
-  Link
-} from '@mui/material'
-import { blue } from '@mui/material/colors'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
+import { useMutation, useQuery } from '@apollo/client'
 import AddIcon from '@mui/icons-material/Add'
-import LinkIcon from '@mui/icons-material/Link'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
-import WishFormModal from './WishForm'
-import { useForm } from 'react-hook-form'
-import { Lightbox } from '../../ui/components/Lightbox.jsx'
-import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
-import { GET_CURRENT_USER } from '../../auth/gql'
-import { useMutation, useQuery } from '@apollo/client'
-import { GET_OWN_WISH_LIST, REMOVE_A_WISH, UPDATE_WISH_ORDER_FOR_WISH_LIST } from '../gql'
-import { GET_SHARE } from '../../share/gql'
-import { ClaimWish } from './ClaimWish'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import LinkIcon from '@mui/icons-material/Link'
+import {
+  Avatar,
+  Badge,
+  CircularProgress,
+  IconButton,
+  Link,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  List as MaterialList,
+  Paper,
+  Typography
+} from '@mui/material'
+import { blue } from '@mui/material/colors'
+import { styled } from '@mui/system'
 import { swap } from 'ramda'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
-import { ChangeWishListFormModal } from './WishListForm'
+import { GET_CURRENT_USER } from '../../auth/gql'
+import { ShareFormDialog } from '../../share/components/ShareForm.jsx'
+import { GET_SHARE } from '../../share/gql'
 import { ButtonWithConfirmation } from '../../ui/components/ButtonWithConfirmation'
+import { Lightbox } from '../../ui/components/Lightbox.jsx'
+import { GET_OWN_WISH_LIST, REMOVE_A_WISH, UPDATE_WISH_ORDER_FOR_WISH_LIST } from '../gql'
+import { ClaimWish } from './ClaimWish'
 import { ToggleListView } from './ToggleListView'
-import { VIEWS, useListViewController } from './ToggleListViewController'
+import { useListViewController, VIEWS } from './ToggleListViewController'
+import WishFormModal from './WishForm'
+import { ChangeWishListFormModal } from './WishListForm'
 
 const ListHeaderContainer = styled('div')(({ theme }) => ({
   display: 'flex',

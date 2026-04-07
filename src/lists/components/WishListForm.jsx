@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client'
+import AddIcon from '@mui/icons-material/Add'
+import EditIcon from '@mui/icons-material/Edit'
+import { Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { materialUiFormRegister } from '../../tools/forms'
-import { CREATE_WISH_LIST, CHANGE_WISH_LIST, GET_OWN_WISH_LISTS } from '../gql'
-import { Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
-import EditIcon from '@mui/icons-material/Edit'
+import { CHANGE_WISH_LIST, CREATE_WISH_LIST, GET_OWN_WISH_LISTS } from '../gql'
 
 const FormModal = ({ onSubmit, headline }) => {
   const {

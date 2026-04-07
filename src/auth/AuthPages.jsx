@@ -60,6 +60,10 @@ export const Signup = () => {
         <Typography variant='h6' component='h1' sx={{ marginBottom: '16px' }}>
           Welcome, wish to create account?
         </Typography>
+        <Typography variant='subtitle1' component='h2' sx={{ marginBottom: '16px' }}>
+          Best wishes is a simple wish list app that allows you to create and share wish lists with your friends and family.
+          Gift givers can easily find items on your list and indicate to each other what they have bought. Stressfree shopping!
+        </Typography>
         <AuthDetailsForm variant='signin' onSubmit={onSubmit} {...formProps} />
       </Paper>
     </Page>
@@ -107,11 +111,7 @@ export const Login = () => {
     <Page>
       <Paper sx={{ padding: 2 }} elevation={0}>
         <Typography variant='h6' component='h1' sx={{ marginBottom: '16px' }}>
-          Wishing you welcome back!
-        </Typography>
-        <Typography variant='subtitle1' component='h2' sx={{ marginBottom: '16px' }}>
-          This is the brand new best wishes! List sorting and quantity are the main features of the new version. A new login system has also
-          been implemented which means that you need to recreate your account. Data will be migrated over the coming weeks.
+          Wishing you welcome!
         </Typography>
         <AuthDetailsForm variant='login' onSubmit={onSubmit} {...formProps} />
       </Paper>

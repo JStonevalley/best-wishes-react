@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import { blue } from '@mui/material/colors'
 
-export const QuantityIndicator = ({ amountClaimedByOthers, amountClaimedByYou, total, sx, ...props }, ref) => {
+export const QuantityIndicator = ({ amountClaimedByOthers, amountClaimedByYou, total, sx, ref, ...props }) => {
   const indicators = Array.from({ length: total }, (_, index) => ({
     color: index < amountClaimedByOthers ? `error.main` : index >= total - amountClaimedByYou ? 'success.main' : `${blue[500]}`,
     opacity: index < amountClaimedByOthers ? 1 : 0.5

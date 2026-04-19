@@ -530,7 +530,16 @@ const WishTileItem = ({
     <TileListItem>
       <TileImage imageUrl={wish.image || `/christmas_gift_placeholder_${index % 5}.jpg`} quantity={wish.quantity} />
       <div style={{ flex: '1 0 250px', display: 'flex', flexDirection: 'column' }}>
-        <Link href={wish.link} variant='h6' component='p' sx={{ marginBottom: '16px' }} underline='none' target='_blank' rel='noopener' color='inherit'>
+        <Link
+          href={wish.link}
+          variant='h6'
+          component='p'
+          sx={{ marginBottom: '16px' }}
+          underline='none'
+          target='_blank'
+          rel='noopener'
+          color='inherit'
+        >
           {wish.title}
         </Link>
         {wish.description && (

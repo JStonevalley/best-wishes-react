@@ -70,8 +70,8 @@ export const Signup = () => {
           Welcome, wish to create account?
         </Typography>
         <Typography variant='subtitle1' component='h2' sx={{ marginBottom: '16px' }}>
-          Best wishes is a simple wish list app that allows you to create and share wish lists with your friends and family.
-          Gift givers can easily find items on your list and indicate to each other what they have bought. Stressfree shopping!
+          Best wishes is a simple wish list app that allows you to create and share wish lists with your friends and family. Gift givers can
+          easily find items on your list and indicate to each other what they have bought. Stressfree shopping!
         </Typography>
         <AuthDetailsForm variant='signin' onSubmit={onSubmit} {...formProps} />
       </Paper>

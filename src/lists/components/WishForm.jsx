@@ -18,6 +18,7 @@ import { styled } from '@mui/system'
 import { useEffect, useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { materialUiFormRegister } from '../../tools/forms'
+import usePrevious from '../../tools/usePrevious'
 import { CHANGE_A_WISH, GET_OWN_WISH_LIST, MAKE_A_WISH } from '../gql'
 
 const GridForm = styled('form')(({ theme }) => ({
@@ -69,9 +70,10 @@ const WishFormModal = ({
     refetchQueries: [{ query: GET_OWN_WISH_LIST, variables: { id: listId } }]
   })
   const [changeAWish, { loading: loadingChangeAWish }] = useMutation(CHANGE_A_WISH)
+  const prevIsOpen = usePrevious(isOpen)
   useEffect(() => {
-    if (isOpen === true && fetchedMetadata === true) setFetchedMetadata(false)
-  }, [isOpen, fetchedMetadata]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (prevIsOpen === false && isOpen === true && fetchedMetadata === true) setFetchedMetadata(false)
+  }, [isOpen, fetchedMetadata, prevIsOpen])
   const loading = loadingMakeAWish || loadingChangeAWish
   const submit = handleSubmit(async (data) => {
     if (data.price?.amount == null || Number.isNaN(data.price?.amount) || data.price?.currency == null) delete data.price
